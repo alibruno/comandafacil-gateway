@@ -1,0 +1,85 @@
+<section class="rounded-2xl border border-[#77818c]/15 bg-white shadow-sm mt-8">
+  <div
+    class="flex flex-col gap-4 border-b border-[#77818c]/15 p-5 md:flex-row md:items-center md:justify-between"
+  >
+    <div>
+      <h2 class="font-serif text-xl font-bold">Mapa de mesas</h2>
+      <p class="mt-1 text-sm text-[#77818c]">Consulte ou atualize um registro.</p>
+    </div>
+    <div class="relative w-full md:w-72">
+      <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#77818c]"
+        >⌕</span
+      ><input
+        class="w-full pl-9"
+        type="search"
+        placeholder="Buscar mesa"
+        aria-label="Buscar mesa"
+        [value]="searchTerm()"
+        (input)="updateSearch($event)"
+      />
+    </div>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="w-full min-w-170 text-left text-sm">
+      <thead class="bg-[#f7f9ff] text-xs uppercase tracking-widest text-[#77818c]">
+        <tr>
+          <th class="px-5 py-4 text-center font-bold">Mesa</th>
+          <th class="px-5 py-4 text-center font-bold">Capacidade</th>
+          <th class="px-5 py-4 text-center font-bold">Cadastro</th>
+          <th class="px-5 py-4 text-center font-bold">Status</th>
+          <th class="px-5 py-4 text-center font-bold">Ações</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-[#77818c]/10">
+        @for (mesa of filteredMesas(); track mesa.id) {
+          <tr class="transition hover:bg-[#f7f9ff]">
+            <td class="px-5 py-4 text-center font-bold">{{ mesa.nome }}</td>
+            <td class="px-5 py-4 text-center text-[#77818c]">{{ mesa.capacidade }} lugares</td>
+            <td class="px-5 py-4 text-center text-[#77818c]">{{ mesa.dataCadastro | date: 'dd/MM/yyyy' }}</td>
+            <td class="px-5 py-4 text-center">
+              <span
+                class="rounded-full px-3 py-1 text-xs font-bold"
+                [class.bg-emerald-100]="mesa.disponivel"
+                [class.text-emerald-700]="mesa.disponivel"
+                [class.bg-orange-100]="!mesa.disponivel"
+                [class.text-orange-800]="!mesa.disponivel"
+                >{{ mesa.disponivel ? 'Disponível' : 'Ocupada' }}</span
+              >
+            </td>
+            <td class="px-5 py-4">
+              <div class="flex justify-center">
+                <button
+                  class="cursor-pointer rounded-lg px-3 py-2 text-xs font-bold text-[#152e30] transition hover:bg-[#dccdc1]/40"
+                  type="button"
+                  (click)="view.emit(mesa)"
+                >
+                  Detalhes
+                </button>
+                <button
+                  class="cursor-pointer rounded-lg px-3 py-2 text-xs font-bold text-[#152e30] transition hover:bg-[#dccdc1]/40"
+                  type="button"
+                  (click)="edit.emit(mesa)"
+                >
+                  Editar
+                </button>
+                <button
+                  class="cursor-pointer rounded-lg px-3 py-2 text-xs font-bold text-[#a13711] transition hover:bg-red-50"
+                  type="button"
+                  (click)="remove.emit(mesa)"
+                >
+                  Excluir
+                </button>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td class="px-5 py-12 text-center text-[#77818c]" colspan="5">
+              Nenhuma mesa encontrada.
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

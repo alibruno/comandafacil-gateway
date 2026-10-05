@@ -1,276 +1,34 @@
-<div class="min-h-screen bg-[#f7f9ff] text-[#152e30]">
-  <aside
-    class="fixed inset-y-0 left-0 z-20 hidden w-64 flex-col justify-between bg-[#152e30] px-5 py-6 text-white lg:flex"
-  >
-    <div class="space-y-10">
-      <div class="px-0">
-        <img
-          ngSrc="/comanda-facil-logo.svg"
-          width="540"
-          height="140"
-          class="h-auto w-full max-w-[210px]"
-          alt="Comanda Fácil - Sistema de gestão de restaurantes"
-        />
-      </div>
-      <nav class="space-y-2" aria-label="Navegação principal">
-        <a
-          class="flex items-center gap-3 rounded-xl bg-[#f99a26] px-4 py-3 text-sm font-bold text-[#152e30]"
-          href="#mesas"
-          ><span>▦</span><span>Restaurante</span></a
-        >
-        <a
-          class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-[#dccdc1] transition hover:bg-white/10"
-          href="#mesas"
-          ><span>⌂</span><span>Salão &amp; Comandas</span></a
-        >
-        <a
-          class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-[#dccdc1] transition hover:bg-white/10"
-          href="#mesas"
-          ><span>▤</span><span>Pedidos</span></a
-        >
-      </nav>
-    </div>
-    <div class="rounded-xl border border-white/10 bg-white/5 p-4">
-      <p class="text-xs uppercase tracking-widest text-[#dccdc1]">Serviço do jantar</p>
-      <div class="mt-3 flex items-center justify-between text-sm">
-        <span class="flex items-center gap-2"
-          ><span class="size-2 rounded-full bg-[#f99a26]"></span>Ativo</span
-        ><span class="font-bold text-[#f99a26]">18:00</span>
-      </div>
-    </div>
-  </aside>
+<app-restaurant-header />
 
-  <main class="lg:pl-64">
-    <header
-      class="flex min-h-20 items-center justify-between border-b border-[#77818c]/15 bg-white/80 px-5 py-4 backdrop-blur md:px-10"
-    >
-      <div>
-        <p class="text-xs font-bold uppercase tracking-[0.2em] text-[#a13711]">
-          Gestão &amp; salão
-        </p>
-        <h1 class="mt-1 font-serif text-3xl font-bold text-[#152e30]">Mesas do restaurante</h1>
-      </div>
-      <div class="hidden items-center gap-3 sm:flex">
-        <div
-          class="grid size-10 place-items-center rounded-full bg-[#dccdc1] font-serif font-bold text-[#152e30]"
-        >
-          JR
-        </div>
-        <div class="hidden text-right md:block">
-          <p class="text-sm font-bold">Julien Roy</p>
-          <p class="text-xs text-[#77818c]">Maître D'</p>
-        </div>
-      </div>
-    </header>
-
-    <section id="mesas" class="space-y-8 px-5 py-8 md:px-10">
-      <div class="flex flex-col justify-between gap-5 md:flex-row md:items-end">
-        <p class="max-w-xl text-sm leading-6 text-[#77818c]">
-          Acompanhe a ocupação do salão e mantenha a disposição das mesas sempre atualizada.
-        </p>
-        <p-button label="Nova mesa" icon="pi pi-plus" (onClick)="openCreateModal()" />
-      </div>
-      <div class="grid gap-4 sm:grid-cols-3">
-        <article class="rounded-2xl border border-[#77818c]/15 bg-white p-5 shadow-sm">
-          <p class="text-xs font-bold uppercase tracking-widest text-[#77818c]">Total de mesas</p>
-          <p class="mt-3 font-serif text-4xl font-bold">{{ mesas().length }}</p>
-          <p class="mt-1 text-sm text-[#77818c]">em operação</p>
-        </article>
-        <article class="rounded-2xl border border-[#77818c]/15 bg-white p-5 shadow-sm">
-          <p class="text-xs font-bold uppercase tracking-widest text-[#77818c]">Disponíveis</p>
-          <p class="mt-3 font-serif text-4xl font-bold text-emerald-700">{{ availableCount() }}</p>
-          <p class="mt-1 text-sm text-[#77818c]">prontas para receber</p>
-        </article>
-        <article class="rounded-2xl border border-[#77818c]/15 bg-white p-5 shadow-sm">
-          <p class="text-xs font-bold uppercase tracking-widest text-[#77818c]">Ocupadas</p>
-          <p class="mt-3 font-serif text-4xl font-bold text-[#a13711]">{{ occupiedCount() }}</p>
-          <p class="mt-1 text-sm text-[#77818c]">em atendimento</p>
-        </article>
-      </div>
-
-      <section class="rounded-2xl border border-[#77818c]/15 bg-white shadow-sm">
-        <div
-          class="flex flex-col gap-4 border-b border-[#77818c]/15 p-5 md:flex-row md:items-center md:justify-between"
-        >
-          <div>
-            <h2 class="font-serif text-xl font-bold">Mapa de mesas</h2>
-            <p class="mt-1 text-sm text-[#77818c]">Consulte ou atualize um registro.</p>
-          </div>
-          <div class="relative w-full md:w-72">
-            <span
-              class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#77818c]"
-              >⌕</span
-            ><input
-              pInputText
-              class="w-full pl-9"
-              type="search"
-              placeholder="Buscar mesa"
-              [value]="searchTerm()"
-              (input)="updateSearch($event)"
-            />
-          </div>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full min-w-170 text-left text-sm">
-            <thead class="bg-[#f7f9ff] text-xs uppercase tracking-widest text-[#77818c]">
-              <tr>
-                <th class="px-5 py-4 font-bold">Mesa</th>
-                <th class="px-5 py-4 font-bold">Capacidade</th>
-                <th class="px-5 py-4 font-bold">Cadastro</th>
-                <th class="px-5 py-4 font-bold">Status</th>
-                <th class="px-5 py-4 text-right font-bold">Ações</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-[#77818c]/10">
-              @for (mesa of filteredMesas(); track mesa.id) {
-                <tr class="transition hover:bg-[#f7f9ff]">
-                  <td class="px-5 py-4 font-bold">{{ mesa.nome }}</td>
-                  <td class="px-5 py-4 text-[#77818c]">{{ mesa.capacidade }} lugares</td>
-                  <td class="px-5 py-4 text-[#77818c]">
-                    {{ mesa.dataCadastro | date: 'dd/MM/yyyy' }}
-                  </td>
-                  <td class="px-5 py-4">
-                    <span
-                      class="rounded-full px-3 py-1 text-xs font-bold"
-                      [class.bg-emerald-100]="mesa.disponivel"
-                      [class.text-emerald-700]="mesa.disponivel"
-                      [class.bg-orange-100]="!mesa.disponivel"
-                      [class.text-orange-800]="!mesa.disponivel"
-                      >{{ mesa.disponivel ? 'Disponível' : 'Ocupada' }}</span
-                    >
-                  </td>
-                  <td class="px-5 py-4">
-                    <div class="flex justify-end gap-2">
-                      <button
-                        class="rounded-lg px-3 py-2 text-xs font-bold text-[#152e30] transition hover:bg-[#dccdc1]/40"
-                        type="button"
-                        (click)="openViewModal(mesa)"
-                      >
-                        Detalhes</button
-                      ><button
-                        class="rounded-lg px-3 py-2 text-xs font-bold text-[#152e30] transition hover:bg-[#dccdc1]/40"
-                        type="button"
-                        (click)="openEditModal(mesa)"
-                      >
-                        Editar</button
-                      ><button
-                        class="rounded-lg px-3 py-2 text-xs font-bold text-[#a13711] transition hover:bg-red-50"
-                        type="button"
-                        (click)="openDeleteModal(mesa)"
-                      >
-                        Excluir
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              } @empty {
-                <tr>
-                  <td class="px-5 py-12 text-center text-[#77818c]" colspan="5">
-                    Nenhuma mesa encontrada.
-                  </td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      </section>
-    </section>
-  </main>
-</div>
-
-<p-dialog
-  [header]="modalTitle()"
-  [visible]="modalVisible()"
-  [modal]="true"
-  [closable]="true"
-  [style]="{ width: 'min(92vw, 30rem)' }"
-  (visibleChange)="modalVisible.set($event)"
->
-  @if (isFormMode()) {
-    <form class="space-y-5" (submit)="$event.preventDefault(); saveMesa()">
-      <div>
-        <label class="mb-2 block text-sm font-bold" for="nome">Nome ou número</label
-        ><input
-          id="nome"
-          pInputText
-          class="w-full"
-          type="text"
-          placeholder="Ex.: Mesa 05"
-          [formField]="mesaForm.nome"
-        />
-        @if (mesaForm.nome().invalid() && mesaForm.nome().touched()) {
-          <p class="mt-1 text-xs text-red-700">Informe o nome da mesa.</p>
-        }
-      </div>
-      <div class="grid gap-5 sm:grid-cols-2">
-        <div>
-          <label class="mb-2 block text-sm font-bold" for="capacidade">Capacidade</label
-          ><input
-            id="capacidade"
-            class="w-full rounded-lg border border-[#77818c]/30 px-3 py-2.5"
-            type="number"
-            [formField]="mesaForm.capacidade"
-          />
-        </div>
-        <div>
-          <label class="mb-2 block text-sm font-bold" for="dataCadastro">Data de cadastro</label
-          ><input
-            id="dataCadastro"
-            class="w-full rounded-lg border border-[#77818c]/30 px-3 py-2.5"
-            type="date"
-            [formField]="mesaForm.dataCadastro"
-          />
-        </div>
-      </div>
-      <label class="flex items-center gap-3 text-sm font-bold" for="disponivel"
-        ><input
-          id="disponivel"
-          class="size-4 accent-[#f99a26]"
-          type="checkbox"
-          [formField]="mesaForm.disponivel"
-        />Mesa disponível para reservas</label
-      >
-      <div class="flex justify-end gap-3 pt-2">
-        <p-button
-          label="Cancelar"
-          severity="secondary"
-          [outlined]="true"
-          (onClick)="closeModal()"
-        /><p-button label="Salvar mesa" icon="pi pi-check" type="submit" />
-      </div>
-    </form>
-  } @else if (modalMode() === 'view' && selectedMesa(); as mesa) {
-    <dl class="grid gap-4 sm:grid-cols-2">
-      <div>
-        <dt class="text-xs uppercase tracking-widest text-[#77818c]">Mesa</dt>
-        <dd class="mt-1 font-bold">{{ mesa.nome }}</dd>
-      </div>
-      <div>
-        <dt class="text-xs uppercase tracking-widest text-[#77818c]">Capacidade</dt>
-        <dd class="mt-1 font-bold">{{ mesa.capacidade }} lugares</dd>
-      </div>
-      <div>
-        <dt class="text-xs uppercase tracking-widest text-[#77818c]">Cadastro</dt>
-        <dd class="mt-1 font-bold">{{ mesa.dataCadastro | date: 'dd/MM/yyyy' }}</dd>
-      </div>
-      <div>
-        <dt class="text-xs uppercase tracking-widest text-[#77818c]">Status</dt>
-        <dd class="mt-1 font-bold">{{ mesa.disponivel ? 'Disponível' : 'Ocupada' }}</dd>
-      </div>
-    </dl>
-    <div class="mt-6 flex justify-end"><p-button label="Fechar" (onClick)="closeModal()" /></div>
-  } @else if (modalMode() === 'delete' && selectedMesa(); as mesa) {
-    <p class="leading-6 text-[#77818c]">
-      Tem certeza que deseja remover <strong class="text-[#152e30]">{{ mesa.nome }}</strong
-      >? Esta ação não poderá ser desfeita.
-    </p>
-    <div class="mt-6 flex justify-end gap-3">
+<main class="min-h-screen bg-[#f7f9ff] text-[#152e30] lg:pl-64">
+  <section id="mesas" class="space-y-8 px-5 py-8 md:px-10">
+    <div class="flex flex-col justify-between gap-5 md:flex-row md:items-end">
+      <p class="max-w-xl text-sm leading-6 text-[#77818c]">
+        Acompanhe a ocupação do salão e mantenha a disposição das mesas sempre atualizada.
+      </p>
       <p-button
-        label="Cancelar"
-        severity="secondary"
-        [outlined]="true"
-        (onClick)="closeModal()"
-      /><p-button label="Remover mesa" severity="danger" (onClick)="deleteMesa()" />
+        class="cursor-pointer"
+        label="Nova mesa"
+        icon="pi pi-plus"
+        (onClick)="openCreateModal()"
+      />
     </div>
-  }
-</p-dialog>
+
+    <app-mesa-summary [mesas]="mesas()" />
+    <app-mesa-table
+      [mesas]="mesas()"
+      (view)="openViewModal($event)"
+      (edit)="openEditModal($event)"
+      (remove)="openDeleteModal($event)"
+    />
+  </section>
+</main>
+
+<app-mesa-dialog
+  [visible]="modalVisible()"
+  [mode]="modalMode()"
+  [selectedMesa]="selectedMesa()"
+  (close)="closeModal()"
+  (save)="saveMesa($event)"
+  (remove)="deleteMesa()"
+/>

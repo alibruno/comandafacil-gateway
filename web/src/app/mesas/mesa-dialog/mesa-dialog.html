@@ -1,0 +1,111 @@
+<p-dialog
+  [header]="modalTitle()"
+  [visible]="visible()"
+  [modal]="true"
+  [closable]="true"
+  [style]="{ width: 'min(92vw, 30rem)' }"
+  (visibleChange)="onVisibleChange($event)"
+>
+  @if (isFormMode()) {
+    <form class="space-y-5" (submit)="$event.preventDefault(); saveMesa()">
+      <div>
+        <label class="mb-2 block text-sm font-bold" for="nome">Nome ou número</label>
+        <input
+          id="nome"
+          class="w-full"
+          type="text"
+          placeholder="Ex.: Mesa 05"
+          [formField]="mesaForm.nome"
+        />
+        @if (mesaForm.nome().invalid() && mesaForm.nome().touched()) {
+          <p class="mt-1 text-xs text-red-700">Informe o nome da mesa.</p>
+        }
+      </div>
+      <div class="grid gap-5 sm:grid-cols-2">
+        <div>
+          <label class="mb-2 block text-sm font-bold" for="capacidade">Capacidade</label>
+          <input
+            id="capacidade"
+            class="w-full rounded-lg border border-[#77818c]/30 px-3 py-2.5"
+            type="number"
+            [formField]="mesaForm.capacidade"
+          />
+        </div>
+        <div>
+          <label class="mb-2 block text-sm font-bold" for="dataCadastro">Data de cadastro</label>
+          <input
+            id="dataCadastro"
+            class="w-full rounded-lg border border-[#77818c]/30 px-3 py-2.5"
+            type="date"
+            [formField]="mesaForm.dataCadastro"
+          />
+        </div>
+      </div>
+      <label class="flex cursor-pointer items-center gap-3 text-sm font-bold" for="disponivel">
+        <input
+          id="disponivel"
+          class="size-4 cursor-pointer accent-[#f99a26]"
+          type="checkbox"
+          [formField]="mesaForm.disponivel"
+        />Mesa disponível para reservas
+      </label>
+      <div class="flex justify-end gap-3 pt-2">
+        <p-button
+          class="cursor-pointer"
+          label="Cancelar"
+          severity="secondary"
+          [outlined]="true"
+          (onClick)="close.emit()"
+        />
+        <p-button
+          class="cursor-pointer"
+          label="Salvar mesa"
+          icon="pi pi-check"
+          type="submit"
+        />
+      </div>
+    </form>
+  } @else if (mode() === 'view' && selectedMesa(); as mesa) {
+    <dl class="grid gap-4 sm:grid-cols-2">
+      <div>
+        <dt class="text-xs uppercase tracking-widest text-[#77818c]">Mesa</dt>
+        <dd class="mt-1 font-bold">{{ mesa.nome }}</dd>
+      </div>
+      <div>
+        <dt class="text-xs uppercase tracking-widest text-[#77818c]">Capacidade</dt>
+        <dd class="mt-1 font-bold">{{ mesa.capacidade }} lugares</dd>
+      </div>
+      <div>
+        <dt class="text-xs uppercase tracking-widest text-[#77818c]">Cadastro</dt>
+        <dd class="mt-1 font-bold">{{ mesa.dataCadastro | date: 'dd/MM/yyyy' }}</dd>
+      </div>
+      <div>
+        <dt class="text-xs uppercase tracking-widest text-[#77818c]">Status</dt>
+        <dd class="mt-1 font-bold">{{ mesa.disponivel ? 'Disponível' : 'Ocupada' }}</dd>
+      </div>
+    </dl>
+    <div class="mt-6 flex justify-end">
+      <p-button class="cursor-pointer" label="Fechar" (onClick)="close.emit()" />
+    </div>
+  } @else if (mode() === 'delete' && selectedMesa(); as mesa) {
+    <p class="leading-6 text-[#77818c]">
+      Tem certeza que deseja remover <strong class="text-[#f5f5f5]">{{ mesa.nome }}</strong
+      >? Esta ação não poderá ser desfeita.
+    </p>
+    <div class="mt-6 flex justify-end gap-3">
+      <p-button
+        class="cursor-pointer"
+        label="Cancelar"
+        severity="secondary"
+        [outlined]="true"
+        (onClick)="close.emit()"
+      />
+      <p-button
+        class="cursor-pointer"
+        label="Remover mesa"
+        severity="danger"
+        (onClick)="remove.emit()"
+      />
+    </div>
+  }
+</p-dialog>

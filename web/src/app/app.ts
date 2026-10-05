@@ -1,11 +1,13 @@
 import { Component, signal } from '@angular/core';
-import { DatePipe, NgOptimizedImage } from '@angular/common';
-import { form, FormField, min, required, schema } from '@angular/forms/signals';
 import { Button } from '@openng/optimus-ui/button';
-import { Dialog } from '@openng/optimus-ui/dialog';
+import { Mesa, MesaDraft, ModalMode } from './mesas/mesa.model';
+import { MesaDialog } from './mesas/mesa-dialog/mesa-dialog';
+import { MesaSummary } from './mesas/mesa-summary/mesa-summary';
+import { MesaTable } from './mesas/mesa-table/mesa-table';
+import { RestaurantHeader } from './restaurant-header/restaurant-header';
 
 @Component({
-  imports: [Button, DatePipe, Dialog, FormField, NgOptimizedImage],
+  imports: [Button, MesaDialog, MesaSummary, MesaTable, RestaurantHeader],
   selector: 'app-root',
   styleUrl: './app.css',
   templateUrl: './app.html',
@@ -18,54 +20,13 @@ export class App {
     { id: 4, nome: 'Mesa 04', capacidade: 4, dataCadastro: '2026-08-21', disponivel: true },
   ]);
 
-  protected readonly searchTerm = signal('');
   protected readonly modalVisible = signal(false);
   protected readonly modalMode = signal<ModalMode>('create');
   protected readonly selectedMesa = signal<Mesa | null>(null);
-  protected readonly mesaDraft = signal<MesaDraft>(this.emptyDraft());
-  protected readonly mesaForm = form(
-    this.mesaDraft,
-    schema((path) => {
-      required(path.nome);
-      min(path.capacidade, 1);
-    }),
-  );
-
-  protected readonly filteredMesas = () => {
-    const term = this.searchTerm().trim().toLowerCase();
-    return term
-      ? this.mesas().filter((mesa) => mesa.nome.toLowerCase().includes(term))
-      : this.mesas();
-  };
-
-  protected readonly availableCount = () => this.mesas().filter((mesa) => mesa.disponivel).length;
-
-  protected readonly occupiedCount = () => this.mesas().length - this.availableCount();
-
-  protected readonly modalTitle = () => {
-    switch (this.modalMode()) {
-      case 'create':
-        return 'Nova mesa';
-      case 'edit':
-        return 'Editar mesa';
-      case 'view':
-        return 'Detalhes da mesa';
-      case 'delete':
-        return 'Remover mesa';
-    }
-  };
-
-  protected readonly isFormMode = () =>
-    this.modalMode() === 'create' || this.modalMode() === 'edit';
-
-  protected updateSearch(event: Event): void {
-    this.searchTerm.set((event.target as HTMLInputElement).value);
-  }
 
   protected openCreateModal(): void {
     this.modalMode.set('create');
     this.selectedMesa.set(null);
-    this.mesaDraft.set(this.emptyDraft());
     this.modalVisible.set(true);
   }
 
@@ -78,7 +39,6 @@ export class App {
   protected openEditModal(mesa: Mesa): void {
     this.modalMode.set('edit');
     this.selectedMesa.set(mesa);
-    this.mesaDraft.set({ ...mesa });
     this.modalVisible.set(true);
   }
 
@@ -88,13 +48,7 @@ export class App {
     this.modalVisible.set(true);
   }
 
-  protected saveMesa(): void {
-    if (!this.mesaForm().valid()) {
-      this.mesaForm().markAsTouched();
-      return;
-    }
-
-    const draft = this.mesaForm().value();
+  protected saveMesa(draft: MesaDraft): void {
     const selected = this.selectedMesa();
 
     if (this.modalMode() === 'edit' && selected) {
@@ -123,30 +77,4 @@ export class App {
     this.modalVisible.set(false);
     this.selectedMesa.set(null);
   }
-
-  private emptyDraft(): MesaDraft {
-    return {
-      nome: '',
-      capacidade: 2,
-      dataCadastro: new Date().toISOString().slice(0, 10),
-      disponivel: true,
-    };
-  }
-}
-
-type ModalMode = 'create' | 'view' | 'edit' | 'delete';
-
-interface Mesa {
-  id: number;
-  nome: string;
-  capacidade: number;
-  dataCadastro: string;
-  disponivel: boolean;
-}
-
-interface MesaDraft {
-  nome: string;
-  capacidade: number;
-  dataCadastro: string;
-  disponivel: boolean;
 }
