@@ -1,0 +1,101 @@
+:host {
+  position: relative;
+  z-index: 10;
+  display: block;
+  height: 80px;
+  flex: 0 0 80px;
+}
+
+.home-header {
+  position: fixed;
+  inset: 0 0 auto;
+  height: 80px;
+  border-bottom: 1px solid color-mix(in srgb, var(--home-linen) 55%, transparent);
+  background: rgb(255 255 255 / 86%);
+  backdrop-filter: blur(16px);
+}
+
+.header-inner {
+  display: flex;
+  width: min(100% - 3rem, 1440px);
+  height: 100%;
+  align-items: center;
+  justify-content: space-between;
+  margin-inline: auto;
+}
+
+.brand-mark,
+.brand-mark img {
+  display: block;
+}
+
+.brand-mark img {
+  width: 148px;
+  height: auto;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+:host ::ng-deep .home-login-button.p-button,
+:host ::ng-deep .home-register-button.p-button {
+  min-height: 44px;
+  border-radius: 999px;
+  padding: 0.65rem 1.25rem;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition:
+    transform 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+:host ::ng-deep .home-login-button.p-button {
+  border-color: transparent;
+  background: transparent;
+  color: var(--home-petrol);
+}
+
+:host ::ng-deep .home-login-button.p-button:hover {
+  background: color-mix(in srgb, var(--home-petrol) 5%, transparent);
+}
+
+:host ::ng-deep .home-register-button.p-button {
+  border-color: var(--home-amber);
+  background: var(--home-amber);
+  color: #fff;
+  box-shadow: 0 2px 5px rgb(249 154 38 / 24%);
+}
+
+:host ::ng-deep .home-register-button.p-button:hover {
+  transform: translateY(-1px);
+  background: #f28c18;
+  box-shadow: 0 5px 12px rgb(249 154 38 / 25%);
+}
+
+:host ::ng-deep .p-button:focus-visible,
+.brand-mark:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--home-amber) 55%, transparent);
+  outline-offset: 3px;
+}
+
+@media (max-width: 520px) {
+  .header-inner {
+    width: calc(100% - 2rem);
+  }
+
+  .brand-mark img {
+    width: 132px;
+  }
+
+  :host ::ng-deep .home-login-button.p-button,
+  :host ::ng-deep .home-register-button.p-button {
+    min-height: 42px;
+    padding-inline: 0.9rem;
+    font-size: 0.82rem;
+  }
+}

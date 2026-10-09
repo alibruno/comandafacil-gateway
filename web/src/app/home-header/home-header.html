@@ -1,0 +1,12 @@
+<header class="home-header">
+  <div class="header-inner">
+    <a class="brand-mark" routerLink="/" aria-label="ComandaFácil, página inicial">
+      <img ngSrc="/comanda-facil-logo.svg" width="540" height="140" priority alt="ComandaFácil" />
+    </a>
+
+    <nav class="header-actions" aria-label="Acesso à conta">
+      <p-button label="Login" type="button" [text]="true" styleClass="home-login-button" (onClick)="openAuth('login')" />
+      <p-button label="Cadastro" type="button" styleClass="home-register-button" (onClick)="openAuth('register')" />
+    </nav>
+  </div>
+</header>

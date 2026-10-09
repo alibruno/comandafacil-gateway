@@ -1,0 +1,157 @@
+@if (mode() === 'login') {
+<p-dialog [visible]="true" [modal]="true" [blockScroll]="true" [dismissableMask]="true" [closeOnEscape]="true" [focusTrap]="true" [showHeader]="false" [closable]="false" [style]="{ width: 'min(calc(100vw - 2rem), 480px)' }" [contentStyle]="{ padding: '0' }" styleClass="auth-dialog-panel" maskStyleClass="auth-dialog-mask" ariaLabelledBy="login-title" (visibleChange)="handleDialogVisibility('login', $event)">
+  <section class="auth-dialog">
+    <div class="modal-accent modal-accent--petrol"></div>
+    <div class="dialog-body">
+      <button class="dialog-close" type="button" aria-label="Fechar modal de login" (click)="close('login')">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+
+      <div class="dialog-heading">
+        <span class="heading-icon heading-icon--petrol material-symbols-outlined" aria-hidden="true">
+          lock_open
+        </span>
+        <div class="heading-copy">
+          <p class="eyebrow">Portal de gerenciamento</p>
+          <h2 id="login-title">Acesse o sistema</h2>
+        </div>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="submitLogin()" novalidate>
+        <div class="field-group">
+          <label for="login-email">Email</label>
+          <div class="input-wrap">
+            <span class="field-icon material-symbols-outlined" aria-hidden="true">mail</span>
+            <input id="login-email" class="auth-input" pInputText type="email" formControlName="email" autocomplete="email" placeholder="gerente@bistroapp.com.br" [invalid]="loginForm.controls.email.touched && loginForm.controls.email.invalid" />
+          </div>
+          @if (loginForm.controls.email.touched && loginForm.controls.email.invalid) {
+          <span class="field-error">Informe um e-mail válido.</span>
+          }
+        </div>
+
+        <div class="field-group">
+          <label for="login-password">Senha</label>
+          <div class="input-wrap">
+            <span class="field-icon material-symbols-outlined" aria-hidden="true">key</span>
+            <input id="login-password" class="auth-input" pInputText type="password" formControlName="password" autocomplete="current-password" placeholder="Sua senha" [invalid]="loginForm.controls.password.touched && loginForm.controls.password.invalid" />
+          </div>
+          @if (loginForm.controls.password.touched && loginForm.controls.password.invalid) {
+          <span class="field-error">Informe sua senha.</span>
+          }
+        </div>
+
+        <p-button label="Fazer login" type="submit" styleClass="auth-submit-button">
+          <ng-template #icon>
+            <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+          </ng-template>
+        </p-button>
+      </form>
+
+      @if (authMessage()) {
+      <p class="auth-message" role="status">{{ authMessage() }}</p>
+      }
+
+      <p class="auth-switch">
+        Ainda não tem acesso administrativo?
+        <p-button label="Criar conta" type="button" [text]="true" styleClass="auth-switch-button" (onClick)="switchMode('register')" />
+      </p>
+    </div>
+    <div class="security-strip">
+      <span class="security-indicator"></span>
+      <span>Acesso administrativo</span>
+    </div>
+  </section>
+</p-dialog>
+}
+
+@if (mode() === 'register') {
+<p-dialog [visible]="true" [modal]="true" [blockScroll]="true" [dismissableMask]="true" [closeOnEscape]="true" [focusTrap]="true" [showHeader]="false" [closable]="false" [style]="{ width: 'min(calc(100vw - 2rem), 520px)' }" [contentStyle]="{ padding: '0' }" styleClass="auth-dialog-panel" maskStyleClass="auth-dialog-mask" ariaLabelledBy="register-title" (visibleChange)="handleDialogVisibility('register', $event)">
+  <section class="auth-dialog">
+    <div class="modal-accent modal-accent--amber"></div>
+    <div class="dialog-body">
+      <button class="dialog-close" type="button" aria-label="Fechar modal de cadastro" (click)="close('register')">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+
+      <div class="dialog-heading">
+        <span class="heading-icon heading-icon--amber material-symbols-outlined" aria-hidden="true">
+          person_add
+        </span>
+        <div class="heading-copy">
+          <p class="eyebrow eyebrow--amber">Boas-vindas</p>
+          <h2 id="register-title">Criar conta</h2>
+        </div>
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="submitRegister()" novalidate>
+        <div class="field-group">
+          <label for="register-name">Nome completo</label>
+          <div class="input-wrap">
+            <span class="field-icon material-symbols-outlined" aria-hidden="true">badge</span>
+            <input id="register-name" class="auth-input" pInputText type="text" formControlName="name" autocomplete="name" placeholder="Seu nome completo" [invalid]="registerForm.controls.name.touched && registerForm.controls.name.invalid" />
+          </div>
+          @if (registerForm.controls.name.touched && registerForm.controls.name.invalid) {
+          <span class="field-error">Informe seu nome completo.</span>
+          }
+        </div>
+
+        <div class="field-group">
+          <label for="register-email">Email</label>
+          <div class="input-wrap">
+            <span class="field-icon material-symbols-outlined" aria-hidden="true">mail</span>
+            <input id="register-email" class="auth-input" pInputText type="email" formControlName="email" autocomplete="email" placeholder="seu.email@exemplo.com" [invalid]="registerForm.controls.email.touched && registerForm.controls.email.invalid" />
+          </div>
+          @if (registerForm.controls.email.touched && registerForm.controls.email.invalid) {
+          <span class="field-error">Informe um e-mail válido.</span>
+          }
+        </div>
+
+        <div class="field-grid">
+          <div class="field-group">
+            <label for="register-password">Senha</label>
+            <div class="input-wrap">
+              <span class="field-icon material-symbols-outlined" aria-hidden="true">lock</span>
+              <input id="register-password" class="auth-input" pInputText type="password" formControlName="password" autocomplete="new-password" placeholder="Mínimo 8 caracteres" [invalid]="registerForm.controls.password.touched && registerForm.controls.password.invalid" />
+            </div>
+            @if (registerForm.controls.password.touched && registerForm.controls.password.invalid) {
+            <span class="field-error">Use ao menos 8 caracteres.</span>
+            }
+          </div>
+
+          <div class="field-group">
+            <label for="register-confirm-password">Confirmar senha</label>
+            <div class="input-wrap">
+              <span class="field-icon material-symbols-outlined" aria-hidden="true">lock_reset</span>
+              <input id="register-confirm-password" class="auth-input" pInputText type="password" formControlName="confirmPassword" autocomplete="new-password" placeholder="Repita sua senha" [invalid]="registerForm.controls.confirmPassword.touched && (registerForm.controls.confirmPassword.invalid || registerForm.hasError('passwordMismatch'))" />
+            </div>
+            @if (registerForm.controls.confirmPassword.touched && registerForm.controls.confirmPassword.invalid) {
+            <span class="field-error">Confirme sua senha.</span>
+            } @else if (registerForm.controls.confirmPassword.touched && registerForm.hasError('passwordMismatch')) {
+            <span class="field-error">As senhas não coincidem.</span>
+            }
+          </div>
+        </div>
+
+        <p-button label="Concluir cadastro" type="submit" styleClass="auth-submit-button auth-submit-button--amber">
+          <ng-template #icon>
+            <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+          </ng-template>
+        </p-button>
+      </form>
+
+      @if (authMessage()) {
+      <p class="auth-message" role="status">{{ authMessage() }}</p>
+      }
+
+      <p class="auth-switch">
+        Já possui uma conta?
+        <p-button label="Fazer login" type="button" [text]="true" styleClass="auth-switch-button auth-switch-button--petrol" (onClick)="switchMode('login')" />
+      </p>
+    </div>
+    <div class="security-strip">
+      <span class="security-indicator security-indicator--amber"></span>
+      <span>Cadastro para equipe do restaurante</span>
+    </div>
+  </section>
+</p-dialog>
+}
