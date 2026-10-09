@@ -1,0 +1,21 @@
+services:
+  postgres:
+    container_name: comandafacil_postgres
+    image: postgres:18
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${DATABASE_USERNAME:-postgres}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD:-admin}
+      - POSTGRES_DB=${DATABASE_NAME:-comandafacil_db}
+      - PGDATA=/var/lib/postgresql/18/docker/pgdata
+    volumes:
+      - pgdata:/var/lib/postgresql
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+
+volumes:
+  pgdata:
