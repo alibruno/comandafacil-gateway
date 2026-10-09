@@ -1,8 +1,9 @@
-import { Component, inject, model, signal } from '@angular/core';
+import { Component, inject, model } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ButtonModule } from '@openng/optimus-ui/button';
 import { DialogModule } from '@openng/optimus-ui/dialog';
 import { InputTextModule } from '@openng/optimus-ui/inputtext';
+import { Router } from '@angular/router';
 import { AuthMode } from '../home-page.types';
 
 function passwordsMatch(control: AbstractControl): ValidationErrors | null {
@@ -20,9 +21,9 @@ function passwordsMatch(control: AbstractControl): ValidationErrors | null {
 })
 export class HomeAuth {
   private readonly formBuilder = inject(FormBuilder);
+  private readonly router = inject(Router);
 
   readonly mode = model<AuthMode | null>(null);
-  protected readonly authMessage = signal('');
   protected readonly loginForm = this.formBuilder.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required],
@@ -40,7 +41,6 @@ export class HomeAuth {
     }
 
     this.mode.set(null);
-    this.authMessage.set('');
   }
 
   protected handleDialogVisibility(mode: AuthMode, visible: boolean): void {
@@ -50,7 +50,6 @@ export class HomeAuth {
   }
 
   protected switchMode(mode: AuthMode): void {
-    this.authMessage.set('');
     this.mode.set(mode);
   }
 
@@ -60,7 +59,7 @@ export class HomeAuth {
       return;
     }
 
-    this.authMessage.set('Formulário validado. A integração de acesso ainda não está disponível.');
+    void this.router.navigateByUrl('/restaurante');
   }
 
   protected submitRegister(): void {
@@ -69,6 +68,6 @@ export class HomeAuth {
       return;
     }
 
-    this.authMessage.set('Formulário validado. A integração de cadastro ainda não está disponível.');
+    void this.router.navigateByUrl('/restaurante');
   }
 }

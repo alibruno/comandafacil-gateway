@@ -47,10 +47,6 @@
         </p-button>
       </form>
 
-      @if (authMessage()) {
-      <p class="auth-message" role="status">{{ authMessage() }}</p>
-      }
-
       <p class="auth-switch">
         Ainda não tem acesso administrativo?
         <p-button label="Criar conta" type="button" [text]="true" styleClass="auth-switch-button" (onClick)="switchMode('register')" />
@@ -138,10 +134,6 @@
           </ng-template>
         </p-button>
       </form>
-
-      @if (authMessage()) {
-      <p class="auth-message" role="status">{{ authMessage() }}</p>
-      }
 
       <p class="auth-switch">
         Já possui uma conta?
