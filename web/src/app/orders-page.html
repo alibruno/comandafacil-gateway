@@ -1,0 +1,119 @@
+<app-restaurant-header pageTitle="Gerenciamento de Pedidos" activeSection="orders" />
+
+<main class="min-h-screen bg-[#f7f9fa] text-[#152e30] lg:ml-64">
+  <section class="mx-auto max-w-[1600px] space-y-7 px-5 py-7 md:px-8 lg:px-10">
+    <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+      <p class="max-w-2xl text-sm leading-6 text-[#77818c]">
+        Acompanhe o fluxo da cozinha, atualize comandas e mantenha o atendimento sincronizado.
+      </p>
+      <p-button label="Novo pedido" type="button" styleClass="new-order-button" (onClick)="openCreateDialog()">
+        <ng-template #icon>
+          <span class="material-symbols-outlined" aria-hidden="true">add</span>
+        </ng-template>
+      </p-button>
+    </div>
+
+    <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Resumo dos pedidos">
+      <article class="summary-item">
+        <div>
+          <p>Pedidos em andamento</p>
+          <strong>{{ activeCount() }}</strong>
+        </div>
+        <span class="summary-icon material-symbols-outlined" aria-hidden="true">receipt_long</span>
+      </article>
+      <article class="summary-item">
+        <div>
+          <p>Na cozinha</p>
+          <strong>{{ statusCounts().cozinha }}</strong>
+        </div>
+        <span class="summary-icon summary-icon--muted material-symbols-outlined" aria-hidden="true">soup_kitchen</span>
+      </article>
+      <article class="summary-item">
+        <div>
+          <p>Prontos para servir</p>
+          <strong>{{ statusCounts().pronto }}</strong>
+        </div>
+        <span class="summary-icon summary-icon--amber material-symbols-outlined" aria-hidden="true">task_alt</span>
+      </article>
+      <article class="summary-item summary-item--dark">
+        <div>
+          <p>Finalizados hoje</p>
+          <strong>{{ statusCounts().finalizado }}</strong>
+        </div>
+        <span class="summary-icon summary-icon--dark material-symbols-outlined" aria-hidden="true">check_circle</span>
+      </article>
+    </section>
+
+    <section class="space-y-4" aria-labelledby="orders-list-title">
+      <div class="flex flex-col justify-between gap-4 rounded-xl border border-[#dccdc1]/55 bg-white p-4 shadow-sm md:flex-row md:items-center">
+        <div class="flex items-center gap-2">
+          <h2 id="orders-list-title" class="font-serif text-xl font-bold">Pedidos do turno</h2>
+          <span class="rounded-full bg-[#152e30]/10 px-2.5 py-1 text-xs font-bold text-[#152e30]">
+            {{ filteredOrders().length }}
+          </span>
+        </div>
+        <div class="flex flex-wrap gap-1" role="group" aria-label="Filtrar pedidos por etapa">
+          @for (filter of filters; track filter.value) {
+          <p-button [label]="filter.label + ' (' + filterCounts()[filter.value] + ')'" type="button" [text]="activeFilter() !== filter.value" [styleClass]="activeFilter() === filter.value ? 'order-filter order-filter--active' : 'order-filter'" (onClick)="setFilter(filter.value)" />
+          }
+        </div>
+      </div>
+
+      <div class="grid gap-3">
+        @for (order of filteredOrders(); track order.id) {
+        <article class="order-card">
+          <div class="order-main">
+            <div class="order-heading">
+              <div class="flex flex-wrap items-center gap-2.5">
+                <h3>{{ order.id }}</h3>
+                <span class="table-label">{{ order.table }}</span>
+              </div>
+              <span class="status-pill" [class]="statusClass(order.status)">
+                <span class="status-dot" aria-hidden="true"></span>
+                {{ statusLabel(order.status) }}
+              </span>
+            </div>
+            <p class="order-items">{{ itemsSummary(order.items) }}</p>
+            @if (order.notes) {
+            <p class="order-note">
+              <span class="material-symbols-outlined" aria-hidden="true">chat</span>
+              {{ order.notes }}
+            </p>
+            }
+            <div class="order-meta">
+              <span>{{ order.waiter }} · {{ order.openedAt }}</span>
+              <strong>{{ formatCurrency(order.total) }}</strong>
+            </div>
+          </div>
+          <div class="order-actions">
+            <p-button label="Visualizar" type="button" [text]="true" styleClass="view-order-button" (onClick)="openViewDialog(order)" />
+            <p-button label="Editar" type="button" [text]="true" styleClass="edit-order-button" (onClick)="openEditDialog(order)" />
+            <p-button label="Excluir" type="button" [text]="true" styleClass="delete-order-button" (onClick)="openDeleteConfirmation(order)" />
+          </div>
+        </article>
+        } @empty {
+        <div class="empty-state">
+          <span class="material-symbols-outlined" aria-hidden="true">receipt_long</span>
+          <p>Nenhum pedido nesta etapa.</p>
+        </div>
+        }
+      </div>
+    </section>
+  </section>
+</main>
+
+<app-order-dialog [visible]="dialogVisible()" [mode]="dialogMode()" [order]="selectedOrder()" (close)="closeDialog()" (save)="saveOrder($event)" (editRequested)="editFromView($event)" />
+
+<p-dialog [visible]="deleteTarget() !== null" [modal]="true" [blockScroll]="true" [dismissableMask]="true" [closeOnEscape]="true" [style]="{ width: 'min(calc(100vw - 2rem), 420px)' }" styleClass="delete-order-dialog" ariaLabelledBy="delete-order-title" (visibleChange)="closeDeleteConfirmation($event)">
+  @if (deleteTarget(); as order) {
+  <div class="delete-confirmation">
+    <span class="delete-confirmation-icon material-symbols-outlined" aria-hidden="true">delete</span>
+    <h2 id="delete-order-title">Excluir pedido {{ order.id }}?</h2>
+    <p>Esta ação remove o pedido de {{ order.table }} do turno e não pode ser desfeita.</p>
+    <div class="delete-confirmation-actions">
+      <p-button label="Manter pedido" type="button" severity="secondary" [outlined]="true" (onClick)="deleteTarget.set(null)" />
+      <p-button label="Excluir pedido" type="button" severity="danger" styleClass="confirm-delete-order" (onClick)="confirmDeleteOrder()" />
+    </div>
+  </div>
+  }
+</p-dialog>

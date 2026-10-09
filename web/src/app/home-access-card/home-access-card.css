@@ -1,0 +1,176 @@
+:host {
+  display: block;
+  min-width: 0;
+  animation: card-arrive 550ms ease both;
+}
+
+.access-link {
+  display: block;
+  height: 100%;
+  border-radius: 1.5rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+:host ::ng-deep .access-card.p-card {
+  height: 100%;
+  min-height: 278px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--home-linen) 53%, white);
+  border-radius: 1.5rem;
+  background: #fff;
+  box-shadow: 0 3px 12px rgb(21 46 48 / 4%);
+  transition:
+    transform 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+:host ::ng-deep .access-card .p-card-body {
+  height: 100%;
+  padding: 2.4rem 2.5rem;
+}
+
+:host ::ng-deep .access-card .p-card-content {
+  height: 100%;
+  padding: 0;
+}
+
+.access-card-content {
+  position: relative;
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.access-icon {
+  display: grid;
+  width: 66px;
+  height: 66px;
+  flex: 0 0 66px;
+  place-items: center;
+  margin-bottom: 2rem;
+  border-radius: 18px;
+  background: var(--home-petrol);
+  box-shadow: 0 4px 8px rgb(21 46 48 / 14%);
+  color: var(--home-amber);
+  transition: transform 220ms ease;
+}
+
+.access-icon .material-symbols-outlined {
+  font-size: 30px;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 500,
+    'GRAD' 0,
+    'opsz' 32;
+}
+
+.access-card-content--amber .access-icon {
+  background: var(--home-amber);
+  color: var(--home-petrol);
+  box-shadow: 0 4px 8px rgb(249 154 38 / 20%);
+}
+
+h2 {
+  max-width: 18ch;
+  margin: 0;
+  color: var(--home-petrol);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.6rem, 2.4vw, 2rem);
+  font-weight: 600;
+  line-height: 1.25;
+  transition: color 180ms ease;
+}
+
+.access-arrow {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: var(--home-gray);
+  font-size: 1.3rem;
+  opacity: 0;
+  transform: translate(-4px, 4px);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+.access-card-content--amber .access-arrow {
+  color: var(--home-amber);
+}
+
+.access-link:hover :host ::ng-deep .access-card.p-card {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--home-petrol) 20%, white);
+  box-shadow:
+    0 16px 30px rgb(21 46 48 / 9%),
+    0 5px 12px rgb(249 154 38 / 7%);
+}
+
+:host ::ng-deep .access-card-content--amber .access-card.p-card {
+  border-color: color-mix(in srgb, var(--home-amber) 26%, white);
+}
+
+.access-link:hover h2 {
+  color: var(--home-terracotta);
+}
+
+.access-link:hover .access-icon {
+  transform: scale(1.05);
+}
+
+.access-link:hover .access-arrow,
+.access-link:focus-visible .access-arrow {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+.access-link:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--home-amber) 55%, transparent);
+  outline-offset: 4px;
+}
+
+@keyframes card-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 700px) {
+  :host ::ng-deep .access-card.p-card {
+    min-height: 230px;
+  }
+
+  :host ::ng-deep .access-card .p-card-body {
+    padding: 1.5rem;
+  }
+
+  .access-icon {
+    width: 58px;
+    height: 58px;
+    flex-basis: 58px;
+    margin-bottom: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.55rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host,
+  :host ::ng-deep .access-card.p-card,
+  .access-icon,
+  h2,
+  .access-arrow {
+    animation: none;
+    transition: none;
+  }
+}

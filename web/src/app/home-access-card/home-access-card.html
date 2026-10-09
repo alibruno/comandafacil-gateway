@@ -1,0 +1,11 @@
+<a class="access-link" [routerLink]="route()">
+  <p-card styleClass="access-card">
+    <div class="access-card-content" [class.access-card-content--amber]="accent() === 'amber'">
+      <span class="access-icon" aria-hidden="true">
+        <span class="material-symbols-outlined">{{ icon() }}</span>
+      </span>
+      <h2>{{ title() }}</h2>
+      <span class="access-arrow material-symbols-outlined" aria-hidden="true">north_east</span>
+    </div>
+  </p-card>
+</a>
