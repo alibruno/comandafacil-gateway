@@ -1,10 +1,10 @@
-package br.com.comandafacil.pedidos;
+package br.com.comandafacil.restaurantes;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PedidosApplicationTests {
+class RestaurantesApplicationTests {
 
 	@Test
 	void contextLoads() {
