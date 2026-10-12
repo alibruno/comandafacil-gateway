@@ -1,0 +1,12 @@
+<div class="home-shell">
+  <app-home-header (authRequested)="openAuth($event)" />
+
+  <main class="home-main">
+    <app-home-hero />
+    <div class="access-grid">
+      <app-home-access-card title="Gerenciamento do Restaurante" icon="table_restaurant" route="/restaurante" />
+      <app-home-access-card title="Gerenciamento de Pedidos" icon="receipt_long" route="/pedidos" accent="amber" />
+    </div>
+  </main>
+  <app-home-auth [(mode)]="authMode" />
+</div>

@@ -1,0 +1,186 @@
+<p-dialog [visible]="visible()" [modal]="true" [blockScroll]="true" [dismissableMask]="true" [closeOnEscape]="true" [focusTrap]="true" [showHeader]="false" [closable]="false" [style]="{ width: 'min(calc(100vw - 2rem), 560px)' }" [contentStyle]="{ padding: '0' }" styleClass="order-dialog-panel" maskStyleClass="order-dialog-mask" ariaLabelledBy="order-dialog-title" (visibleChange)="onVisibleChange($event)">
+  <section class="order-dialog-content">
+    <div class="dialog-accent"></div>
+    <div class="dialog-body">
+      <header class="dialog-heading">
+        <div class="dialog-title-group">
+          <span class="dialog-brand-icon material-symbols-outlined" aria-hidden="true">receipt_long</span>
+          <div>
+            @if (order(); as currentOrder) {
+            <p class="dialog-eyebrow">{{ currentOrder.table }} · {{ currentOrder.waiter }} · {{ currentOrder.openedAt }}</p>
+            } @else {
+            <p class="dialog-eyebrow">Cozinha &amp; atendimento</p>
+            }
+            <h2 id="order-dialog-title">
+              @if (mode() === 'create') {
+              Novo pedido
+              } @else if (mode() === 'edit') {
+              Editar pedido #{{ order()?.id }}
+              } @else {
+              Pedido #{{ order()?.id }}
+              }
+            </h2>
+          </div>
+        </div>
+        <button class="dialog-close" type="button" aria-label="Fechar diálogo" (click)="close.emit()">
+          <span class="material-symbols-outlined" aria-hidden="true">close</span>
+        </button>
+      </header>
+
+      @if (mode() === 'view') {
+      @if (order(); as currentOrder) {
+      <div class="view-summary">
+        <span class="view-status" [class]="'view-status--' + currentOrder.status">
+          {{ statusLabel(currentOrder.status) }}
+        </span>
+        <span>Atendente: {{ currentOrder.waiter }}</span>
+        <span>{{ currentOrder.openedAt }}</span>
+      </div>
+      <h3 class="items-title">Itens do pedido</h3>
+      <div class="item-list view-item-list">
+        @for (item of currentOrder.items; track item.id) {
+        <article class="line-item">
+          <div class="line-copy">
+            <strong>{{ item.name }}</strong>
+            <span>{{ item.detail }} · {{ formatCurrency(item.unitPrice) }} un.</span>
+          </div>
+          <span class="view-quantity">{{ item.quantity }} × {{ formatCurrency(item.unitPrice) }}</span>
+          <strong class="line-total">{{ formatCurrency(itemTotal(item)) }}</strong>
+        </article>
+        }
+      </div>
+      @if (currentOrder.notes) {
+      <div class="order-notes"><strong>Observações da cozinha:</strong> {{ currentOrder.notes }}</div>
+      }
+      <div class="subtotal-row"><span>Total do pedido</span><strong>{{ formatCurrency(currentOrder.total) }}</strong></div>
+      }
+      <footer class="dialog-actions">
+        <p-button label="Fechar" type="button" severity="secondary" [outlined]="true" (onClick)="close.emit()" />
+        @if (order(); as currentOrder) {
+        <p-button label="Editar pedido" type="button" styleClass="save-order-button" (onClick)="editRequested.emit(currentOrder)" />
+        }
+      </footer>
+      } @else {
+      <form [formGroup]="orderForm" (ngSubmit)="saveOrder()" novalidate>
+        <fieldset class="status-fieldset">
+          <legend>Etapa do pedido</legend>
+          <div class="status-switch" role="group" aria-label="Etapa do pedido">
+            @for (status of statusChoices; track status.value) {
+            <p-button [label]="status.label" type="button" [text]="orderForm.controls.status.value !== status.value" [styleClass]="orderForm.controls.status.value === status.value ? 'status-choice status-choice--active' : 'status-choice'" (onClick)="setStatus(status.value)" />
+            }
+          </div>
+        </fieldset>
+
+        <div class="form-grid">
+          <div class="field-group">
+            <label for="order-table">Mesa / local</label>
+            <select id="order-table" formControlName="table">
+              <option value="Mesa 01 · Salão">Mesa 01 · Salão</option>
+              <option value="Mesa 02 · Salão">Mesa 02 · Salão</option>
+              <option value="Mesa 05 · Varanda">Mesa 05 · Varanda</option>
+              <option value="Mesa 08 · Gazebo">Mesa 08 · Gazebo</option>
+              <option value="Balcão · Bar">Balcão · Bar</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label for="order-waiter">Atendente</label>
+            <select id="order-waiter" formControlName="waiter">
+              <option value="Jean-Pierre">Jean-Pierre</option>
+              <option value="Marcella V.">Marcella V.</option>
+              <option value="Thomas B.">Thomas B.</option>
+            </select>
+          </div>
+        </div>
+
+        <section class="items-section" aria-labelledby="order-items-title">
+          <div class="items-heading">
+            <h3 id="order-items-title">Itens do pedido</h3>
+            <span>{{ orderForm.controls.items.length }} {{ orderForm.controls.items.length === 1 ? 'item' : 'itens' }}</span>
+          </div>
+
+          <div class="item-list" formArrayName="items">
+            @for (item of orderForm.controls.items.controls; track item.controls.id.value; let index = $index) {
+            <article class="line-item" [formGroupName]="index">
+              <div class="line-copy">
+                <strong>{{ item.controls.name.value }}</strong>
+                <span>{{ item.controls.detail.value || formatCurrency(item.controls.unitPrice.value) + ' un.' }}</span>
+                @if (item.controls.note.value) {
+                <small><span class="material-symbols-outlined" aria-hidden="true">restaurant</span>{{ item.controls.note.value }}</small>
+                }
+              </div>
+              <div class="item-controls">
+                <div class="quantity-stepper" [attr.aria-label]="'Quantidade de ' + item.controls.name.value">
+                  <p-button label="−" type="button" styleClass="quantity-change" [attr.aria-label]="'Diminuir ' + item.controls.name.value" (onClick)="adjustQuantity(index, -1)" />
+                  <span>{{ item.controls.quantity.value }}</span>
+                  <p-button label="+" type="button" styleClass="quantity-change" [attr.aria-label]="'Aumentar ' + item.controls.name.value" (onClick)="adjustQuantity(index, 1)" />
+                </div>
+                <strong class="line-total">{{ formatCurrency(item.controls.unitPrice.value * item.controls.quantity.value) }}</strong>
+                <p-button type="button" [text]="true" styleClass="remove-item-button" [attr.aria-label]="'Remover ' + item.controls.name.value" (onClick)="removeItem(index)">
+                  <ng-template #icon><span class="material-symbols-outlined" aria-hidden="true">delete</span></ng-template>
+                </p-button>
+              </div>
+            </article>
+            } @empty {
+            <p class="empty-items">Adicione pelo menos um item ao pedido.</p>
+            }
+          </div>
+
+          @if (orderForm.controls.items.touched && orderForm.controls.items.length === 0) {
+          <span class="field-error">O pedido precisa ter ao menos um item.</span>
+          }
+
+          @if (addingItem) {
+          <div class="new-item-form" [formGroup]="newItemForm">
+            <div class="new-item-fields">
+              <div class="field-group">
+                <label for="new-item-name">Nome do item</label>
+                <input id="new-item-name" pInputText formControlName="name" placeholder="Ex.: Croque Monsieur" />
+                @if (newItemForm.controls.name.touched && newItemForm.controls.name.invalid) {
+                <span class="field-error">Informe o nome do item.</span>
+                }
+              </div>
+              <div class="field-group">
+                <label for="new-item-detail">Descrição</label>
+                <input id="new-item-detail" pInputText formControlName="detail" placeholder="Opcional" />
+              </div>
+              <div class="field-group">
+                <label for="new-item-price">Preço unitário</label>
+                <input id="new-item-price" pInputText type="number" min="0.01" step="0.01" formControlName="unitPrice" />
+                @if (newItemForm.controls.unitPrice.touched && newItemForm.controls.unitPrice.invalid) {
+                <span class="field-error">Informe um preço maior que zero.</span>
+                }
+              </div>
+              <div class="field-group">
+                <label for="new-item-quantity">Quantidade</label>
+                <input id="new-item-quantity" pInputText type="number" min="1" step="1" formControlName="quantity" />
+                @if (newItemForm.controls.quantity.touched && newItemForm.controls.quantity.invalid) {
+                <span class="field-error">A quantidade mínima é 1.</span>
+                }
+              </div>
+            </div>
+            <div class="new-item-actions">
+              <p-button label="Cancelar" type="button" [text]="true" styleClass="cancel-add-item" (onClick)="addingItem = false" />
+              <p-button label="Adicionar item" type="button" styleClass="add-item-confirm" (onClick)="addItem()" />
+            </div>
+          </div>
+          } @else {
+          <p-button label="Adicionar item ao pedido" type="button" [outlined]="true" styleClass="add-item-button" (onClick)="addingItem = true" />
+          }
+        </section>
+
+        <div class="field-group">
+          <label for="order-notes">Observações gerais da cozinha</label>
+          <textarea id="order-notes" rows="2" formControlName="notes" placeholder="Ponto da carne, restrições ou instruções especiais"></textarea>
+        </div>
+
+        <div class="subtotal-row"><span>Subtotal dos itens</span><strong>{{ formatCurrency(itemsSubtotal()) }}</strong></div>
+
+        <footer class="dialog-actions">
+          <p-button label="Cancelar" type="button" severity="secondary" [outlined]="true" (onClick)="close.emit()" />
+          <p-button [label]="mode() === 'create' ? 'Criar pedido' : 'Salvar alterações'" type="submit" styleClass="save-order-button" />
+        </footer>
+      </form>
+      }
+    </div>
+  </section>
+</p-dialog>

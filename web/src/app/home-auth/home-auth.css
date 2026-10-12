@@ -1,0 +1,320 @@
+:host ::ng-deep .auth-dialog-mask {
+  background: rgb(21 46 48 / 42%);
+  backdrop-filter: blur(8px);
+}
+
+:host ::ng-deep .auth-dialog-panel.p-dialog {
+  overflow: hidden;
+  border: 1px solid rgb(220 205 193 / 45%);
+  border-radius: 1.5rem;
+  background: #fff;
+  box-shadow:
+    0 20px 36px -6px rgb(21 46 48 / 18%),
+    0 8px 16px -4px rgb(21 46 48 / 8%);
+}
+
+:host ::ng-deep .auth-dialog-panel .p-dialog-content {
+  overflow: visible;
+  border-radius: inherit;
+}
+
+.auth-dialog {
+  position: relative;
+  max-height: min(90vh, 760px);
+  overflow-y: auto;
+  color: var(--home-petrol);
+}
+
+.modal-accent {
+  height: 6px;
+  background: linear-gradient(90deg, var(--home-petrol), var(--home-amber), var(--home-terracotta));
+}
+
+.modal-accent--amber {
+  background: linear-gradient(90deg, var(--home-petrol), var(--home-amber), #8b5000);
+}
+
+.dialog-body {
+  padding: 1.75rem 2rem 1.5rem;
+}
+
+.dialog-close {
+  position: absolute;
+  top: 1.45rem;
+  right: 1.45rem;
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--home-gray);
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.dialog-close:hover {
+  background: color-mix(in srgb, var(--home-linen) 35%, transparent);
+  color: var(--home-petrol);
+}
+
+.dialog-close .material-symbols-outlined {
+  font-size: 22px;
+}
+
+.dialog-close:focus-visible,
+:host ::ng-deep .p-button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--home-amber) 55%, transparent);
+  outline-offset: 3px;
+}
+
+.dialog-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.55rem;
+  padding-right: 1.5rem;
+}
+
+.heading-icon {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  place-items: center;
+  border-radius: 12px;
+  font-size: 24px;
+}
+
+.heading-icon--petrol {
+  background: color-mix(in srgb, var(--home-petrol) 10%, white);
+  color: var(--home-petrol);
+}
+
+.heading-icon--amber {
+  background: color-mix(in srgb, var(--home-amber) 17%, white);
+  color: #8b5000;
+}
+
+.heading-copy {
+  min-width: 0;
+}
+
+.eyebrow {
+  margin: 0 0 0.45rem;
+  color: var(--home-terracotta);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.eyebrow--amber {
+  color: #8b5000;
+}
+
+h2 {
+  margin: 0;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.8rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.dialog-description {
+  margin: 0.5rem 0 0;
+  color: var(--home-gray);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+form {
+  display: grid;
+  gap: 1rem;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.field-group {
+  display: grid;
+  gap: 0.45rem;
+}
+
+label {
+  color: var(--home-gray);
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.field-icon {
+  position: absolute;
+  left: 0.85rem;
+  z-index: 1;
+  color: var(--home-gray);
+  font-size: 20px;
+  pointer-events: none;
+}
+
+.auth-input {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid color-mix(in srgb, var(--home-gray) 28%, white);
+  border-radius: 10px;
+  background: var(--home-light);
+  color: var(--home-petrol);
+  font: inherit;
+  font-size: 0.86rem;
+  padding: 0.7rem 0.85rem 0.7rem 2.8rem;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease;
+}
+
+.auth-input::placeholder {
+  color: color-mix(in srgb, var(--home-gray) 58%, white);
+}
+
+.auth-input:focus {
+  border-color: var(--home-amber);
+  outline: 0;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgb(249 154 38 / 22%);
+}
+
+.auth-input.p-invalid {
+  border-color: #ba1a1a;
+}
+
+.field-error {
+  color: #a12620;
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+:host ::ng-deep .auth-submit-button.p-button {
+  width: 100%;
+  min-height: 46px;
+  margin-top: 0.2rem;
+  border: 0;
+  border-radius: 10px;
+  background: var(--home-petrol);
+  color: #fff;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 600;
+  transition:
+    background-color 160ms ease,
+    transform 160ms ease;
+}
+
+:host ::ng-deep .auth-submit-button.p-button:hover {
+  transform: translateY(-1px);
+  background: #1f4043;
+}
+
+:host ::ng-deep .auth-submit-button--amber.p-button {
+  background: var(--home-amber);
+  color: #fff;
+}
+
+:host ::ng-deep .auth-submit-button--amber.p-button:hover {
+  background: #f28c18;
+}
+
+.auth-switch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  margin: 1.5rem 0 0;
+  border-top: 1px solid color-mix(in srgb, var(--home-linen) 40%, white);
+  color: var(--home-gray);
+  font-size: 0.76rem;
+  padding-top: 1.15rem;
+  text-align: center;
+}
+
+:host ::ng-deep .auth-switch-button.p-button {
+  border: 0;
+  background: transparent;
+  color: var(--home-amber);
+  font: inherit;
+  font-size: inherit;
+  font-weight: 700;
+  padding: 0.2rem;
+}
+
+:host ::ng-deep .auth-switch-button--petrol.p-button {
+  color: var(--home-petrol);
+}
+
+.security-strip {
+  display: flex;
+  min-height: 42px;
+  align-items: center;
+  gap: 0.55rem;
+  background: color-mix(in srgb, var(--home-linen) 27%, white);
+  color: var(--home-gray);
+  font-size: 0.68rem;
+  padding: 0.65rem 2rem;
+}
+
+.security-indicator {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-radius: 50%;
+  background: var(--home-petrol);
+}
+
+.security-indicator--amber {
+  background: var(--home-amber);
+}
+
+.auth-message {
+  margin: 1rem 0 0;
+  border-radius: 8px;
+  background: #e8efe2;
+  color: #34513a;
+  font-size: 0.76rem;
+  line-height: 1.5;
+  padding: 0.75rem;
+}
+
+@media (max-width: 520px) {
+  .dialog-body {
+    padding: 1.5rem 1.25rem 1.25rem;
+  }
+
+  .dialog-close {
+    top: 1rem;
+    right: 1rem;
+  }
+
+  h2 {
+    font-size: 1.55rem;
+  }
+
+  .field-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .security-strip {
+    padding-inline: 1.25rem;
+  }
+}

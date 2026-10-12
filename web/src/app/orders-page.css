@@ -1,0 +1,375 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+:host ::ng-deep .new-order-button.p-button {
+  min-height: 44px;
+  border-color: #f99a26;
+  border-radius: 10px;
+  background: #f99a26;
+  color: #152e30;
+  font-weight: 700;
+  padding-inline: 1rem;
+  transition:
+    transform 150ms ease,
+    background-color 150ms ease;
+}
+
+:host ::ng-deep .new-order-button.p-button:hover {
+  transform: translateY(-1px);
+  border-color: #a13711;
+  background: #a13711;
+  color: white;
+}
+
+.summary-item {
+  display: flex;
+  min-height: 116px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border: 1px solid rgb(220 205 193 / 60%);
+  border-radius: 12px;
+  background: white;
+  padding: 1.15rem 1.25rem;
+  box-shadow: 0 4px 16px -2px rgb(21 46 48 / 6%);
+}
+
+.summary-item p {
+  margin: 0;
+  color: #77818c;
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+
+.summary-item strong {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.summary-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 10px;
+  background: #152e30;
+  flex: 0 0 auto;
+  white-space: nowrap;
+  font-size: 22px;
+}
+
+.summary-icon--muted {
+  background: #e5ebeb;
+  color: #152e30;
+}
+
+:host ::ng-deep .new-order-button.p-button .p-button-label {
+  white-space: nowrap;
+}
+.summary-icon--amber {
+  background: rgb(249 154 38 / 20%);
+  color: #a13711;
+}
+
+.summary-item--dark {
+  border-color: #152e30;
+  background: #152e30;
+  color: white;
+}
+
+.summary-item--dark p {
+  color: #dccdc1;
+}
+
+.summary-icon--dark {
+  background: rgb(255 255 255 / 10%);
+  color: #f99a26;
+}
+
+:host ::ng-deep .order-filter.p-button {
+  min-height: 36px;
+  border-radius: 8px;
+  color: #77818c;
+  font-size: 0.74rem;
+  font-weight: 600;
+  padding: 0.45rem 0.65rem;
+}
+
+:host ::ng-deep .order-filter--active.p-button {
+  border-color: #152e30;
+  background: #152e30;
+  color: white;
+}
+
+.order-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  border: 1px solid rgb(220 205 193 / 65%);
+  border-radius: 12px;
+  background: white;
+  padding: 1.15rem 1.25rem;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.order-card:hover {
+  border-color: rgb(249 154 38 / 65%);
+  box-shadow: 0 8px 20px -8px rgb(21 46 48 / 14%);
+}
+
+.order-main {
+  min-width: 0;
+  flex: 1;
+}
+
+.order-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.order-heading h3 {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.table-label {
+  border-radius: 6px;
+  background: #f4f6f8;
+  color: #152e30;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.28rem 0.55rem;
+}
+
+.status-pill {
+  display: inline-flex;
+  min-height: 26px;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 999px;
+  font-size: 0.64rem;
+  font-weight: 700;
+  padding: 0.3rem 0.65rem;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.status--cozinha {
+  background: #e5ebeb;
+  color: #152e30;
+}
+
+.status--preparo {
+  background: rgb(249 154 38 / 18%);
+  color: #8b5000;
+}
+
+.status--pronto {
+  background: #e8f2e5;
+  color: #38623b;
+}
+
+.status--finalizado {
+  background: #f4f6f8;
+  color: #77818c;
+}
+
+.order-items {
+  overflow: hidden;
+  margin: 0.65rem 0 0;
+  color: #77818c;
+  font-size: 0.76rem;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+}
+
+.order-note {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.55rem 0 0;
+  color: #77818c;
+  font-size: 0.7rem;
+}
+
+.order-note .material-symbols-outlined {
+  color: #a13711;
+  font-size: 16px;
+}
+
+.order-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-top: 1px solid rgb(220 205 193 / 38%);
+  margin-top: 0.75rem;
+  padding-top: 0.65rem;
+  color: #77818c;
+  font-size: 0.68rem;
+}
+
+.order-meta strong {
+  color: #152e30;
+  font-size: 0.82rem;
+}
+
+.order-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+:host ::ng-deep .view-order-button.p-button,
+:host ::ng-deep .edit-order-button.p-button,
+:host ::ng-deep .delete-order-button.p-button {
+  border-radius: 7px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding-inline: 0.45rem;
+}
+
+:host ::ng-deep .view-order-button.p-button,
+:host ::ng-deep .edit-order-button.p-button {
+  color: #152e30;
+}
+
+:host ::ng-deep .view-order-button.p-button:hover,
+:host ::ng-deep .edit-order-button.p-button:hover {
+  background: rgb(21 46 48 / 8%);
+}
+
+:host ::ng-deep .delete-order-button.p-button {
+  color: #a13711;
+}
+
+:host ::ng-deep .delete-order-button.p-button:hover {
+  background: rgb(161 55 17 / 8%);
+}
+
+:host ::ng-deep .delete-order-dialog.p-dialog {
+  border: 1px solid rgb(220 205 193 / 70%);
+  border-radius: 12px;
+  box-shadow: 0 20px 48px rgb(21 46 48 / 18%);
+}
+
+.delete-confirmation {
+  display: grid;
+  justify-items: center;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.delete-confirmation-icon {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border-radius: 12px;
+  background: rgb(161 55 17 / 10%);
+  color: #a13711;
+  font-size: 24px;
+}
+
+.delete-confirmation h2 {
+  margin: 1rem 0 0;
+  color: #152e30;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.3rem;
+}
+
+.delete-confirmation p {
+  margin: 0.5rem 0 0;
+  color: #77818c;
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+.delete-confirmation-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 1.25rem;
+}
+
+:host ::ng-deep .confirm-delete-order.p-button {
+  border-color: #a13711;
+  background: #a13711;
+}
+
+:host ::ng-deep .confirm-delete-order.p-button:hover {
+  border-color: #842500;
+  background: #842500;
+}
+
+:host ::ng-deep .edit-order-button.p-button {
+  color: #152e30;
+}
+
+:host ::ng-deep .edit-order-button.p-button:hover {
+  background: rgb(21 46 48 / 8%);
+}
+
+.empty-state {
+  display: grid;
+  min-height: 190px;
+  place-content: center;
+  justify-items: center;
+  gap: 0.5rem;
+  border: 1px dashed rgb(119 129 140 / 35%);
+  border-radius: 12px;
+  color: #77818c;
+}
+
+.empty-state .material-symbols-outlined {
+  font-size: 30px;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 0.84rem;
+}
+
+:where(button, a, input, select, textarea):focus-visible,
+:host ::ng-deep .p-button:focus-visible {
+  outline: 3px solid rgb(249 154 38 / 48%);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .order-card {
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+
+  .order-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .order-actions {
+    padding-top: 1.7rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+}

@@ -1,0 +1,22 @@
+:host ::ng-deep .header-logout-button.p-button {
+  min-height: 38px;
+  border-radius: 8px;
+  color: #77818c;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.45rem 0.65rem;
+}
+
+:host ::ng-deep .header-logout-button.p-button:hover {
+  background: rgb(161 55 17 / 8%);
+  color: #a13711;
+}
+
+:host ::ng-deep .header-logout-button--mobile.p-button {
+  margin-left: auto;
+}
+
+:host ::ng-deep .header-logout-button.p-button:focus-visible {
+  outline: 3px solid rgb(249 154 38 / 50%);
+  outline-offset: 2px;
+}
