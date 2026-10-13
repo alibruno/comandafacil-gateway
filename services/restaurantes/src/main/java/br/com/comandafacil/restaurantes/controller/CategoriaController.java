@@ -12,35 +12,36 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/restaurantes/categorias")
+@RequestMapping("/restaurantes/{restauranteId}/categorias")
 @RequiredArgsConstructor
 public class CategoriaController {
     private final CategoriaService service;
 
     @GetMapping
-    public List<CategoriaResponse> listar() {
-        return service.listar();
+    public List<CategoriaResponse> listar(@PathVariable UUID restauranteId) {
+        return service.listar(restauranteId);
     }
 
     @GetMapping("/{id}")
-    public CategoriaResponse buscar(@PathVariable UUID id) {
-        return service.buscar(id);
+    public CategoriaResponse buscar(@PathVariable UUID restauranteId, @PathVariable UUID id) {
+        return service.buscar(restauranteId, id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CategoriaResponse criar(@Valid @RequestBody CategoriaRequest request) {
-        return service.criar(request);
+    public CategoriaResponse criar(@PathVariable UUID restauranteId, @Valid @RequestBody CategoriaRequest request) {
+        return service.criar(restauranteId, request);
     }
 
-    @PutMapping("/{id}")
-    public CategoriaResponse atualizar(@PathVariable UUID id, @Valid @RequestBody CategoriaRequest request) {
-        return service.atualizar(id, request);
+    @PatchMapping("/{id}")
+    public CategoriaResponse atualizar(@PathVariable UUID restauranteId, @PathVariable UUID id,
+                                       @Valid @RequestBody CategoriaRequest request) {
+        return service.atualizar(restauranteId, id, request);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void excluir(@PathVariable UUID id) {
-        service.excluir(id);
+    public void excluir(@PathVariable UUID restauranteId, @PathVariable UUID id) {
+        service.excluir(restauranteId, id);
     }
 }

@@ -19,31 +19,37 @@ public class CategoriaService {
     private final RestauranteService restauranteService;
 
     @Transactional(readOnly = true)
-    public List<CategoriaResponse> listar() { return repository.findAll().stream().map(CategoriaResponse::from).toList(); }
+    public List<CategoriaResponse> listar(UUID restauranteId) {
+        restauranteService.obter(restauranteId);
+        return repository.findAllByRestauranteId(restauranteId).stream().map(CategoriaResponse::from).toList();
+    }
 
     @Transactional(readOnly = true)
-    public CategoriaResponse buscar(UUID id) { return CategoriaResponse.from(obter(id)); }
+    public CategoriaResponse buscar(UUID restauranteId, UUID id) {
+        return CategoriaResponse.from(obter(restauranteId, id));
+    }
 
     @Transactional
-    public CategoriaResponse criar(CategoriaRequest request) {
+    public CategoriaResponse criar(UUID restauranteId, CategoriaRequest request) {
         return CategoriaResponse.from(repository.save(CategoriaEntity.builder()
-                .restaurante(restauranteService.obter(request.restauranteId()))
+                .restaurante(restauranteService.obter(restauranteId))
                 .nome(request.nome()).ativa(request.ativa()).build()));
     }
 
     @Transactional
-    public CategoriaResponse atualizar(UUID id, CategoriaRequest request) {
-        var categoria = obter(id);
-        categoria.setRestaurante(restauranteService.obter(request.restauranteId()));
+    public CategoriaResponse atualizar(UUID restauranteId, UUID id, CategoriaRequest request) {
+        var categoria = obter(restauranteId, id);
         categoria.setNome(request.nome());
         categoria.setAtiva(request.ativa());
         return CategoriaResponse.from(categoria);
     }
 
     @Transactional
-    public void excluir(UUID id) { repository.delete(obter(id)); }
+    public void excluir(UUID restauranteId, UUID id) { repository.delete(obter(restauranteId, id)); }
 
-    public CategoriaEntity obter(UUID id) {
-        return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Categoria", id));
+    public CategoriaEntity obter(UUID restauranteId, UUID id) {
+        return repository.findById(id)
+                .filter(categoria -> categoria.getRestaurante().getId().equals(restauranteId))
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Categoria", id));
     }
 }

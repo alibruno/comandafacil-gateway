@@ -8,9 +8,6 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public record ProdutoRequest(
-        @NotNull
-        UUID restauranteId,
-
         UUID categoriaId,
 
         @NotBlank(message = "nome é obrigatório")

@@ -20,23 +20,27 @@ public class MesaService {
     private final RestauranteService restauranteService;
 
     @Transactional(readOnly = true)
-    public List<MesaResponse> listar() { return repository.findAll().stream().map(MesaResponse::from).toList(); }
+    public List<MesaResponse> listar(UUID restauranteId) {
+        restauranteService.obter(restauranteId);
+        return repository.findAllByRestauranteId(restauranteId).stream().map(MesaResponse::from).toList();
+    }
 
     @Transactional(readOnly = true)
-    public MesaResponse buscar(UUID id) { return MesaResponse.from(obter(id)); }
+    public MesaResponse buscar(UUID restauranteId, UUID id) {
+        return MesaResponse.from(obter(restauranteId, id));
+    }
 
     @Transactional
-    public MesaResponse criar(MesaRequest request) {
+    public MesaResponse criar(UUID restauranteId, MesaRequest request) {
         return MesaResponse.from(repository.save(MesaEntity.builder()
-                .restaurante(restauranteService.obter(request.restauranteId())).nome(request.nome())
+                .restaurante(restauranteService.obter(restauranteId)).nome(request.nome())
                 .capacidade(request.capacidade()).dataCadastro(LocalDate.now())
                 .disponivel(request.disponivel()).build()));
     }
 
     @Transactional
-    public MesaResponse atualizar(UUID id, MesaRequest request) {
-        var mesa = obter(id);
-        mesa.setRestaurante(restauranteService.obter(request.restauranteId()));
+    public MesaResponse atualizar(UUID restauranteId, UUID id, MesaRequest request) {
+        var mesa = obter(restauranteId, id);
         mesa.setNome(request.nome());
         mesa.setCapacidade(request.capacidade());
         mesa.setDisponivel(request.disponivel());
@@ -44,9 +48,11 @@ public class MesaService {
     }
 
     @Transactional
-    public void excluir(UUID id) { repository.delete(obter(id)); }
+    public void excluir(UUID restauranteId, UUID id) { repository.delete(obter(restauranteId, id)); }
 
-    private MesaEntity obter(UUID id) {
-        return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Mesa", id));
+    private MesaEntity obter(UUID restauranteId, UUID id) {
+        return repository.findById(id)
+                .filter(mesa -> mesa.getRestaurante().getId().equals(restauranteId))
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Mesa", id));
     }
 }

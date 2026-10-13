@@ -20,20 +20,25 @@ public class ProdutoService {
     private final CategoriaService categoriaService;
 
     @Transactional(readOnly = true)
-    public List<ProdutoResponse> listar() { return repository.findAll().stream().map(ProdutoResponse::from).toList(); }
+    public List<ProdutoResponse> listar(UUID restauranteId) {
+        restauranteService.obter(restauranteId);
+        return repository.findAllByRestauranteId(restauranteId).stream().map(ProdutoResponse::from).toList();
+    }
 
     @Transactional(readOnly = true)
-    public ProdutoResponse buscar(UUID id) { return ProdutoResponse.from(obter(id)); }
-
-    @Transactional
-    public ProdutoResponse criar(ProdutoRequest request) {
-        return ProdutoResponse.from(repository.save(construir(request)));
+    public ProdutoResponse buscar(UUID restauranteId, UUID id) {
+        return ProdutoResponse.from(obter(restauranteId, id));
     }
 
     @Transactional
-    public ProdutoResponse atualizar(UUID id, ProdutoRequest request) {
-        var produto = obter(id);
-        var atualizado = construir(request);
+    public ProdutoResponse criar(UUID restauranteId, ProdutoRequest request) {
+        return ProdutoResponse.from(repository.save(construir(restauranteId, request)));
+    }
+
+    @Transactional
+    public ProdutoResponse atualizar(UUID restauranteId, UUID id, ProdutoRequest request) {
+        var produto = obter(restauranteId, id);
+        var atualizado = construir(restauranteId, request);
         produto.setRestaurante(atualizado.getRestaurante());
         produto.setCategoria(atualizado.getCategoria());
         produto.setNome(atualizado.getNome());
@@ -44,16 +49,18 @@ public class ProdutoService {
     }
 
     @Transactional
-    public void excluir(UUID id) { repository.delete(obter(id)); }
+    public void excluir(UUID restauranteId, UUID id) { repository.delete(obter(restauranteId, id)); }
 
-    private ProdutoEntity construir(ProdutoRequest request) {
-        return ProdutoEntity.builder().restaurante(restauranteService.obter(request.restauranteId()))
-                .categoria(request.categoriaId() == null ? null : categoriaService.obter(request.categoriaId()))
+    private ProdutoEntity construir(UUID restauranteId, ProdutoRequest request) {
+        return ProdutoEntity.builder().restaurante(restauranteService.obter(restauranteId))
+                .categoria(request.categoriaId() == null ? null : categoriaService.obter(restauranteId, request.categoriaId()))
                 .nome(request.nome()).descricao(request.descricao()).preco(request.preco())
                 .disponivel(request.disponivel()).build();
     }
 
-    private ProdutoEntity obter(UUID id) {
-        return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Produto", id));
+    private ProdutoEntity obter(UUID restauranteId, UUID id) {
+        return repository.findById(id)
+                .filter(produto -> produto.getRestaurante().getId().equals(restauranteId))
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Produto", id));
     }
 }
