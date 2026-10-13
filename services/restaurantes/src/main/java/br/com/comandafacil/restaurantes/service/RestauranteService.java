@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class RestauranteService {
@@ -23,7 +21,7 @@ public class RestauranteService {
     }
 
     @Transactional(readOnly = true)
-    public RestauranteResponse buscar(UUID id) {
+    public RestauranteResponse buscar(Long id) {
         return RestauranteResponse.from(obter(id));
     }
 
@@ -34,7 +32,7 @@ public class RestauranteService {
     }
 
     @Transactional
-    public RestauranteResponse atualizar(UUID id, RestauranteRequest request) {
+    public RestauranteResponse atualizar(Long id, RestauranteRequest request) {
         var restaurante = obter(id);
         restaurante.setNome(request.nome());
         restaurante.setAtivo(request.ativo());
@@ -42,11 +40,11 @@ public class RestauranteService {
     }
 
     @Transactional
-    public void excluir(UUID id) {
+    public void excluir(Long id) {
         repository.delete(obter(id));
     }
 
-    public RestauranteEntity obter(UUID id) {
+    public RestauranteEntity obter(Long id) {
         return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Restaurante", id));
     }
 }

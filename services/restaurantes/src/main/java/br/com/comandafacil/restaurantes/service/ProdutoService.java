@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class ProdutoService {
@@ -20,23 +18,23 @@ public class ProdutoService {
     private final CategoriaService categoriaService;
 
     @Transactional(readOnly = true)
-    public List<ProdutoResponse> listar(UUID restauranteId) {
+    public List<ProdutoResponse> listar(Long restauranteId) {
         restauranteService.obter(restauranteId);
         return repository.findAllByRestauranteId(restauranteId).stream().map(ProdutoResponse::from).toList();
     }
 
     @Transactional(readOnly = true)
-    public ProdutoResponse buscar(UUID restauranteId, UUID id) {
+    public ProdutoResponse buscar(Long restauranteId, Long id) {
         return ProdutoResponse.from(obter(restauranteId, id));
     }
 
     @Transactional
-    public ProdutoResponse criar(UUID restauranteId, ProdutoRequest request) {
+    public ProdutoResponse criar(Long restauranteId, ProdutoRequest request) {
         return ProdutoResponse.from(repository.save(construir(restauranteId, request)));
     }
 
     @Transactional
-    public ProdutoResponse atualizar(UUID restauranteId, UUID id, ProdutoRequest request) {
+    public ProdutoResponse atualizar(Long restauranteId, Long id, ProdutoRequest request) {
         var produto = obter(restauranteId, id);
         var atualizado = construir(restauranteId, request);
         produto.setRestaurante(atualizado.getRestaurante());
@@ -49,16 +47,16 @@ public class ProdutoService {
     }
 
     @Transactional
-    public void excluir(UUID restauranteId, UUID id) { repository.delete(obter(restauranteId, id)); }
+    public void excluir(Long restauranteId, Long id) { repository.delete(obter(restauranteId, id)); }
 
-    private ProdutoEntity construir(UUID restauranteId, ProdutoRequest request) {
+    private ProdutoEntity construir(Long restauranteId, ProdutoRequest request) {
         return ProdutoEntity.builder().restaurante(restauranteService.obter(restauranteId))
                 .categoria(request.categoriaId() == null ? null : categoriaService.obter(restauranteId, request.categoriaId()))
                 .nome(request.nome()).descricao(request.descricao()).preco(request.preco())
                 .disponivel(request.disponivel()).build();
     }
 
-    private ProdutoEntity obter(UUID restauranteId, UUID id) {
+    private ProdutoEntity obter(Long restauranteId, Long id) {
         return repository.findById(id)
                 .filter(produto -> produto.getRestaurante().getId().equals(restauranteId))
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Produto", id));

@@ -2,10 +2,8 @@ package br.com.comandafacil.restaurantes.dto;
 
 import br.com.comandafacil.restaurantes.database.model.RestauranteEntity;
 
-import java.util.UUID;
-
 public record RestauranteResponse(
-        UUID id,
+        Long id,
         String nome,
         boolean ativo
 ) {

@@ -9,8 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/restaurantes")
 @RequiredArgsConstructor
@@ -23,7 +21,7 @@ public class RestauranteController {
     }
 
     @GetMapping("/{id}")
-    public RestauranteResponse buscar(@PathVariable UUID id) {
+    public RestauranteResponse buscar(@PathVariable Long id) {
         return service.buscar(id);
     }
 
@@ -34,13 +32,13 @@ public class RestauranteController {
     }
 
     @PatchMapping("/{id}")
-    public RestauranteResponse atualizar(@PathVariable UUID id, @Valid @RequestBody RestauranteRequest request) {
+    public RestauranteResponse atualizar(@PathVariable Long id, @Valid @RequestBody RestauranteRequest request) {
         return service.atualizar(id, request);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void excluir(@PathVariable UUID id) {
+    public void excluir(@PathVariable Long id) {
         service.excluir(id);
     }
 }

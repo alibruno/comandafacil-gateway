@@ -3,12 +3,13 @@ package br.com.comandafacil.restaurantes.dto;
 import br.com.comandafacil.restaurantes.database.model.ProdutoEntity;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 public record ProdutoResponse(
-        UUID id,
-        UUID restauranteId,
-        UUID categoriaId,
+        Long id,
+
+        Long restauranteId,
+
+        Long categoriaId,
         String nome,
         String descricao,
         BigDecimal preco,
