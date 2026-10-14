@@ -1,26 +1,25 @@
 # API — Microsserviço de Pedidos
 
-O serviço expõe JSON em `http://localhost:8082/api/` e Swagger UI em
-`http://localhost:8082/api/docs/` (especificação OpenAPI em
-`http://localhost:8082/api/schema/`). Na raiz do repositório, inicie-o em
-segundo plano com:
+O gateway encaminha a API em `http://localhost:8080/api/` e o Swagger UI em
+`http://localhost:8080/api/docs/` (especificação OpenAPI em
+`http://localhost:8080/api/schema/`). O endpoint `/api/pedidos/` exige o token
+JWT recebido no cadastro ou login como `Authorization: Bearer <token>`. As
+portas dos microsserviços não são expostas diretamente. Na raiz do repositório,
+configure `JWT_SECRET` em `.env` e inicie a aplicação com:
 
 ```sh
-docker compose up -d --build pedidos
+docker compose up -d --build
 docker compose ps
-docker compose logs -f pedidos
+docker compose logs -f gateway pedidos
 ```
 
-O primeiro comando também inicia o PostgreSQL e aplica as migrações. Quando os
-logs mostrarem `Starting development server`, abra
-`http://localhost:8082/api/docs/`. No GitHub Codespaces, encaminhe a porta
-`8082` pela aba **Ports** do VS Code e use **Open in Browser**; o endereço
-encaminhado termina em `-8082.app.github.dev/api/docs/`. Se não abrir, confira
-`docker compose ps` e os logs com `docker compose logs --tail=100 pedidos`.
+O Compose também inicia PostgreSQL e aplica as migrações. Para usar o frontend,
+inicie-o em `web` com `pnpm start`; no Codespaces, encaminhe as portas `5173`
+(frontend) e `8080` (gateway).
 
-Para desenvolvimento local, instale `services/pedidos/requirements.txt` e
-execute `python manage.py migrate` e `python manage.py runserver` dentro de
-`services/pedidos`. Sem configuração de banco, o serviço usa SQLite.
+O Swagger e o schema também são protegidos. Para testar endpoints no Swagger,
+use **Authorize** e informe `Bearer <token>` obtido em `POST /api/auth/login`
+ou `POST /api/auth/register`.
 
 ## Endpoints
 
@@ -36,12 +35,12 @@ Exemplo de criação:
 
 ```json
 {
-  "mesaId": "45f63e3f-b94e-45be-9283-dcc56ebddc45",
-  "garcomId": "1449b7bf-0cf1-4b44-a385-65cfb1df4481",
+  "mesaId": 12,
+  "garcomId": 34,
   "notas": "Sem cebola",
   "itens": [
     {
-      "produtoId": "7c964405-e1ea-459f-b644-078ab10f0996",
+      "produtoId": 56,
       "nomeProduto": "Hambúrguer",
       "precoUnitario": "25.50",
       "quantidade": 2,
@@ -51,7 +50,8 @@ Exemplo de criação:
 }
 ```
 
-`mesaId` e `itens` são obrigatórios; um pedido deve ter ao menos um item.
+`mesaId` e `itens` são obrigatórios; os identificadores `mesaId`, `garcomId`,
+`produtoId`, `id` e `pedidoId` são longs positivos.
 `garcomId`, `notas` e a observação do item são opcionais. O preço do item é
 persistido como snapshot e o `total` é calculado pelo serviço, nunca aceito do
 cliente. `id`, `total`, `abertoEm` e `finalizadoEm` são gerados pelo serviço.

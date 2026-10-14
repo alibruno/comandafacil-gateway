@@ -6,9 +6,13 @@ from rest_framework import serializers
 
 from .models import ItemPedido, Pedido
 
+MAX_LONG = 9223372036854775807
+
 
 class ItemPedidoSerializer(serializers.ModelSerializer):
-    produtoId = serializers.UUIDField(source="produto_id")
+    produtoId = serializers.IntegerField(
+        source="produto_id", min_value=1, max_value=MAX_LONG
+    )
     nomeProduto = serializers.CharField(source="nome_produto", max_length=255)
     precoUnitario = serializers.DecimalField(
         source="preco_unitario", max_digits=10, decimal_places=2, min_value=Decimal("0.01")
@@ -29,8 +33,16 @@ class ItemPedidoSerializer(serializers.ModelSerializer):
 class PedidoSerializer(serializers.ModelSerializer):
     MAX_TOTAL = Decimal("9999999999.99")
 
-    mesaId = serializers.UUIDField(source="mesa_id")
-    garcomId = serializers.UUIDField(source="garcom_id", required=False, allow_null=True)
+    mesaId = serializers.IntegerField(
+        source="mesa_id", min_value=1, max_value=MAX_LONG
+    )
+    garcomId = serializers.IntegerField(
+        source="garcom_id",
+        min_value=1,
+        max_value=MAX_LONG,
+        required=False,
+        allow_null=True,
+    )
     itens = ItemPedidoSerializer(many=True)
     abertoEm = serializers.DateTimeField(source="aberto_em", read_only=True)
     finalizadoEm = serializers.DateTimeField(source="finalizado_em", read_only=True)

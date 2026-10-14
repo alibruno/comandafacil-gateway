@@ -1,37 +1,49 @@
-import uuid
 from decimal import Decimal
 
 from django.test import TestCase
 from django.urls import reverse
 from rest_framework.test import APIClient
 
+from .authentication import GatewayUser
 from .models import Pedido
 
 
 class PedidoApiTests(TestCase):
     def setUp(self):
         self.client = APIClient()
+        self.client.force_authenticate(
+            user=GatewayUser(email="teste@example.com", name="Usuário de teste")
+        )
         self.url = reverse("pedido-list")
         self.payload = {
-            "mesaId": str(uuid.uuid4()),
-            "garcomId": str(uuid.uuid4()),
+            "mesaId": 10,
+            "garcomId": 20,
             "notas": "Sem cebola",
             "itens": [
                 {
-                    "produtoId": str(uuid.uuid4()),
+                    "produtoId": 30,
                     "nomeProduto": "Hambúrguer",
                     "precoUnitario": "25.50",
                     "quantidade": 2,
                     "observacao": "Bem passado",
                 },
                 {
-                    "produtoId": str(uuid.uuid4()),
+                    "produtoId": 40,
                     "nomeProduto": "Suco",
                     "precoUnitario": "8.00",
                     "quantidade": 1,
                 },
             ],
         }
+
+    def test_protege_api_sem_token(self):
+        response = APIClient().get(self.url)
+        self.assertEqual(response.status_code, 401)
+
+        cliente_com_token_invalido = APIClient()
+        cliente_com_token_invalido.credentials(HTTP_AUTHORIZATION="Bearer invalid")
+        response_token_invalido = cliente_com_token_invalido.get(self.url)
+        self.assertEqual(response_token_invalido.status_code, 401)
 
     def test_cria_pedido_com_total_calculado_e_snapshot_dos_itens(self):
         response = self.client.post(self.url, self.payload, format="json")
@@ -41,6 +53,10 @@ class PedidoApiTests(TestCase):
         self.assertEqual(len(response.data["itens"]), 2)
         self.assertEqual(response.data["status"], Pedido.Status.COZINHA)
         self.assertIsNone(response.data["finalizadoEm"])
+        self.assertIsInstance(response.data["id"], int)
+        self.assertIsInstance(response.data["itens"][0]["id"], int)
+        self.assertEqual(response.data["mesaId"], self.payload["mesaId"])
+        self.assertEqual(response.data["itens"][0]["produtoId"], 30)
 
         pedido = Pedido.objects.get(pk=response.data["id"])
         self.assertEqual(
