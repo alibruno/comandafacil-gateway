@@ -54,8 +54,8 @@ class PedidoApiTests(TestCase):
         self.assertEqual(response.data["status"], Pedido.Status.COZINHA)
         self.assertIsNone(response.data["finalizadoEm"])
         self.assertIsInstance(response.data["id"], int)
-        self.assertIsInstance(response.data["itens"][0]["id"], int)
         self.assertEqual(response.data["mesaId"], self.payload["mesaId"])
+        self.assertIsInstance(response.data["itens"][0]["id"], int)
         self.assertEqual(response.data["itens"][0]["produtoId"], 30)
 
         pedido = Pedido.objects.get(pk=response.data["id"])
@@ -88,6 +88,22 @@ class PedidoApiTests(TestCase):
         }
         response_total = self.client.post(self.url, total_excedido, format="json")
         self.assertEqual(response_total.status_code, 400)
+
+    def test_rejeita_identificadores_que_nao_sao_longs_positivos(self):
+        payload = {**self.payload, "mesaId": "45f63e3f-b94e-45be-9283-dcc56ebddc45"}
+        response = self.client.post(self.url, payload, format="json")
+        self.assertEqual(response.status_code, 400)
+
+        payload = {
+            **self.payload,
+            "itens": [{**self.payload["itens"][0], "produtoId": 0}],
+        }
+        response = self.client.post(self.url, payload, format="json")
+        self.assertEqual(response.status_code, 400)
+
+        payload = {**self.payload, "mesaId": 9223372036854775808}
+        response = self.client.post(self.url, payload, format="json")
+        self.assertEqual(response.status_code, 400)
 
     def test_atualiza_itens_e_calcula_data_de_finalizacao(self):
         criado = self.client.post(self.url, self.payload, format="json")

@@ -51,12 +51,13 @@ Exemplo de criação:
 ```
 
 `mesaId` e `itens` são obrigatórios; os identificadores `mesaId`, `garcomId`,
-`produtoId`, `id` e `pedidoId` são longs positivos.
+`produtoId` e os IDs de pedido/item são numéricos longos (`long`/`bigint`)
+positivos. Um pedido deve ter ao menos um item.
 `garcomId`, `notas` e a observação do item são opcionais. O preço do item é
 persistido como snapshot e o `total` é calculado pelo serviço, nunca aceito do
-cliente. `id`, `total`, `abertoEm` e `finalizadoEm` são gerados pelo serviço.
-Ao mudar o status para `finalizado`, `finalizadoEm` é preenchido; ao reabrir
-para outro status, ele é limpo.
+cliente. `id` é um identificador numérico longo (`long`), e `total`, `abertoEm` e
+`finalizadoEm` são gerados pelo serviço. Ao mudar o status para `finalizado`,
+`finalizadoEm` é preenchido; ao reabrir para outro status, ele é limpo.
 
 Erros de validação retornam `400`, recursos inexistentes retornam `404` e uma
 criação bem-sucedida retorna `201`.

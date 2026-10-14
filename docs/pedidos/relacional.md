@@ -4,7 +4,8 @@ O esquema mantém o preço e o nome do produto no item como snapshot. Dessa
 forma, alterações futuras no catálogo não modificam o histórico financeiro de
 um pedido. Todos os identificadores são `bigint`; `mesa_id`, `garcom_id` e
 `produto_id` são referências externas e não recebem foreign keys para outro
-banco.
+banco. UUIDs legados são associados a novos IDs numéricos na tabela
+`pedido_legacy_id_map` para permitir a reconciliação após a migração.
 
 ```mermaid
 erDiagram
