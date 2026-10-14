@@ -1,5 +1,3 @@
-import uuid
-
 from django.db import models
 
 
@@ -10,9 +8,9 @@ class Pedido(models.Model):
         PRONTO = "pronto", "Pronto para servir"
         FINALIZADO = "finalizado", "Finalizado"
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    mesa_id = models.UUIDField()
-    garcom_id = models.UUIDField(null=True, blank=True)
+    id = models.BigAutoField(primary_key=True)
+    mesa_id = models.BigIntegerField()
+    garcom_id = models.BigIntegerField(null=True, blank=True)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.COZINHA)
     notas = models.TextField(blank=True)
     total = models.DecimalField(max_digits=12, decimal_places=2, default=0)
@@ -25,9 +23,9 @@ class Pedido(models.Model):
 
 
 class ItemPedido(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.BigAutoField(primary_key=True)
     pedido = models.ForeignKey(Pedido, related_name="itens", on_delete=models.CASCADE)
-    produto_id = models.UUIDField()
+    produto_id = models.BigIntegerField()
     nome_produto = models.CharField(max_length=255)
     preco_unitario = models.DecimalField(max_digits=10, decimal_places=2)
     quantidade = models.PositiveIntegerField()

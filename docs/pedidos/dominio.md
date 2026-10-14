@@ -9,9 +9,9 @@ classDiagram
     direction LR
 
     class Pedido {
-        +string id
-        +string mesaId
-        +string garcomId
+        +long id
+        +long mesaId
+        +long garcomId
         +string notas
         +number total
         +OrderStatus status
@@ -22,8 +22,8 @@ classDiagram
     }
 
     class ItemPedido {
-        +string id
-        +string produtoId
+        +long id
+        +long produtoId
         +string nomeProduto
         +number precoUnitario
         +number quantidade
@@ -32,18 +32,18 @@ classDiagram
     }
 
     class Garcom {
-        +string id
+        +long id
         +string nome
     }
 
     class Mesa {
         <<external>>
-        +string id
+        +long id
     }
 
     class Produto {
         <<external>>
-        +string id
+        +long id
     }
 
     class OrderStatus {

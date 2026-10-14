@@ -36,12 +36,12 @@ Exemplo de criação:
 
 ```json
 {
-  "mesaId": "45f63e3f-b94e-45be-9283-dcc56ebddc45",
-  "garcomId": "1449b7bf-0cf1-4b44-a385-65cfb1df4481",
+  "mesaId": 12,
+  "garcomId": 34,
   "notas": "Sem cebola",
   "itens": [
     {
-      "produtoId": "7c964405-e1ea-459f-b644-078ab10f0996",
+      "produtoId": 56,
       "nomeProduto": "Hambúrguer",
       "precoUnitario": "25.50",
       "quantidade": 2,
@@ -51,12 +51,14 @@ Exemplo de criação:
 }
 ```
 
-`mesaId` e `itens` são obrigatórios; um pedido deve ter ao menos um item.
+`mesaId` e `itens` são obrigatórios; os identificadores `mesaId`, `garcomId`,
+`produtoId` e os IDs de pedido/item são numéricos longos (`long`/`bigint`)
+positivos. Um pedido deve ter ao menos um item.
 `garcomId`, `notas` e a observação do item são opcionais. O preço do item é
 persistido como snapshot e o `total` é calculado pelo serviço, nunca aceito do
-cliente. `id`, `total`, `abertoEm` e `finalizadoEm` são gerados pelo serviço.
-Ao mudar o status para `finalizado`, `finalizadoEm` é preenchido; ao reabrir
-para outro status, ele é limpo.
+cliente. `id` é um identificador numérico longo (`long`), e `total`, `abertoEm` e
+`finalizadoEm` são gerados pelo serviço. Ao mudar o status para `finalizado`,
+`finalizadoEm` é preenchido; ao reabrir para outro status, ele é limpo.
 
 Erros de validação retornam `400`, recursos inexistentes retornam `404` e uma
 criação bem-sucedida retorna `201`.
