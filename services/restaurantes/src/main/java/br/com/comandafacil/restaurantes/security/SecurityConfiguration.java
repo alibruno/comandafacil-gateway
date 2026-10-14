@@ -28,7 +28,10 @@ public class SecurityConfiguration {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/restaurantes/docs/**", "/api/restaurantes/schema/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/webjars/**").permitAll()
+                        .anyRequest().authenticated())
                 .oauth2ResourceServer(resourceServer -> resourceServer.jwt(jwt -> {}))
                 .build();
     }

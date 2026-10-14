@@ -13,14 +13,14 @@ spring:
       server:
         webmvc:
           routes:
-            - id: pedidos
-              uri: ${PEDIDOS_URL:http://localhost:8082}
-              predicates:
-                - Path=/api/pedidos/**,/api/docs/**,/api/schema/**
             - id: restaurantes
               uri: ${RESTAURANTES_URL:http://localhost:8081}
               predicates:
                 - Path=/api/restaurantes/**
+            - id: pedidos
+              uri: ${PEDIDOS_URL:http://localhost:8082}
+              predicates:
+                - Path=/api/pedidos/**
 
 server:
   port: 8080
@@ -28,3 +28,12 @@ server:
 app:
   jwt:
     secret: ${JWT_SECRET}
+
+springdoc:
+  swagger-ui:
+    path: /api/docs
+    urls:
+      - name: Pedidos
+        url: /api/pedidos/schema/
+      - name: Restaurantes
+        url: /api/restaurantes/schema

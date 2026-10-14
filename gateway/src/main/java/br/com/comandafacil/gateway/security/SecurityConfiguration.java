@@ -38,7 +38,18 @@ public class SecurityConfiguration {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/auth/register", "/api/auth/login", "/error").permitAll()
+                        .requestMatchers(
+                                "/api/auth/register",
+                                "/api/auth/login",
+                                "/api/docs",
+                                "/api/docs/**",
+                                "/api/pedidos/docs/**",
+                                "/api/pedidos/schema/**",
+                                "/api/restaurantes/docs/**",
+                                "/api/restaurantes/schema/**",
+                                "/swagger-ui/**",
+                                "/webjars/**",
+                                "/error").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(resourceServer -> resourceServer.jwt(Customizer.withDefaults()))
                 .build();

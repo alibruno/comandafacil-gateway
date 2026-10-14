@@ -140,11 +140,11 @@ class PedidoApiTests(TestCase):
         )
 
     def test_disponibiliza_documentacao_openapi_e_swagger(self):
-        schema = self.client.get("/api/schema/")
-        docs = self.client.get("/api/docs/")
+        schema = self.client.get("/api/pedidos/schema/")
+        docs = self.client.get("/api/pedidos/docs/")
         home = self.client.get("/")
 
         self.assertEqual(schema.status_code, 200)
         self.assertIn("/api/pedidos/", schema.data["paths"])
         self.assertEqual(docs.status_code, 200)
-        self.assertRedirects(home, "/api/docs/", fetch_redirect_response=False)
+        self.assertRedirects(home, "/api/pedidos/docs/", fetch_redirect_response=False)
