@@ -20,7 +20,7 @@ spring:
             - id: restaurantes
               uri: ${RESTAURANTES_URL:http://localhost:8081}
               predicates:
-                - Path=/restaurantes/**
+                - Path=/api/restaurantes/**
 
 server:
   port: 8080
