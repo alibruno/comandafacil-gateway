@@ -1,8 +1,9 @@
 # API — Microsserviço de Pedidos
 
-O gateway encaminha a API em `http://localhost:8080/api/` e o Swagger UI em
-`http://localhost:8080/api/docs/` (especificação OpenAPI em
-`http://localhost:8080/api/schema/`). O endpoint `/api/pedidos/` exige o token
+O gateway encaminha a API em `http://localhost:8080/api/`. O Swagger agregado
+fica em `http://localhost:8080/api/docs/`; a documentação específica deste
+microsserviço está em `http://localhost:8080/api/pedidos/docs/` e o schema
+OpenAPI em `http://localhost:8080/api/pedidos/schema/`. O endpoint `/api/pedidos/` exige o token
 JWT recebido no cadastro ou login como `Authorization: Bearer <token>`. As
 portas dos microsserviços não são expostas diretamente. Na raiz do repositório,
 configure `JWT_SECRET` em `.env` e inicie a aplicação com:
