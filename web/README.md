@@ -1,59 +1,28 @@
-# ComandafacilWeb
+# ComandaFácil Web
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.1.
+Frontend operacional em React 19, TypeScript, Material UI e Tailwind CSS v4.
 
-## Development server
-
-To start a local development server, run:
+## Desenvolvimento
 
 ```bash
-ng serve
+pnpm install
+pnpm start
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+O Vite inicia em `http://localhost:5173`.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Verificação
 
 ```bash
-ng generate component component-name
+pnpm test
+pnpm build
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Organização
 
-```bash
-ng generate --help
-```
+- `src/app`: roteamento e estrutura compartilhada da aplicação.
+- `src/features`: dashboard, pedidos, mesas e cardápio.
+- `src/shared`: formatação e componentes reutilizáveis.
+- `src/state`: estado de trabalho persistido no navegador.
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Mesas, categorias, produtos e pedidos usam dados demonstrativos persistidos em `localStorage`. O serviço de restaurantes possui contratos REST, mas ainda não há configuração de restaurante/gateway para conectar este frontend; pedidos ainda não têm serviço backend.
