@@ -4,12 +4,16 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework.test import APIClient
 
+from .authentication import GatewayUser
 from .models import Pedido
 
 
 class PedidoApiTests(TestCase):
     def setUp(self):
         self.client = APIClient()
+        self.client.force_authenticate(
+            user=GatewayUser(email="teste@example.com", name="Usuário de teste")
+        )
         self.url = reverse("pedido-list")
         self.payload = {
             "mesaId": 10,
@@ -31,6 +35,15 @@ class PedidoApiTests(TestCase):
                 },
             ],
         }
+
+    def test_protege_api_sem_token(self):
+        response = APIClient().get(self.url)
+        self.assertEqual(response.status_code, 401)
+
+        cliente_com_token_invalido = APIClient()
+        cliente_com_token_invalido.credentials(HTTP_AUTHORIZATION="Bearer invalid")
+        response_token_invalido = cliente_com_token_invalido.get(self.url)
+        self.assertEqual(response_token_invalido.status_code, 401)
 
     def test_cria_pedido_com_total_calculado_e_snapshot_dos_itens(self):
         response = self.client.post(self.url, self.payload, format="json")
@@ -127,11 +140,11 @@ class PedidoApiTests(TestCase):
         )
 
     def test_disponibiliza_documentacao_openapi_e_swagger(self):
-        schema = self.client.get("/api/schema/")
-        docs = self.client.get("/api/docs/")
+        schema = self.client.get("/api/pedidos/schema/")
+        docs = self.client.get("/api/pedidos/docs/")
         home = self.client.get("/")
 
         self.assertEqual(schema.status_code, 200)
         self.assertIn("/api/pedidos/", schema.data["paths"])
         self.assertEqual(docs.status_code, 200)
-        self.assertRedirects(home, "/api/docs/", fetch_redirect_response=False)
+        self.assertRedirects(home, "/api/pedidos/docs/", fetch_redirect_response=False)

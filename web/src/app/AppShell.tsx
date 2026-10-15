@@ -2,13 +2,15 @@ import { useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import {
 	Avatar, Box, Drawer, IconButton, List, ListItemButton, ListItemIcon,
-	ListItemText, Typography, useMediaQuery, useTheme,
+	ListItemText, Tooltip, Typography, useMediaQuery, useTheme,
 } from '@mui/material';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
 import TableRestaurantOutlinedIcon from '@mui/icons-material/TableRestaurantOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
+import LogoutRounded from '@mui/icons-material/LogoutRounded';
+import { useAuth } from '../state/AuthContext';
 
 const navigation = [
 	{ label: 'Visão geral', to: '/', icon: <DashboardOutlinedIcon /> },
@@ -16,7 +18,7 @@ const navigation = [
 	{ label: 'Salão e cardápio', to: '/restaurante', icon: <TableRestaurantOutlinedIcon /> },
 ];
 
-function Navigation({ onNavigate }: { onNavigate?: () => void }) {
+function Navigation({ onNavigate, name, email }: { onNavigate?: () => void; name: string; email: string }) {
 	return (
 		<>
 			<Box sx={{ px: 2.5, pt: 3.5, pb: 4, display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -44,10 +46,10 @@ function Navigation({ onNavigate }: { onNavigate?: () => void }) {
 				))}
 			</List>
 			<Box sx={{ mt: 'auto', mx: 2, mb: 2, p: 1.5, borderTop: '1px solid #e8ebe6', display: 'flex', alignItems: 'center', gap: 1.2 }}>
-				<Avatar sx={{ width: 34, height: 34, bgcolor: '#e9d7c8', color: '#634d3c', fontSize: 12, fontWeight: 700 }}>CF</Avatar>
+				<Avatar sx={{ width: 34, height: 34, bgcolor: '#e9d7c8', color: '#634d3c', fontSize: 12, fontWeight: 700 }}>{name.slice(0, 2).toUpperCase()}</Avatar>
 				<Box sx={{ minWidth: 0 }}>
-					<Typography noWrap sx={{ fontSize: 12, fontWeight: 700 }}>Café do Largo</Typography>
-					<Typography noWrap sx={{ fontSize: 11, color: 'text.secondary' }}>Administrador</Typography>
+					<Typography noWrap sx={{ fontSize: 12, fontWeight: 700 }}>{name}</Typography>
+					<Typography noWrap sx={{ fontSize: 11, color: 'text.secondary' }}>{email}</Typography>
 				</Box>
 			</Box>
 		</>
@@ -59,8 +61,11 @@ export default function AppShell() {
 	const mobile = useMediaQuery(theme.breakpoints.down('md'));
 	const [drawerOpen, setDrawerOpen] = useState(false);
 	const location = useLocation();
+	const { user, signOut } = useAuth();
 	const pageTitle = location.pathname === '/pedidos' ? 'Pedidos' : location.pathname === '/restaurante' ? 'Salão e cardápio' : 'Visão geral';
-	const drawerContent = <Box sx={{ width: 250, height: '100%', display: 'flex', flexDirection: 'column', bgcolor: '#fff' }}><Navigation onNavigate={() => setDrawerOpen(false)} /></Box>;
+	const userName = user?.name ?? '';
+	const userEmail = user?.email ?? '';
+	const drawerContent = <Box sx={{ width: 250, height: '100%', display: 'flex', flexDirection: 'column', bgcolor: '#fff' }}><Navigation onNavigate={() => setDrawerOpen(false)} name={userName} email={userEmail} /></Box>;
 
 	return (
 		<Box sx={{ minHeight: '100vh', display: 'flex' }}>
@@ -71,7 +76,7 @@ export default function AppShell() {
 				</Drawer>
 			) : (
 				<Box component="aside" sx={{ width: 250, flexShrink: 0, bgcolor: '#fff', borderRight: '1px solid #e9ebe6', minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'fixed', inset: '0 auto 0 0' }}>
-					<Navigation />
+					<Navigation name={userName} email={userEmail} />
 				</Box>
 			)}
 			<Box component="main" sx={{ flex: 1, minWidth: 0, ml: { md: '250px' } }}>
@@ -79,7 +84,12 @@ export default function AppShell() {
 					{mobile && <IconButton aria-label="Abrir menu" onClick={() => setDrawerOpen(true)} edge="start"><MenuIcon /></IconButton>}
 					<Typography sx={{ fontSize: 13, fontWeight: 600 }}>{pageTitle}</Typography>
 					<Typography sx={{ ml: 'auto', fontSize: 12, color: 'text.secondary', display: { xs: 'none', sm: 'block' } }}>Terça-feira, 13 de outubro</Typography>
-					<Avatar sx={{ width: 32, height: 32, ml: { xs: 'auto', sm: 1 }, bgcolor: '#244b43', fontSize: 12 }}>CF</Avatar>
+					<Typography noWrap sx={{ ml: 'auto', maxWidth: 180, fontSize: 12, color: 'text.secondary', display: { xs: 'none', sm: 'block' } }}>{userName}</Typography>
+					<Tooltip title="Sair">
+						<IconButton aria-label="Sair da conta" onClick={signOut} size="small">
+							<LogoutRounded fontSize="small" />
+						</IconButton>
+					</Tooltip>
 				</Box>
 				<Box sx={{ p: { xs: 2, sm: 3.5, lg: 5 }, maxWidth: 1540, mx: 'auto' }}><Outlet /></Box>
 			</Box>

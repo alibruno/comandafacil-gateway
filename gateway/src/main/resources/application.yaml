@@ -1,3 +1,42 @@
 spring:
   application:
     name: gateway
+  datasource:
+    url: ${DATABASE_URL:jdbc:h2:mem:comandafacil-auth;DB_CLOSE_DELAY=-1}
+    username: ${DATABASE_USERNAME:sa}
+    password: ${DATABASE_PASSWORD:}
+  sql:
+    init:
+      mode: always
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          routes:
+            - id: restaurantes
+              uri: ${RESTAURANTES_URL:http://localhost:8081}
+              predicates:
+                - Path=/api/restaurantes/**
+            - id: pedidos
+              uri: ${PEDIDOS_URL:http://localhost:8082}
+              predicates:
+                - Path=/api/pedidos/**
+
+server:
+  port: 8080
+
+app:
+  jwt:
+    secret: ${JWT_SECRET}
+
+springdoc:
+  swagger-ui:
+    path: /api/docs/
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      - name: Gateway
+        url: /v3/api-docs
+      - name: Pedidos
+        url: /api/pedidos/schema/
+      - name: Restaurantes
+        url: /api/restaurantes/schema
