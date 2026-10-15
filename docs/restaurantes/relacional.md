@@ -43,3 +43,4 @@ erDiagram
     RESTAURANTE ||--o{ CATEGORIA : organiza
     RESTAURANTE ||--o{ PRODUTO : oferece
     CATEGORIA o|--o{ PRODUTO : classifica
+```

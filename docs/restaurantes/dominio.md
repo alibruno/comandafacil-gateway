@@ -42,3 +42,4 @@ classDiagram
     Restaurante "1" *-- "1..*" Mesa : administra
     Restaurante "1" *-- "0..*" Produto : oferece
     Categoria "1" --> "0..*" Produto : classifica
+```

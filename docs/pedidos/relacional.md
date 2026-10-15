@@ -31,3 +31,4 @@ erDiagram
     }
 
     PEDIDO ||--|{ ITEM_PEDIDO : possui
+```

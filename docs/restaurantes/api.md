@@ -1,29 +1,20 @@
 # API de Restaurantes
 
-Base da API:
+Base: `http://localhost:8080/api/restaurantes/`
+
+As rotas exigem um token JWT:
 
 ```text
-http://localhost:8080/api/restaurantes
+Authorization: Bearer TOKEN_JWT
 ```
 
-As rotas de negócio exigem um token JWT emitido pelo gateway. A documentação
-continua disponível sem autenticação, mas é necessário clicar em `Authorize` no
-Swagger e informar o token JWT para executar as operacoes da API.
+Obtenha o token em `POST /api/auth/register` ou `POST /api/auth/login`.
 
-## Documentação
+Documentação:
 
-```text
-Swagger: http://localhost:8080/api/docs
-Swagger de restaurantes: http://localhost:8080/api/restaurantes/docs/
-Schema: http://localhost:8080/api/restaurantes/schema/
-```
-
-Para obter um token, registre um usuário e faça login pela API de autenticação:
-
-```text
-POST /api/auth/register
-POST /api/auth/login
-```
+- Swagger geral: `http://localhost:8080/api/docs/`
+- Swagger de Restaurantes: `http://localhost:8080/api/restaurantes/docs/`
+- Schema OpenAPI: `http://localhost:8080/api/restaurantes/schema/`
 
 ## Restaurantes
 
@@ -34,8 +25,6 @@ POST /api/auth/login
 | `GET` | `/api/restaurantes/{id}/` |
 | `PATCH` | `/api/restaurantes/{id}/` |
 | `DELETE` | `/api/restaurantes/{id}/` |
-
-Criar ou atualizar:
 
 ```json
 {
@@ -48,13 +37,8 @@ Criar ou atualizar:
 
 | Método | Endpoint |
 | --- | --- |
-| `GET` | `/api/restaurantes/{restauranteId}/categorias/` |
-| `POST` | `/api/restaurantes/{restauranteId}/categorias/` |
-| `GET` | `/api/restaurantes/{restauranteId}/categorias/{id}/` |
-| `PATCH` | `/api/restaurantes/{restauranteId}/categorias/{id}/` |
-| `DELETE` | `/api/restaurantes/{restauranteId}/categorias/{id}/` |
-
-Corpo:
+| `GET` / `POST` | `/api/restaurantes/{restauranteId}/categorias/` |
+| `GET` / `PATCH` / `DELETE` | `/api/restaurantes/{restauranteId}/categorias/{id}/` |
 
 ```json
 {
@@ -67,13 +51,8 @@ Corpo:
 
 | Método | Endpoint |
 | --- | --- |
-| `GET` | `/api/restaurantes/{restauranteId}/produtos/` |
-| `POST` | `/api/restaurantes/{restauranteId}/produtos/` |
-| `GET` | `/api/restaurantes/{restauranteId}/produtos/{id}/` |
-| `PATCH` | `/api/restaurantes/{restauranteId}/produtos/{id}/` |
-| `DELETE` | `/api/restaurantes/{restauranteId}/produtos/{id}/` |
-
-Corpo:
+| `GET` / `POST` | `/api/restaurantes/{restauranteId}/produtos/` |
+| `GET` / `PATCH` / `DELETE` | `/api/restaurantes/{restauranteId}/produtos/{id}/` |
 
 ```json
 {
@@ -85,20 +64,15 @@ Corpo:
 }
 ```
 
-`categoriaId` é opcional. `nome` e `preco` são obrigatórios; o preço deve ser
+`nome` e `preco` são obrigatórios. `categoriaId` é opcional e `preco` deve ser
 maior que zero.
 
 ## Mesas
 
 | Método | Endpoint |
 | --- | --- |
-| `GET` | `/api/restaurantes/{restauranteId}/mesas/` |
-| `POST` | `/api/restaurantes/{restauranteId}/mesas/` |
-| `GET` | `/api/restaurantes/{restauranteId}/mesas/{id}/` |
-| `PATCH` | `/api/restaurantes/{restauranteId}/mesas/{id}/` |
-| `DELETE` | `/api/restaurantes/{restauranteId}/mesas/{id}/` |
-
-Corpo:
+| `GET` / `POST` | `/api/restaurantes/{restauranteId}/mesas/` |
+| `GET` / `PATCH` / `DELETE` | `/api/restaurantes/{restauranteId}/mesas/{id}/` |
 
 ```json
 {
@@ -110,25 +84,13 @@ Corpo:
 
 `nome` é obrigatório e `capacidade` deve ser maior que zero.
 
-## Códigos de resposta
+## Respostas
 
 | Código | Significado |
 | --- | --- |
-| `200` | Operação de consulta ou atualização concluída |
+| `200` | Consulta ou atualização concluída |
 | `201` | Recurso criado |
-| `204` | Recurso excluído sem conteúdo de resposta |
-| `400` | Dados inválidos ou falha de validação |
-| `401` | Token ausente, inválido ou expirado |
-| `404` | Restaurante, categoria, produto ou mesa não encontrado |
-
-Erros de validação retornam um objeto com `status` e os campos inválidos:
-
-```json
-{
-  "timestamp": "2026-10-14T20:00:00Z",
-  "status": 400,
-  "errors": {
-    "nome": "nome é obrigatório"
-  }
-}
-```
+| `204` | Recurso excluído |
+| `400` | Dados inválidos |
+| `401` | Token ausente ou inválido |
+| `404` | Recurso não encontrado |

@@ -59,3 +59,4 @@ classDiagram
     Pedido --> OrderStatus : possui
     ItemPedido ..> Produto : produtoId
     Pedido ..> Mesa : mesaId
+```

@@ -1,38 +1,30 @@
-# API — Microsserviço de Pedidos
+# API de Pedidos
 
-O gateway encaminha a API em `http://localhost:8080/api/`. O Swagger agregado
-fica em `http://localhost:8080/api/docs/`; a documentação específica deste
-microsserviço está em `http://localhost:8080/api/pedidos/docs/` e o schema
-OpenAPI em `http://localhost:8080/api/pedidos/schema/`. O endpoint `/api/pedidos/` exige o token
-JWT recebido no cadastro ou login como `Authorization: Bearer <token>`. As
-portas dos microsserviços não são expostas diretamente. Na raiz do repositório,
-configure `JWT_SECRET` em `.env` e inicie a aplicação com:
+Base: `http://localhost:8080/api/pedidos/`
 
-```sh
-docker compose up -d --build
-docker compose ps
-docker compose logs -f gateway pedidos
+As rotas exigem um token JWT no cabeçalho:
+
+```text
+Authorization: Bearer TOKEN_JWT
 ```
 
-O Compose também inicia PostgreSQL e aplica as migrações. Para usar o frontend,
-inicie-o em `web` com `pnpm start`; no Codespaces, encaminhe as portas `5173`
-(frontend) e `8080` (gateway).
+Documentação:
 
-O Swagger e o schema também são protegidos. Para testar endpoints no Swagger,
-use **Authorize** e informe `Bearer <token>` obtido em `POST /api/auth/login`
-ou `POST /api/auth/register`.
+- Swagger geral: `http://localhost:8080/api/docs/`
+- Swagger de Pedidos: `http://localhost:8080/api/pedidos/docs/`
+- Schema OpenAPI: `http://localhost:8080/api/pedidos/schema/`
 
 ## Endpoints
 
-| Método | Caminho | Ação |
+| Método | Endpoint | Descrição |
 | --- | --- | --- |
 | `GET` | `/api/pedidos/` | Lista pedidos; aceita `?status=cozinha`, `preparo`, `pronto` ou `finalizado` |
-| `POST` | `/api/pedidos/` | Cria um pedido |
-| `GET` | `/api/pedidos/{id}/` | Busca um pedido e seus itens |
-| `PUT` / `PATCH` | `/api/pedidos/{id}/` | Atualiza o pedido; se `itens` for informado, substitui a lista inteira |
-| `DELETE` | `/api/pedidos/{id}/` | Exclui o pedido e seus itens |
+| `POST` | `/api/pedidos/` | Cria pedido |
+| `GET` | `/api/pedidos/{id}/` | Consulta pedido |
+| `PUT` / `PATCH` | `/api/pedidos/{id}/` | Atualiza pedido |
+| `DELETE` | `/api/pedidos/{id}/` | Exclui pedido |
 
-Exemplo de criação:
+### Criar pedido
 
 ```json
 {
@@ -51,14 +43,19 @@ Exemplo de criação:
 }
 ```
 
-`mesaId` e `itens` são obrigatórios; os identificadores `mesaId`, `garcomId`,
-`produtoId` e os IDs de pedido/item são numéricos longos (`long`/`bigint`)
-positivos. Um pedido deve ter ao menos um item.
-`garcomId`, `notas` e a observação do item são opcionais. O preço do item é
-persistido como snapshot e o `total` é calculado pelo serviço, nunca aceito do
-cliente. `id` é um identificador numérico longo (`long`), e `total`, `abertoEm` e
-`finalizadoEm` são gerados pelo serviço. Ao mudar o status para `finalizado`,
-`finalizadoEm` é preenchido; ao reabrir para outro status, ele é limpo.
+`mesaId` e `itens` são obrigatórios. O pedido deve ter pelo menos um item.
+`garcomId`, `notas` e `observacao` são opcionais. O serviço calcula `total`,
+`abertoEm` e `finalizadoEm`; o total enviado pelo cliente é ignorado.
 
-Erros de validação retornam `400`, recursos inexistentes retornam `404` e uma
-criação bem-sucedida retorna `201`.
+Ao informar `itens` em uma atualização, a lista inteira é substituída.
+
+## Respostas
+
+| Código | Significado |
+| --- | --- |
+| `200` | Consulta ou atualização concluída |
+| `201` | Pedido criado |
+| `204` | Pedido excluído |
+| `400` | Dados inválidos |
+| `401` | Token ausente ou inválido |
+| `404` | Pedido não encontrado |
