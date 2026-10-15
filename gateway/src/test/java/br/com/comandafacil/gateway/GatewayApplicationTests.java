@@ -31,6 +31,21 @@ class GatewayApplicationTests {
 	}
 
 	@Test
+	void exposesGatewayAuthenticationEndpointsInOpenApi() throws Exception {
+		mockMvc.perform(get("/v3/api-docs"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.paths['/api/auth/register']").exists())
+				.andExpect(jsonPath("$.paths['/api/auth/login']").exists())
+				.andExpect(jsonPath("$.paths['/api/auth/me'].get.security[0].bearerAuth").exists())
+				.andExpect(jsonPath("$.components.securitySchemes.bearerAuth.scheme").value("bearer"));
+
+		mockMvc.perform(get("/v3/api-docs/swagger-config"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.urls[0].name").value("Gateway"))
+				.andExpect(jsonPath("$.urls[0].url").value("/v3/api-docs"));
+	}
+
+	@Test
 	void protectsRestaurantApiWithoutAuthentication() throws Exception {
 		mockMvc.perform(get("/api/restaurantes"))
 				.andExpect(status().isUnauthorized());
