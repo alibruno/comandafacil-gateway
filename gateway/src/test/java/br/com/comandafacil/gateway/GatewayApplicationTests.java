@@ -116,6 +116,7 @@ class GatewayApplicationTests {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.paths['/api/auth/register']").exists())
 				.andExpect(jsonPath("$.paths['/api/auth/login']").exists())
+				.andExpect(jsonPath("$.paths['/api/pedidos']").doesNotExist())
 				.andExpect(jsonPath("$.paths['/api/auth/me'].get.security[0].bearerAuth").exists())
 				.andExpect(jsonPath("$.components.securitySchemes.bearerAuth.scheme").value("bearer"));
 

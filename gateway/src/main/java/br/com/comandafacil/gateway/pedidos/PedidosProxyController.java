@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Set;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestClient;
 
 @Controller
+@Hidden
 public class PedidosProxyController {
     private static final Set<String> HOP_BY_HOP_HEADERS = Set.of(
             "connection",
