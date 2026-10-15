@@ -22,13 +22,13 @@ class RestaurantesApplicationTests {
 
 	@Test
 	void exposesOpenApiSchemaWithoutGatewayToken() throws Exception {
-		mockMvc.perform(get("/api/restaurantes/schema/"))
+		mockMvc.perform(get("/api/restaurantes/schema"))
 				.andExpect(status().isOk());
 	}
 
 	@Test
-	void rejectsRequestsWithoutGatewayToken() throws Exception {
-		mockMvc.perform(get("/restaurantes"))
+	void protectsBusinessRequestsWithoutGatewayToken() throws Exception {
+		mockMvc.perform(get("/api/restaurantes"))
 				.andExpect(status().isUnauthorized());
 	}
 

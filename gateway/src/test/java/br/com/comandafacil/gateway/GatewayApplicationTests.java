@@ -31,6 +31,12 @@ class GatewayApplicationTests {
 	}
 
 	@Test
+	void protectsRestaurantApiWithoutAuthentication() throws Exception {
+		mockMvc.perform(get("/api/restaurantes"))
+				.andExpect(status().isUnauthorized());
+	}
+
+	@Test
 	void registersLogsInAndProtectsPrivateEndpoints() throws Exception {
 		mockMvc.perform(get("/api/auth/me"))
 				.andExpect(status().isUnauthorized());

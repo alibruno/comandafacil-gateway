@@ -6,18 +6,9 @@ Base da API:
 http://localhost:8080/api/restaurantes
 ```
 
-As rotas de negócio exigem JWT:
-
-```http
-Authorization: Bearer <token>
-```
-
-O token é obtido em:
-
-```text
-POST /api/auth/register
-POST /api/auth/login
-```
+As rotas de negócio exigem um token JWT emitido pelo gateway. A documentação
+continua disponível sem autenticação, mas é necessário clicar em `Authorize` no
+Swagger e informar o token JWT para executar as operacoes da API.
 
 ## Documentação
 
@@ -25,6 +16,13 @@ POST /api/auth/login
 Swagger: http://localhost:8080/api/docs
 Swagger de restaurantes: http://localhost:8080/api/restaurantes/docs/
 Schema: http://localhost:8080/api/restaurantes/schema/
+```
+
+Para obter um token, registre um usuário e faça login pela API de autenticação:
+
+```text
+POST /api/auth/register
+POST /api/auth/login
 ```
 
 ## Restaurantes
