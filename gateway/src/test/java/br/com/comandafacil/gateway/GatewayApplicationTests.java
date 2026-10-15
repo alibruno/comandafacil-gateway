@@ -25,6 +25,12 @@ class GatewayApplicationTests {
 	}
 
 	@Test
+	void exposesSwaggerUiWithoutAuthentication() throws Exception {
+		mockMvc.perform(get("/api/docs/"))
+				.andExpect(status().is3xxRedirection());
+	}
+
+	@Test
 	void registersLogsInAndProtectsPrivateEndpoints() throws Exception {
 		mockMvc.perform(get("/api/auth/me"))
 				.andExpect(status().isUnauthorized());

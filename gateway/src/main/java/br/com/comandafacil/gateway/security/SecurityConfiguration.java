@@ -47,6 +47,11 @@ public class SecurityConfiguration {
                                 "/api/pedidos/schema/**",
                                 "/api/restaurantes/docs/**",
                                 "/api/restaurantes/schema/**",
+                                "/v3/api-docs/**",
+                                "/api/swagger-config",
+                                "/api/swagger-ui/**",
+                                "/api/restaurantes/docs/swagger-config",
+                                "/api/restaurantes/docs/swagger-ui/**",
                                 "/swagger-ui/**",
                                 "/webjars/**",
                                 "/error").permitAll()

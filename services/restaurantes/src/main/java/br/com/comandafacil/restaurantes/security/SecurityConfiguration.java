@@ -29,7 +29,12 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/restaurantes/docs/**", "/api/restaurantes/schema/**").permitAll()
+                        .requestMatchers(
+                                "/api/restaurantes/docs/**",
+                                "/api/restaurantes/docs/swagger-config",
+                                "/api/restaurantes/docs/swagger-ui/**",
+                                "/api/restaurantes/schema/**",
+                                "/api/restaurantes/schema").permitAll()
                         .requestMatchers("/swagger-ui/**", "/webjars/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(resourceServer -> resourceServer.jwt(jwt -> {}))
