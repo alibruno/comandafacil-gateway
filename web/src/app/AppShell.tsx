@@ -11,6 +11,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import LogoutRounded from '@mui/icons-material/LogoutRounded';
 import { useAuth } from '../state/AuthContext';
+import { currentDateLabel } from '../shared/format';
 
 const navigation = [
 	{ label: 'Visão geral', to: '/', icon: <DashboardOutlinedIcon /> },
@@ -83,7 +84,7 @@ export default function AppShell() {
 				<Box component="header" sx={{ height: 64, px: { xs: 2, sm: 3.5, lg: 5 }, display: 'flex', alignItems: 'center', gap: 1.5, bgcolor: 'rgba(255,255,255,0.72)', borderBottom: '1px solid #e9ebe6' }}>
 					{mobile && <IconButton aria-label="Abrir menu" onClick={() => setDrawerOpen(true)} edge="start"><MenuIcon /></IconButton>}
 					<Typography sx={{ fontSize: 13, fontWeight: 600 }}>{pageTitle}</Typography>
-					<Typography sx={{ ml: 'auto', fontSize: 12, color: 'text.secondary', display: { xs: 'none', sm: 'block' } }}>Terça-feira, 13 de outubro</Typography>
+					<Typography sx={{ ml: 'auto', fontSize: 12, color: 'text.secondary', display: { xs: 'none', sm: 'block' } }}>{currentDateLabel()}</Typography>
 					<Typography noWrap sx={{ ml: 'auto', maxWidth: 180, fontSize: 12, color: 'text.secondary', display: { xs: 'none', sm: 'block' } }}>{userName}</Typography>
 					<Tooltip title="Sair">
 						<IconButton aria-label="Sair da conta" onClick={signOut} size="small">

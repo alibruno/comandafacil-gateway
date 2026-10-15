@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { money, orderTotal, tableName } from './format';
+import { currentDateLabel, money, orderTotal, tableName } from './format';
 import type { Order, Table } from '../types';
 
 const order: Order = {
@@ -28,5 +28,9 @@ describe('format helpers', () => {
 		const tables: Table[] = [{ id: 'mesa-1', name: 'Mesa 01', capacity: 4, createdAt: '2026-10-01', available: true }];
 		expect(tableName('mesa-1', tables)).toBe('Mesa 01');
 		expect(tableName('missing', tables)).toBe('Mesa removida');
+	});
+
+	it('formata a data atual em português', () => {
+		expect(currentDateLabel(new Date(2026, 9, 13))).toBe('Terça-feira, 13 de outubro');
 	});
 });
