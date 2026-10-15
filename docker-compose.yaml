@@ -33,11 +33,9 @@ services:
       - DATABASE_NAME=${DATABASE_NAME:-comandafacil_db}
       - DATABASE_USER=${DATABASE_USERNAME:-postgres}
       - DATABASE_PASSWORD=${DATABASE_PASSWORD:-admin}
-      - DATABASE_HOST=host.docker.internal
+      - DATABASE_HOST=postgres
       - DATABASE_PORT=5432
       - JWT_SECRET=${JWT_SECRET:?Defina JWT_SECRET com pelo menos 32 bytes no arquivo .env}
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     depends_on:
       postgres:
         condition: service_healthy
@@ -54,14 +52,12 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - DATABASE_URL=jdbc:postgresql://host.docker.internal:5432/${DATABASE_NAME:-comandafacil_db}
+      - DATABASE_URL=jdbc:postgresql://postgres:5432/${DATABASE_NAME:-comandafacil_db}
       - DATABASE_USERNAME=${DATABASE_USERNAME:-postgres}
       - DATABASE_PASSWORD=${DATABASE_PASSWORD:-admin}
       - JWT_SECRET=${JWT_SECRET:?Defina JWT_SECRET com pelo menos 32 bytes no arquivo .env}
-      - PEDIDOS_URL=http://host.docker.internal:8082
-      - RESTAURANTES_URL=http://host.docker.internal:8081
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - PEDIDOS_URL=http://pedidos:8000
+      - RESTAURANTES_URL=http://restaurantes:8081
     depends_on:
       postgres:
         condition: service_healthy
