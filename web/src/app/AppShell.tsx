@@ -11,6 +11,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import LogoutRounded from '@mui/icons-material/LogoutRounded';
 import { useAuth } from '../state/AuthContext';
+import { useWorkspace } from '../state/WorkspaceContext';
 import { currentDateLabel } from '../shared/format';
 
 const navigation = [
@@ -19,7 +20,7 @@ const navigation = [
 	{ label: 'Salão e cardápio', to: '/restaurante', icon: <TableRestaurantOutlinedIcon /> },
 ];
 
-function Navigation({ onNavigate, name, email }: { onNavigate?: () => void; name: string; email: string }) {
+function Navigation({ onNavigate, name, email, restaurantName }: { onNavigate?: () => void; name: string; email: string; restaurantName: string }) {
 	return (
 		<>
 			<Box sx={{ px: 2.5, pt: 3.5, pb: 4, display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -27,6 +28,7 @@ function Navigation({ onNavigate, name, email }: { onNavigate?: () => void; name
 				<Box>
 					<Typography sx={{ fontFamily: 'Fraunces, serif', fontSize: 18, fontWeight: 650, lineHeight: 1.1 }}>comanda<span style={{ color: '#bd654a' }}>fácil</span></Typography>
 					<Typography sx={{ color: 'text.secondary', fontSize: 10, mt: 0.4, letterSpacing: 0.3 }}>PAINEL DO RESTAURANTE</Typography>
+					<Typography noWrap title={restaurantName} sx={{ maxWidth: 190, color: 'primary.main', fontSize: 12, fontWeight: 700, mt: 0.8 }}>{restaurantName}</Typography>
 				</Box>
 			</Box>
 			<Typography sx={{ px: 3, mb: 1, color: '#929991', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1.1 }}>Operação</Typography>
@@ -63,10 +65,12 @@ export default function AppShell() {
 	const [drawerOpen, setDrawerOpen] = useState(false);
 	const location = useLocation();
 	const { user, signOut } = useAuth();
+	const { restaurant } = useWorkspace();
 	const pageTitle = location.pathname === '/pedidos' ? 'Pedidos' : location.pathname === '/restaurante' ? 'Salão e cardápio' : 'Visão geral';
 	const userName = user?.name ?? '';
 	const userEmail = user?.email ?? '';
-	const drawerContent = <Box sx={{ width: 250, height: '100%', display: 'flex', flexDirection: 'column', bgcolor: '#fff' }}><Navigation onNavigate={() => setDrawerOpen(false)} name={userName} email={userEmail} /></Box>;
+	const restaurantName = restaurant?.nome ?? '';
+	const drawerContent = <Box sx={{ width: 250, height: '100%', display: 'flex', flexDirection: 'column', bgcolor: '#fff' }}><Navigation onNavigate={() => setDrawerOpen(false)} name={userName} email={userEmail} restaurantName={restaurantName} /></Box>;
 
 	return (
 		<Box sx={{ minHeight: '100vh', display: 'flex' }}>
@@ -77,7 +81,7 @@ export default function AppShell() {
 				</Drawer>
 			) : (
 				<Box component="aside" sx={{ width: 250, flexShrink: 0, bgcolor: '#fff', borderRight: '1px solid #e9ebe6', minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'fixed', inset: '0 auto 0 0' }}>
-					<Navigation name={userName} email={userEmail} />
+					<Navigation name={userName} email={userEmail} restaurantName={restaurantName} />
 				</Box>
 			)}
 			<Box component="main" sx={{ flex: 1, minWidth: 0, ml: { md: '250px' } }}>
