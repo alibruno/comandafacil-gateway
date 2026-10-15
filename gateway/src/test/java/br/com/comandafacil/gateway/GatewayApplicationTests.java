@@ -31,6 +31,22 @@ class GatewayApplicationTests {
 	}
 
 	@Test
+	void exposesGatewayNavigationLinks() throws Exception {
+		mockMvc.perform(get("/api"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$._links.self.href").value("http://localhost/api"))
+				.andExpect(jsonPath("$._links.restaurantes.href").value("http://localhost/api/restaurantes"))
+				.andExpect(jsonPath("$._links.pedidos.href").value("http://localhost/api/pedidos"))
+				.andExpect(jsonPath("$._links.auth.register.href").value("http://localhost/api/auth/register"))
+				.andExpect(jsonPath("$._links.auth.register.method").value("POST"))
+				.andExpect(jsonPath("$._links.auth.login.href").value("http://localhost/api/auth/login"))
+				.andExpect(jsonPath("$._links.auth.login.method").value("POST"))
+				.andExpect(jsonPath("$._links.auth.me.href").value("http://localhost/api/auth/me"))
+				.andExpect(jsonPath("$._links.auth.me.method").value("GET"))
+				.andExpect(jsonPath("$._links.documentation.href").value("http://localhost/api/docs/"));
+	}
+
+	@Test
 	void exposesGatewayAuthenticationEndpointsInOpenApi() throws Exception {
 		mockMvc.perform(get("/v3/api-docs"))
 				.andExpect(status().isOk())
