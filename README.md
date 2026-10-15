@@ -27,5 +27,9 @@ gateway e microsserviços exigem esse token. As APIs ficam publicadas nas portas
 `8080`, `8081` e `8082` para desenvolvimento, mas rejeitam chamadas sem token.
 A porta do banco exige a senha definida em `.env`; não a encaminhe pelo Codespaces.
 
+No primeiro acesso ao painel, cadastre o restaurante para habilitar o salão e o
+cardápio. Mesas, categorias, produtos e pedidos são carregados e salvos pelas
+APIs autenticadas através do gateway; não são mantidos apenas no navegador.
+
 O segredo JWT deve permanecer privado, ter pelo menos 32 bytes e ser o mesmo
 para gateway e microsserviços. Não use o valor de exemplo em produção.

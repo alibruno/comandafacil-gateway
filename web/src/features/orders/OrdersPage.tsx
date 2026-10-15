@@ -17,7 +17,7 @@ type OrderDraft = Omit<Order, 'id' | 'openedAt'>;
 const filters: Filter[] = ['todos', 'cozinha', 'preparo', 'pronto', 'finalizado'];
 
 export default function OrdersPage() {
-	const { orders, setOrders, tables, setTables, products } = useWorkspace();
+	const { orders, tables, products, saveOrder: persistOrder, deleteOrder: removeOrder } = useWorkspace();
 	const [filter, setFilter] = useState<Filter>('todos');
 	const [search, setSearch] = useState('');
 	const [editorOpen, setEditorOpen] = useState(false);
@@ -38,31 +38,16 @@ export default function OrdersPage() {
 		return matchesFilter && haystack.includes(search.toLocaleLowerCase('pt-BR'));
 	});
 
-	const syncTable = (tableId: string, available: boolean) => setTables((current) => current.map((table) => table.id === tableId ? { ...table, available } : table));
-	const saveOrder = (draft: OrderDraft) => {
-		if (editing) {
-			setOrders((current) => current.map((order) => order.id === editing.id ? { ...order, ...draft } : order));
-			if (editing.tableId !== draft.tableId) {
-					const stillActive = orders.some((order) => order.id !== editing.id && order.tableId === editing.tableId && order.status !== 'finalizado');
-					if (!stillActive) syncTable(editing.tableId, true);
-			}
-				const anotherActiveOrder = orders.some((order) => order.id !== editing.id && order.tableId === draft.tableId && order.status !== 'finalizado');
-				syncTable(draft.tableId, draft.status === 'finalizado' && !anotherActiveOrder);
-		} else {
-			const latest = Math.max(1048, ...orders.map((order) => Number(order.id.replace('PED-', '')) || 0));
-			setOrders((current) => [{ ...draft, id: `PED-${latest + 1}`, openedAt: 'agora' }, ...current]);
-			syncTable(draft.tableId, false);
-		}
+	const saveOrder = async (draft: OrderDraft) => {
+		if (!await persistOrder(draft, editing?.id ?? null)) return false;
 		setEditorOpen(false);
 		setEditing(null);
+		return true;
 	};
 
-	const deleteOrder = () => {
+	const deleteOrder = async () => {
 		if (!deleting) return;
-		const remainingActive = orders.some((order) => order.id !== deleting.id && order.tableId === deleting.tableId && order.status !== 'finalizado');
-		setOrders((current) => current.filter((order) => order.id !== deleting.id));
-		if (!remainingActive) syncTable(deleting.tableId, true);
-		setDeleting(null);
+		if (await removeOrder(deleting.id)) setDeleting(null);
 	};
 	const openCreate = () => { setEditing(null); setEditorOpen(true); };
 	const openEdit = (order: Order) => { setEditing(order); setEditorOpen(true); };

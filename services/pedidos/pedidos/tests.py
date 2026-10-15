@@ -18,6 +18,7 @@ class PedidoApiTests(TestCase):
         self.payload = {
             "mesaId": 10,
             "garcomId": 20,
+            "garcomNome": "Usuário de teste",
             "notas": "Sem cebola",
             "itens": [
                 {
@@ -55,6 +56,7 @@ class PedidoApiTests(TestCase):
         self.assertIsNone(response.data["finalizadoEm"])
         self.assertIsInstance(response.data["id"], int)
         self.assertEqual(response.data["mesaId"], self.payload["mesaId"])
+        self.assertEqual(response.data["garcomNome"], self.payload["garcomNome"])
         self.assertIsInstance(response.data["itens"][0]["id"], int)
         self.assertEqual(response.data["itens"][0]["produtoId"], 30)
 
@@ -111,12 +113,13 @@ class PedidoApiTests(TestCase):
 
         response = self.client.patch(
             reverse("pedido-detail", args=[criado.data["id"]]),
-            {"status": Pedido.Status.FINALIZADO, "itens": [item]},
+            {"status": Pedido.Status.FINALIZADO, "garcomNome": "Joana", "itens": [item]},
             format="json",
         )
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["total"], "30.00")
+        self.assertEqual(response.data["garcomNome"], "Joana")
         self.assertIsNotNone(response.data["finalizadoEm"])
 
         reaberto = self.client.patch(

@@ -18,7 +18,7 @@ interface Props {
 	tables: Table[];
 	products: Product[];
 	onClose: () => void;
-	onSave: (draft: OrderDraft) => void;
+	onSave: (draft: OrderDraft) => Promise<boolean>;
 }
 
 const statuses: OrderStatus[] = ['cozinha', 'preparo', 'pronto', 'finalizado'];
@@ -30,6 +30,7 @@ export default function OrderEditorDialog({ open, order, tables, products, onClo
 	const [notes, setNotes] = useState('');
 	const [items, setItems] = useState<OrderItem[]>([]);
 	const [error, setError] = useState('');
+	const [isSaving, setIsSaving] = useState(false);
 
 	useEffect(() => {
 		if (!open) return;
@@ -52,13 +53,18 @@ export default function OrderEditorDialog({ open, order, tables, products, onClo
 		if (product) setItems((current) => [...current, { id: makeId(), productId: product.id, name: product.name, quantity: 1, unitPrice: product.price, note: '' }]);
 	};
 
-	const submit = (event: FormEvent<HTMLFormElement>) => {
+	const submit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		if (!tableId || !waiter.trim() || !items.length || items.some((item) => item.quantity < 1)) {
 			setError('Informe mesa, atendente e pelo menos um item com quantidade válida.');
 			return;
 		}
-		onSave({ tableId, waiter: waiter.trim(), status, notes: notes.trim(), items });
+		setIsSaving(true);
+		try {
+			await onSave({ tableId, waiter: waiter.trim(), status, notes: notes.trim(), items });
+		} finally {
+			setIsSaving(false);
+		}
 	};
 
 	return (
@@ -97,7 +103,7 @@ export default function OrderEditorDialog({ open, order, tables, products, onClo
 				</DialogContent>
 				<DialogActions sx={{ px: 3, pb: 2.5 }}>
 					<Button onClick={onClose} color="inherit">Cancelar</Button>
-					<Button type="submit" variant="contained">{order ? 'Salvar alterações' : 'Criar pedido'}</Button>
+					<Button type="submit" variant="contained" disabled={isSaving}>{isSaving ? 'Salvando...' : order ? 'Salvar alterações' : 'Criar pedido'}</Button>
 				</DialogActions>
 			</form>
 		</Dialog>

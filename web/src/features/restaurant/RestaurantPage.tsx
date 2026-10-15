@@ -16,7 +16,10 @@ type EditTarget = { kind: 'table'; value: Table | null } | { kind: 'product'; va
 type DeleteTarget = { kind: 'table'; value: Table } | { kind: 'product'; value: Product } | { kind: 'category'; value: Category };
 
 export default function RestaurantPage() {
-	const { tables, setTables, products, setProducts, categories, setCategories, orders } = useWorkspace();
+	const {
+		tables, products, categories, orders, saveTable, deleteTable, saveCategory, deleteCategory,
+		saveProduct, deleteProduct,
+	} = useWorkspace();
 	const [params, setParams] = useSearchParams();
 	const [tab, setTab] = useState(params.get('tab') === 'cardapio' ? 1 : 0);
 	const [categoryFilter, setCategoryFilter] = useState('todos');
@@ -55,40 +58,40 @@ export default function RestaurantPage() {
 		setTab(next);
 		setParams(next === 1 ? { tab: 'cardapio' } : {});
 	};
-	const submitEditor = (event: FormEvent<HTMLFormElement>) => {
+	const submitEditor = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		if (!editor || !name.trim()) return;
 		if (editor.kind === 'table') {
 			const value: Table = { id: editor.value?.id ?? makeId(), name: name.trim(), capacity, createdAt: editor.value?.createdAt ?? new Date().toISOString().slice(0, 10), available: editor.value?.available ?? true };
-			setTables((current) => editor.value ? current.map((table) => table.id === value.id ? value : table) : [...current, value]);
+			if (await saveTable(value)) setEditor(null);
 		} else {
 			if (!categoryId || Number(price) <= 0) { setError('Escolha uma categoria e informe um preço maior que zero.'); return; }
 			const value: Product = { id: editor.value?.id ?? makeId(), name: name.trim(), description: description.trim(), price: Number(price), categoryId, available: editor.value?.available ?? true };
-			setProducts((current) => editor.value ? current.map((product) => product.id === value.id ? value : product) : [...current, value]);
+			if (await saveProduct(value)) setEditor(null);
 		}
-		setEditor(null);
 	};
 
-	const addCategory = (event: FormEvent<HTMLFormElement>) => {
+	const addCategory = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		const trimmed = categoryName.trim();
 		if (!trimmed || categories.some((category) => category.name.toLocaleLowerCase('pt-BR') === trimmed.toLocaleLowerCase('pt-BR'))) return;
-		const value = { id: makeId(), name: trimmed, active: true };
-		setCategories((current) => [...current, value]);
-		setCategoryId(value.id);
-		setCategoryName('');
-		setCategoryDialog(false);
+		const value = await saveCategory({ id: makeId(), name: trimmed, active: true });
+		if (value) {
+			setCategoryId(value.id);
+			setCategoryName('');
+			setCategoryDialog(false);
+		}
 	};
 
-	const confirmDelete = () => {
+	const confirmDelete = async () => {
 		if (!deleting) return;
-		if (deleting.kind === 'table') setTables((current) => current.filter((table) => table.id !== deleting.value.id));
-		if (deleting.kind === 'product') setProducts((current) => current.filter((product) => product.id !== deleting.value.id));
-		if (deleting.kind === 'category') {
-			setCategories((current) => current.filter((category) => category.id !== deleting.value.id));
-			setProducts((current) => current.filter((product) => product.categoryId !== deleting.value.id));
-			if (categoryFilter === deleting.value.id) setCategoryFilter('todos');
-		}
+		const deleted = deleting.kind === 'table'
+			? await deleteTable(deleting.value.id)
+			: deleting.kind === 'product'
+				? await deleteProduct(deleting.value.id)
+				: await deleteCategory(deleting.value.id);
+		if (!deleted) return;
+		if (deleting.kind === 'category' && categoryFilter === deleting.value.id) setCategoryFilter('todos');
 		setDeleting(null);
 	};
 
@@ -123,7 +126,7 @@ export default function RestaurantPage() {
 								<Box component="td" sx={{ px: 2.2, py: 1.6, fontSize: 12, color: 'text.secondary' }}>{shortDate(table.createdAt)}</Box>
 								<Box component="td" sx={{ px: 2.2, py: 1.6 }}><Chip size="small" label={table.available ? 'Disponível' : 'Ocupada'} sx={{ height: 24, fontSize: 10, fontWeight: 700, bgcolor: table.available ? '#e5f0e8' : '#f8e8e4', color: table.available ? '#387456' : '#a24c3e' }} /></Box>
 								<Box component="td" sx={{ px: 1.5, py: 1, textAlign: 'right', whiteSpace: 'nowrap' }}>
-									<Button size="small" color="inherit" onClick={() => setTables((current) => current.map((item) => item.id === table.id ? { ...item, available: !item.available } : item))}>{table.available ? 'Ocupar' : 'Liberar'}</Button>
+									<Button size="small" color="inherit" onClick={() => void saveTable({ ...table, available: !table.available })}>{table.available ? 'Ocupar' : 'Liberar'}</Button>
 									<IconButton size="small" aria-label={`Editar ${table.name}`} onClick={() => setEditor({ kind: 'table', value: table })}><EditOutlined fontSize="small" /></IconButton>
 									<IconButton size="small" aria-label={`Excluir ${table.name}`} color="error" onClick={() => setDeleting({ kind: 'table', value: table })}><DeleteOutline fontSize="small" /></IconButton>
 								</Box>
@@ -148,7 +151,7 @@ export default function RestaurantPage() {
 								<Box component="td" sx={{ px: 2.2, py: 1.4, maxWidth: 380 }}><Typography sx={{ fontSize: 13, fontWeight: 650 }}>{product.name}</Typography><Typography noWrap sx={{ fontSize: 11, color: 'text.secondary', mt: 0.3 }}>{product.description}</Typography></Box>
 								<Box component="td" sx={{ px: 2.2, py: 1.4, fontSize: 12, color: 'text.secondary' }}>{categories.find((category) => category.id === product.categoryId)?.name ?? 'Sem categoria'}</Box>
 								<Box component="td" sx={{ px: 2.2, py: 1.4, fontSize: 12, fontWeight: 650 }}>{money(product.price)}</Box>
-								<Box component="td" sx={{ px: 1.2, py: 1.4 }}><Stack direction="row" alignItems="center"><Switch size="small" checked={product.available} onChange={() => setProducts((current) => current.map((item) => item.id === product.id ? { ...item, available: !item.available } : item))} inputProps={{ 'aria-label': `${product.available ? 'Desativar' : 'Ativar'} ${product.name}` }} /><Typography sx={{ fontSize: 11, color: 'text.secondary' }}>{product.available ? 'Disponível' : 'Indisponível'}</Typography></Stack></Box>
+								<Box component="td" sx={{ px: 1.2, py: 1.4 }}><Stack direction="row" alignItems="center"><Switch size="small" checked={product.available} onChange={() => void saveProduct({ ...product, available: !product.available })} inputProps={{ 'aria-label': `${product.available ? 'Desativar' : 'Ativar'} ${product.name}` }} /><Typography sx={{ fontSize: 11, color: 'text.secondary' }}>{product.available ? 'Disponível' : 'Indisponível'}</Typography></Stack></Box>
 								<Box component="td" sx={{ px: 1.2, py: 1, textAlign: 'right', whiteSpace: 'nowrap' }}><IconButton size="small" aria-label={`Editar ${product.name}`} onClick={() => setEditor({ kind: 'product', value: product })}><EditOutlined fontSize="small" /></IconButton><IconButton size="small" aria-label={`Excluir ${product.name}`} color="error" onClick={() => setDeleting({ kind: 'product', value: product })}><DeleteOutline fontSize="small" /></IconButton></Box>
 							</Box>)}</tbody>
 						</Box></Box>

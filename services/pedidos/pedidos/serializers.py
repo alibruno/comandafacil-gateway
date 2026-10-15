@@ -43,6 +43,9 @@ class PedidoSerializer(serializers.ModelSerializer):
         required=False,
         allow_null=True,
     )
+    garcomNome = serializers.CharField(
+        source="garcom_nome", max_length=255, required=False, allow_blank=True
+    )
     itens = ItemPedidoSerializer(many=True)
     abertoEm = serializers.DateTimeField(source="aberto_em", read_only=True)
     finalizadoEm = serializers.DateTimeField(source="finalizado_em", read_only=True)
@@ -53,6 +56,7 @@ class PedidoSerializer(serializers.ModelSerializer):
             "id",
             "mesaId",
             "garcomId",
+            "garcomNome",
             "status",
             "notas",
             "total",

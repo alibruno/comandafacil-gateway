@@ -11,6 +11,7 @@ class Pedido(models.Model):
     id = models.BigAutoField(primary_key=True)
     mesa_id = models.BigIntegerField()
     garcom_id = models.BigIntegerField(null=True, blank=True)
+    garcom_nome = models.CharField(max_length=255, blank=True, default="")
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.COZINHA)
     notas = models.TextField(blank=True)
     total = models.DecimalField(max_digits=12, decimal_places=2, default=0)
