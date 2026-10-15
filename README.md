@@ -30,6 +30,9 @@ A porta do banco exige a senha definida em `.env`; não a encaminhe pelo Codespa
 No primeiro acesso ao painel, cadastre o restaurante para habilitar o salão e o
 cardápio. Mesas, categorias, produtos e pedidos são carregados e salvos pelas
 APIs autenticadas através do gateway; não são mantidos apenas no navegador.
+O gateway encaminha as chamadas às portas publicadas dos microsserviços; o
+serviço de pedidos usa Gunicorn para aceitar corretamente as requisições
+encaminhadas pelo gateway.
 
 O segredo JWT deve permanecer privado, ter pelo menos 32 bytes e ser o mesmo
 para gateway e microsserviços. Não use o valor de exemplo em produção.
