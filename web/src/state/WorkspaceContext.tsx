@@ -78,6 +78,7 @@ interface WorkspaceValue {
 }
 
 const WorkspaceContext = createContext<WorkspaceValue | null>(null);
+const PEDIDOS_API_PATH = '/api/pedidos/';
 
 function mapTable(dto: TableDto): Table {
 	return { id: String(dto.id), name: dto.nome, capacity: dto.capacidade, createdAt: dto.dataCadastro, available: dto.disponivel };
@@ -138,7 +139,7 @@ export function WorkspaceProvider({ children }: PropsWithChildren) {
 			apiRequest<TableDto[]>(token, `${prefix}/mesas`),
 			apiRequest<CategoryDto[]>(token, `${prefix}/categorias`),
 			apiRequest<ProductDto[]>(token, `${prefix}/produtos`),
-			apiRequest<OrderDto[]>(token, '/api/pedidos/pedidos/'),
+			apiRequest<OrderDto[]>(token, PEDIDOS_API_PATH),
 		]);
 		setTables(tableDtos.map(mapTable));
 		setCategories(categoryDtos.map(mapCategory));
@@ -313,7 +314,7 @@ export function WorkspaceProvider({ children }: PropsWithChildren) {
 		};
 		const savedDto = await execute(() => apiRequest<OrderDto>(
 			token,
-			id ? `/api/pedidos/pedidos/${numericId(id)}/` : '/api/pedidos/pedidos/',
+			id ? `${PEDIDOS_API_PATH}${numericId(id)}/` : PEDIDOS_API_PATH,
 			requestOptions(id ? 'PATCH' : 'POST', payload),
 		));
 		if (!savedDto) return false;
@@ -344,7 +345,7 @@ export function WorkspaceProvider({ children }: PropsWithChildren) {
 		if (!token) return false;
 		const order = orders.find((item) => item.id === id);
 		const result = await execute(async () => {
-			await apiRequest<void>(token, `/api/pedidos/pedidos/${numericId(id)}/`, requestOptions('DELETE'));
+			await apiRequest<void>(token, `${PEDIDOS_API_PATH}${numericId(id)}/`, requestOptions('DELETE'));
 			return true;
 		});
 		if (!result) return false;
