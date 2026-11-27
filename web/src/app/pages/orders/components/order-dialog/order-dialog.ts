@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { Button } from '@openng/optimus-ui/button';
 import { Dialog } from '@openng/optimus-ui/dialog';
 import { InputText } from '@openng/optimus-ui/inputtext';
+import { Mesa } from '../../../restaurant/mesa.model';
 import { Order, OrderDialogMode, OrderDraft, OrderItem, OrderStatus } from '../../order.model';
 
 type OrderItemForm = FormGroup<{
@@ -25,6 +26,7 @@ export class OrderDialog implements OnChanges {
   readonly visible = input.required<boolean>();
   readonly mode = input.required<OrderDialogMode>();
   readonly order = input<Order | null>(null);
+  readonly mesas = input.required<Mesa[]>();
   readonly close = output<void>();
   readonly save = output<OrderDraft>();
   readonly editRequested = output<Order>();
@@ -53,7 +55,7 @@ export class OrderDialog implements OnChanges {
 
   ngOnChanges(): void {
     const order = this.mode() !== 'create' ? this.order() : null;
-    this.orderForm.controls.table.reset(order?.table ?? 'Mesa 01');
+    this.orderForm.controls.table.reset(order?.table ?? this.mesas()[0]?.nome ?? '');
     this.orderForm.controls.waiter.reset(order?.waiter ?? 'Jean-Pierre');
     this.orderForm.controls.notes.reset(order?.notes ?? '');
     this.orderForm.controls.status.reset(order?.status ?? 'cozinha');
@@ -116,6 +118,10 @@ export class OrderDialog implements OnChanges {
 
   protected statusLabel(status: OrderStatus): string {
     return this.statusChoices.find((choice) => choice.value === status)?.label ?? status;
+  }
+
+  protected hasMesa(nome: string): boolean {
+    return this.mesas().some((mesa) => mesa.nome === nome);
   }
 
   protected statusBadgeClass(status: OrderStatus): string {

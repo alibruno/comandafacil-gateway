@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/auth.guard';
 import { HomePage } from './pages/home/home-page';
 
 export const routes: Routes = [
@@ -10,6 +11,7 @@ export const routes: Routes = [
 	},
 	{
 		path: 'restaurante',
+		canActivate: [authGuard],
 		loadComponent: () =>
 			import('./pages/restaurant/restaurant-management').then(
 				(module) => module.RestaurantManagement,
@@ -18,6 +20,7 @@ export const routes: Routes = [
 	},
 	{
 		path: 'pedidos',
+		canActivate: [authGuard],
 		loadComponent: () =>
 			import('./pages/orders/orders-page').then((module) => module.OrdersPage),
 		title: 'Pedidos | ComandaFácil',

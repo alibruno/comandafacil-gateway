@@ -45,6 +45,11 @@
         </div>
 
         <form class="grid gap-4" [formGroup]="loginForm" (ngSubmit)="submitLogin()" novalidate>
+          @if (auth.error(); as error) {
+            <p class="rounded-lg bg-[#a13711]/8 px-3 py-2 text-sm text-[#a13711]" role="alert">
+              {{ error }}
+            </p>
+          }
           <div class="grid gap-1.5">
             <label class="text-[0.76rem] font-semibold text-[#77818c]" for="login-email">Email</label>
             <div class="relative flex items-center">
@@ -98,6 +103,7 @@
           <p-button
             label="Fazer login"
             type="submit"
+            [disabled]="auth.loading()"
             styleClass="mt-1 min-h-[46px] w-full rounded-[10px] border-0 bg-[#152e30] text-[0.86rem] font-semibold text-white transition hover:-translate-y-px hover:bg-[#1f4043] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-[#f99a26]/55"
           >
             <ng-template #icon>
@@ -176,6 +182,11 @@
         </div>
 
         <form class="grid gap-4" [formGroup]="registerForm" (ngSubmit)="submitRegister()" novalidate>
+          @if (auth.error(); as error) {
+            <p class="rounded-lg bg-[#a13711]/8 px-3 py-2 text-sm text-[#a13711]" role="alert">
+              {{ error }}
+            </p>
+          }
           <div class="grid gap-1.5">
             <label class="text-[0.76rem] font-semibold text-[#77818c]" for="register-name">Nome completo</label>
             <div class="relative flex items-center">
@@ -288,6 +299,7 @@
           <p-button
             label="Concluir cadastro"
             type="submit"
+            [disabled]="auth.loading()"
             styleClass="mt-1 min-h-[46px] w-full rounded-[10px] border-0 bg-[#f99a26] text-[0.86rem] font-semibold text-white transition hover:-translate-y-px hover:bg-[#f28c18] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-[#f99a26]/55"
           >
             <ng-template #icon>

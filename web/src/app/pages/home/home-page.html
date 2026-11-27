@@ -19,5 +19,5 @@
       />
     </div>
   </main>
-  <app-home-auth [(mode)]="authMode" />
+  <app-home-auth [(mode)]="authMode" (authenticated)="completeAuthentication()" />
 </div>

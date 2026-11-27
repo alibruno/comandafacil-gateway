@@ -47,6 +47,20 @@ class BackendApplicationTests {
 		String token = JsonPath.read(registration, "$.token");
 		assertNotNull(token);
 
+		mockMvc.perform(post("/api/pedidos")
+						.header("Authorization", "Bearer " + token)
+						.contentType(MediaType.APPLICATION_JSON)
+						.content("""
+								{
+								  "table":"Mesa inexistente",
+								  "waiter":"Teste",
+								  "items":[{"name":"Prato","detail":"","unitPrice":25,"quantity":1,"note":""}],
+								  "notes":"",
+								  "status":"cozinha"
+								}
+								"""))
+				.andExpect(status().isBadRequest());
+
 		String mesaResponse = mockMvc.perform(post("/api/mesas")
 						.header("Authorization", "Bearer " + token)
 						.contentType(MediaType.APPLICATION_JSON)
@@ -76,16 +90,12 @@ class BackendApplicationTests {
 								"""))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.capacidade").value(6));
-		mockMvc.perform(delete("/api/mesas/{id}", mesaId)
-						.header("Authorization", "Bearer " + token))
-				.andExpect(status().isNoContent());
-
 		String pedidoResponse = mockMvc.perform(post("/api/pedidos")
 						.header("Authorization", "Bearer " + token)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content("""
 								{
-								  "table":"Mesa 01 · Salão",
+								  "table":"Mesa atualizada",
 								  "waiter":"Teste",
 								  "items":[{"id":"item-1","name":"Prato","detail":"R$ 25,00","unitPrice":25,"quantity":2,"note":""}],
 								  "notes":"",
@@ -105,7 +115,7 @@ class BackendApplicationTests {
 						.contentType(MediaType.APPLICATION_JSON)
 						.content("""
 								{
-								  "table":"Mesa 02 · Salão",
+								  "table":"Mesa atualizada",
 								  "waiter":"Teste",
 								  "items":[{"id":"item-1","name":"Prato","detail":"R$ 25,00","unitPrice":25,"quantity":3,"note":""}],
 								  "notes":"",
@@ -120,6 +130,9 @@ class BackendApplicationTests {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.items[0].quantity").value(3));
 		mockMvc.perform(delete("/api/pedidos/{id}", pedidoId)
+						.header("Authorization", "Bearer " + token))
+				.andExpect(status().isNoContent());
+		mockMvc.perform(delete("/api/mesas/{id}", mesaId)
 						.header("Authorization", "Bearer " + token))
 				.andExpect(status().isNoContent());
 	}

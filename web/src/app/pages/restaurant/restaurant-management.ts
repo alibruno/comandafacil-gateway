@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Button } from '@openng/optimus-ui/button';
 import { RestaurantHeader } from '../../shared/components/restaurant-header/restaurant-header';
+import { RestaurantDataService } from '../../core/restaurant-data.service';
 import { MesaDialog } from './components/mesa-dialog/mesa-dialog';
 import { MesaSummary } from './components/mesa-summary/mesa-summary';
 import { MesaTable } from './components/mesa-table/mesa-table';
@@ -11,17 +12,19 @@ import { Mesa, MesaDraft, ModalMode } from './mesa.model';
   selector: 'app-restaurant-management',
   templateUrl: './restaurant-management.html',
 })
-export class RestaurantManagement {
-  protected readonly mesas = signal<Mesa[]>([
-    { id: 1, nome: 'Mesa 01', capacidade: 4, dataCadastro: '2026-09-12', disponivel: true },
-    { id: 2, nome: 'Mesa 02', capacidade: 2, dataCadastro: '2026-09-09', disponivel: false },
-    { id: 3, nome: 'Mesa 03', capacidade: 6, dataCadastro: '2026-08-28', disponivel: true },
-    { id: 4, nome: 'Mesa 04', capacidade: 4, dataCadastro: '2026-08-21', disponivel: true },
-  ]);
+export class RestaurantManagement implements OnInit {
+  protected readonly data = inject(RestaurantDataService);
+  protected readonly mesas = this.data.mesas;
 
   protected readonly modalVisible = signal(false);
   protected readonly modalMode = signal<ModalMode>('create');
   protected readonly selectedMesa = signal<Mesa | null>(null);
+
+  ngOnInit(): void {
+    this.data.loadMesas().subscribe({
+      error: (error: unknown) => console.error('Falha ao carregar mesas:', error),
+    });
+  }
 
   protected openCreateModal(): void {
     this.modalMode.set('create');
@@ -49,27 +52,24 @@ export class RestaurantManagement {
 
   protected saveMesa(draft: MesaDraft): void {
     const selected = this.selectedMesa();
+    const request = this.modalMode() === 'edit' && selected
+      ? this.data.updateMesa(selected.id, draft)
+      : this.data.createMesa(draft);
 
-    if (this.modalMode() === 'edit' && selected) {
-      this.mesas.update((mesas) =>
-        mesas.map((mesa) => (mesa.id === selected.id ? { ...mesa, ...draft } : mesa)),
-      );
-    } else {
-      this.mesas.update((mesas) => [
-        ...mesas,
-        { id: Math.max(0, ...mesas.map((mesa) => mesa.id)) + 1, ...draft },
-      ]);
-    }
-
-    this.closeModal();
+    request.subscribe({
+      next: () => this.closeModal(),
+      error: (error: unknown) => console.error('Falha ao salvar mesa:', error),
+    });
   }
 
   protected deleteMesa(): void {
     const selected = this.selectedMesa();
     if (!selected) return;
 
-    this.mesas.update((mesas) => mesas.filter((mesa) => mesa.id !== selected.id));
-    this.closeModal();
+    this.data.deleteMesa(selected.id).subscribe({
+      next: () => this.closeModal(),
+      error: (error: unknown) => console.error('Falha ao remover mesa:', error),
+    });
   }
 
   protected closeModal(): void {

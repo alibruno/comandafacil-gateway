@@ -1,9 +1,10 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Button } from '@openng/optimus-ui/button';
 import { Dialog } from '@openng/optimus-ui/dialog';
+import { RestaurantHeader } from '../../shared/components/restaurant-header/restaurant-header';
+import { RestaurantDataService } from '../../core/restaurant-data.service';
 import { OrderDialog } from './components/order-dialog/order-dialog';
 import { Order, OrderDialogMode, OrderDraft, OrderFilter, OrderItem, OrderStatus } from './order.model';
-import { RestaurantHeader } from '../../shared/components/restaurant-header/restaurant-header';
 
 @Component({
   imports: [Button, Dialog, OrderDialog, RestaurantHeader],
@@ -13,90 +14,10 @@ import { RestaurantHeader } from '../../shared/components/restaurant-header/rest
     class: 'block min-h-screen font-sans',
   },
 })
-export class OrdersPage {
-  protected readonly orders = signal<Order[]>([
-    {
-      id: 'PED-1054',
-      table: 'Mesa 02 · Salão',
-      waiter: 'Jean-Pierre',
-      items: [
-        { id: '1054-1', name: 'Boeuf Bourguignon', detail: 'R$ 79,00 un.', unitPrice: 79, quantity: 2, note: 'Ponto da carne ao ponto' },
-        { id: '1054-2', name: 'Croque Monsieur', detail: 'R$ 38,80 un.', unitPrice: 38.8, quantity: 1, note: '' },
-        { id: '1054-3', name: 'Côtes du Rhône (Taça)', detail: 'R$ 16,00 un.', unitPrice: 16, quantity: 2, note: '' },
-      ],
-      notes: 'Molho à parte; pão bem crocante.',
-      total: 228.8,
-      status: 'preparo',
-      openedAt: 'há 14 min',
-    },
-    {
-      id: 'PED-1053',
-      table: 'Mesa 05 · Varanda',
-      waiter: 'Marcella V.',
-      items: [
-        { id: '1053-1', name: 'Filet Mignon au Poivre', detail: 'R$ 108,00 un.', unitPrice: 108, quantity: 1, note: 'Ponto da carne menos' },
-        { id: '1053-2', name: 'Risoto de Cogumelos', detail: 'R$ 56,00 un.', unitPrice: 56, quantity: 1, note: '' },
-      ],
-      notes: 'Ponto da carne menos.',
-      total: 164,
-      status: 'cozinha',
-      openedAt: 'há 6 min',
-    },
-    {
-      id: 'PED-1052',
-      table: 'Mesa 08 · Gazebo',
-      waiter: 'Jean-Pierre',
-      items: [
-        { id: '1052-1', name: 'Salmão Grelhado ao Molho de Ervas', detail: 'R$ 65,00 un.', unitPrice: 65, quantity: 2, note: '' },
-        { id: '1052-2', name: 'Sauvignon Blanc', detail: 'R$ 34,00 un.', unitPrice: 34, quantity: 2, note: '' },
-      ],
-      notes: '',
-      total: 198,
-      status: 'pronto',
-      openedAt: 'há 28 min',
-    },
-    {
-      id: 'PED-1051',
-      table: 'Mesa 01 · Salão',
-      waiter: 'Thomas B.',
-      items: [
-        { id: '1051-1', name: 'Confit de Canard', detail: 'R$ 142,00 un.', unitPrice: 142, quantity: 1, note: '' },
-        { id: '1051-2', name: 'Gratin Dauphinois', detail: 'R$ 52,00 un.', unitPrice: 52, quantity: 1, note: '' },
-        { id: '1051-3', name: 'Pinot Noir', detail: 'R$ 116,00 un.', unitPrice: 116, quantity: 1, note: '' },
-      ],
-      notes: 'Mesa de celebração.',
-      total: 310,
-      status: 'preparo',
-      openedAt: 'há 21 min',
-    },
-    {
-      id: 'PED-1050',
-      table: 'Mesa 11 · Salão',
-      waiter: 'Marcella V.',
-      items: [
-        { id: '1050-1', name: 'Sopa de Cebola Gratinada', detail: 'R$ 32,00 un.', unitPrice: 32, quantity: 2, note: '' },
-        { id: '1050-2', name: 'Steak Tartare', detail: 'R$ 70,00 un.', unitPrice: 70, quantity: 1, note: '' },
-      ],
-      notes: '',
-      total: 134,
-      status: 'finalizado',
-      openedAt: 'às 19:54',
-    },
-    {
-      id: 'PED-1049',
-      table: 'Mesa 04 · Centro',
-      waiter: 'Jean-Pierre',
-      items: [
-        { id: '1049-1', name: 'Ratatouille', detail: 'R$ 48,00 un.', unitPrice: 48, quantity: 1, note: '' },
-        { id: '1049-2', name: 'Robalo Selado', detail: 'R$ 108,00 un.', unitPrice: 108, quantity: 1, note: '' },
-        { id: '1049-3', name: 'Água', detail: 'R$ 8,00 un.', unitPrice: 8, quantity: 2, note: '' },
-      ],
-      notes: '',
-      total: 172,
-      status: 'finalizado',
-      openedAt: 'às 19:30',
-    },
-  ]);
+export class OrdersPage implements OnInit {
+  protected readonly data = inject(RestaurantDataService);
+  protected readonly orders = this.data.orders;
+  protected readonly mesas = this.data.mesas;
 
   protected readonly filters: { label: string; value: OrderFilter }[] = [
     { label: 'Todos', value: 'all' },
@@ -128,11 +49,21 @@ export class OrdersPage {
     () => this.orders().filter((order) => order.status !== 'finalizado').length,
   );
 
+  ngOnInit(): void {
+    this.data.loadMesas().subscribe({
+      error: (error: unknown) => console.error('Falha ao carregar mesas:', error),
+    });
+    this.data.loadOrders().subscribe({
+      error: (error: unknown) => console.error('Falha ao carregar pedidos:', error),
+    });
+  }
+
   protected setFilter(filter: OrderFilter): void {
     this.activeFilter.set(filter);
   }
 
   protected openCreateDialog(): void {
+    if (this.data.loadingMesas() || this.mesas().length === 0) return;
     this.dialogMode.set('create');
     this.selectedOrder.set(null);
     this.dialogVisible.set(true);
@@ -166,31 +97,26 @@ export class OrdersPage {
     const target = this.deleteTarget();
     if (!target) return;
 
-    this.orders.update((orders) => orders.filter((order) => order.id !== target.id));
-    this.deleteTarget.set(null);
+    this.data.deleteOrder(target.id).subscribe({
+      next: () => this.deleteTarget.set(null),
+      error: (error: unknown) => console.error('Falha ao remover pedido:', error),
+    });
   }
 
   protected saveOrder(draft: OrderDraft): void {
     const selected = this.selectedOrder();
+    const isEditing = this.dialogMode() === 'edit' && selected !== null;
+    const request = this.dialogMode() === 'edit' && selected
+      ? this.data.updateOrder(selected.id, draft)
+      : this.data.createOrder(draft);
 
-    if (this.dialogMode() === 'edit' && selected) {
-      this.orders.update((orders) =>
-        orders.map((order) => (order.id === selected.id ? { ...order, ...draft } : order)),
-      );
-    } else {
-      const latestId = Math.max(1048, ...this.orders().map((order) => Number(order.id.slice(4))));
-      this.orders.update((orders) => [
-        {
-          ...draft,
-          id: `PED-${latestId + 1}`,
-          openedAt: 'agora',
-        },
-        ...orders,
-      ]);
-      this.activeFilter.set('all');
-    }
-
-    this.closeDialog();
+    request.subscribe({
+      next: () => {
+        if (!isEditing) this.activeFilter.set('all');
+        this.closeDialog();
+      },
+      error: (error: unknown) => console.error('Falha ao salvar pedido:', error),
+    });
   }
 
   protected closeDialog(): void {

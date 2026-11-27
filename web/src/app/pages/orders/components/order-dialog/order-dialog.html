@@ -156,11 +156,16 @@
                 class="min-h-[44px] w-full rounded-lg border border-[#77818c]/35 bg-[#f8fafc] px-3 py-2.5 text-[0.82rem] text-[#152e30] focus-visible:border-[#f99a26] focus-visible:outline-3 focus-visible:outline-offset-1 focus-visible:outline-[#f99a26]/24"
                 formControlName="table"
               >
-                <option value="Mesa 01 · Salão">Mesa 01 · Salão</option>
-                <option value="Mesa 02 · Salão">Mesa 02 · Salão</option>
-                <option value="Mesa 05 · Varanda">Mesa 05 · Varanda</option>
-                <option value="Mesa 08 · Gazebo">Mesa 08 · Gazebo</option>
-                <option value="Balcão · Bar">Balcão · Bar</option>
+                @if (order(); as currentOrder) {
+                  @if (!hasMesa(currentOrder.table)) {
+                    <option [value]="currentOrder.table" disabled>
+                      {{ currentOrder.table }} (mesa não cadastrada)
+                    </option>
+                  }
+                }
+                @for (mesa of mesas(); track mesa.id) {
+                  <option [value]="mesa.nome">{{ mesa.nome }}</option>
+                }
               </select>
             </div>
             <div class="grid content-start gap-1.5">

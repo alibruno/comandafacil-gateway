@@ -2,6 +2,25 @@
 
 <main class="min-h-screen bg-[#f7f9fa] text-[#152e30] lg:ml-64">
   <section class="mx-auto max-w-[1600px] space-y-7 px-5 py-7 md:px-8 lg:px-10">
+    @if (data.orderError(); as error) {
+      <p class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800" role="alert">
+        {{ error }}
+      </p>
+    }
+    @if (data.loadingOrders() && orders().length === 0) {
+      <p class="text-sm text-[#77818c]" role="status">Carregando pedidos...</p>
+    }
+    @if (data.mesaError(); as error) {
+      <p class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800" role="alert">
+        {{ error }}
+      </p>
+    } @else if (data.loadingMesas() && mesas().length === 0) {
+      <p class="text-sm text-[#77818c]" role="status">Carregando mesas para novos pedidos...</p>
+    } @else if (!data.loadingMesas() && mesas().length === 0) {
+      <p class="rounded-xl border border-[#f99a26]/35 bg-[#f99a26]/10 px-4 py-3 text-sm text-[#8b5000]" role="status">
+        Cadastre uma mesa na aba Restaurante antes de criar um pedido.
+      </p>
+    }
     <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
       <p class="max-w-2xl text-sm leading-6 text-[#77818c]">
         Acompanhe o fluxo da cozinha, atualize comandas e mantenha o atendimento sincronizado.
@@ -9,6 +28,7 @@
       <p-button
         label="Novo pedido"
         type="button"
+        [disabled]="data.loadingMesas() || mesas().length === 0"
         styleClass="new-order-button min-h-[44px] whitespace-nowrap rounded-[10px] border-[#f99a26] bg-[#f99a26] px-4 font-bold text-[#152e30] transition hover:-translate-y-px hover:border-[#a13711] hover:bg-[#a13711] hover:text-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#f99a26]/48"
         (onClick)="openCreateDialog()"
       >
@@ -182,6 +202,7 @@
   [visible]="dialogVisible()"
   [mode]="dialogMode()"
   [order]="selectedOrder()"
+  [mesas]="mesas()"
   (close)="closeDialog()"
   (save)="saveOrder($event)"
   (editRequested)="editFromView($event)"

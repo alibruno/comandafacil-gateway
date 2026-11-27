@@ -1,5 +1,6 @@
 package br.com.comandafacil.backend.pedidos;
 
+import br.com.comandafacil.backend.mesas.MesaRepository;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
@@ -13,9 +14,11 @@ import org.springframework.web.server.ResponseStatusException;
 public class PedidoService {
 
     private final PedidoRepository pedidos;
+    private final MesaRepository mesas;
 
-    public PedidoService(PedidoRepository pedidos) {
+    public PedidoService(PedidoRepository pedidos, MesaRepository mesas) {
         this.pedidos = pedidos;
+        this.mesas = mesas;
     }
 
     @Transactional(readOnly = true)
@@ -30,6 +33,7 @@ public class PedidoService {
     }
 
     public PedidoResponse create(PedidoRequest request) {
+        validateTable(request.table());
         Pedido pedido = new Pedido(
                 request.table().trim(), request.waiter().trim(), request.notes(), request.status());
         replaceItems(pedido, request.items());
@@ -39,6 +43,7 @@ public class PedidoService {
     public PedidoResponse update(String id, PedidoRequest request) {
         Pedido pedido = pedidos.findById(parseId(id))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado."));
+        validateTable(request.table());
         pedido.setTableName(request.table().trim());
         pedido.setWaiter(request.waiter().trim());
         pedido.setNotes(request.notes());
@@ -56,6 +61,13 @@ public class PedidoService {
     private void replaceItems(Pedido pedido, List<PedidoItemRequest> items) {
         items.forEach(item -> pedido.addItem(new PedidoItem(
                 item.name().trim(), item.detail(), item.unitPrice(), item.quantity(), item.note())));
+    }
+
+    private void validateTable(String tableName) {
+        if (!mesas.existsByNome(tableName.trim())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Cadastre a mesa antes de criar um pedido para ela.");
+        }
     }
 
     private PedidoResponse toResponse(Pedido pedido) {

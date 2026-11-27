@@ -34,6 +34,7 @@ export class MesaDialog {
     schema((path) => {
       required(path.nome);
       min(path.capacidade, 1);
+      required(path.dataCadastro);
     }),
   );
   protected readonly modalTitle = computed(() => {

@@ -1,10 +1,10 @@
-import { Component, inject, model } from '@angular/core';
+import { Component, inject, model, output } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ButtonModule } from '@openng/optimus-ui/button';
 import { DialogModule } from '@openng/optimus-ui/dialog';
 import { InputTextModule } from '@openng/optimus-ui/inputtext';
-import { Router } from '@angular/router';
 import { AuthMode } from '../../home-page.types';
+import { AuthService } from '../../../../core/auth.service';
 
 function passwordsMatch(control: AbstractControl): ValidationErrors | null {
   const password = control.get('password')?.value;
@@ -20,9 +20,10 @@ function passwordsMatch(control: AbstractControl): ValidationErrors | null {
 })
 export class HomeAuth {
   private readonly formBuilder = inject(FormBuilder);
-  private readonly router = inject(Router);
+  protected readonly auth = inject(AuthService);
 
   readonly mode = model<AuthMode | null>(null);
+  readonly authenticated = output<void>();
   protected readonly loginForm = this.formBuilder.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required],
@@ -39,6 +40,7 @@ export class HomeAuth {
       return;
     }
 
+    this.auth.clearError();
     this.mode.set(null);
   }
 
@@ -49,6 +51,7 @@ export class HomeAuth {
   }
 
   protected switchMode(mode: AuthMode): void {
+    this.auth.clearError();
     this.mode.set(mode);
   }
 
@@ -58,7 +61,10 @@ export class HomeAuth {
       return;
     }
 
-    void this.router.navigateByUrl('/restaurante');
+    this.auth.login(this.loginForm.getRawValue()).subscribe({
+      next: () => this.authenticated.emit(),
+      error: (error: unknown) => console.error('Falha ao entrar:', error),
+    });
   }
 
   protected submitRegister(): void {
@@ -67,6 +73,10 @@ export class HomeAuth {
       return;
     }
 
-    void this.router.navigateByUrl('/restaurante');
+    const { name, email, password } = this.registerForm.getRawValue();
+    this.auth.register({ name, email, password }).subscribe({
+      next: () => this.authenticated.emit(),
+      error: (error: unknown) => console.error('Falha ao criar conta:', error),
+    });
   }
 }
