@@ -1,5 +1,18 @@
 # ComandaFácil
 
+## Executar com Docker
+
+Com Docker e Docker Compose instalados, na raiz do projeto execute:
+
+```bash
+docker compose up --build
+```
+
+A interface roda pelo servidor de desenvolvimento do Angular (Vite) em
+`http://localhost:4200`, e a API fica em `http://localhost:8080`. Para parar
+os serviços, use `Ctrl+C` e depois `docker compose down`. O banco H2 é mantido
+em memória; os dados são apagados quando o backend é reiniciado.
+
 ## Backend
 
 O backend usa Java 25, Spring Boot, Spring Data JPA, Spring Security, JWT e H2.
