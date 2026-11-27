@@ -8,8 +8,10 @@ import { RestaurantHeader } from '../../shared/components/restaurant-header/rest
 @Component({
   imports: [Button, Dialog, OrderDialog, RestaurantHeader],
   selector: 'app-orders-page',
-  styleUrl: './orders-page.css',
   templateUrl: './orders-page.html',
+  host: {
+    class: 'block min-h-screen font-sans',
+  },
 })
 export class OrdersPage {
   protected readonly orders = signal<Order[]>([
@@ -207,7 +209,13 @@ export class OrdersPage {
   }
 
   protected statusClass(status: OrderStatus): string {
-    return `status--${status}`;
+    const classes: Record<OrderStatus, string> = {
+      cozinha: 'bg-[#e5ebeb] text-[#152e30]',
+      preparo: 'bg-[#f99a26]/18 text-[#8b5000]',
+      pronto: 'bg-[#e8f2e5] text-[#38623b]',
+      finalizado: 'bg-[#f4f6f8] text-[#77818c]',
+    };
+    return classes[status];
   }
 
   protected formatCurrency(value: number): string {

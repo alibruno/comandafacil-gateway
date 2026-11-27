@@ -17,7 +17,6 @@ type OrderItemForm = FormGroup<{
 @Component({
   imports: [Button, Dialog, InputText, ReactiveFormsModule],
   selector: 'app-order-dialog',
-  styleUrl: './order-dialog.css',
   templateUrl: './order-dialog.html',
 })
 export class OrderDialog implements OnChanges {
@@ -117,6 +116,16 @@ export class OrderDialog implements OnChanges {
 
   protected statusLabel(status: OrderStatus): string {
     return this.statusChoices.find((choice) => choice.value === status)?.label ?? status;
+  }
+
+  protected statusBadgeClass(status: OrderStatus): string {
+    const classes: Record<OrderStatus, string> = {
+      cozinha: 'bg-[#e5ebeb] text-[#152e30]',
+      preparo: 'bg-[#f99a26]/18 text-[#8b5000]',
+      pronto: 'bg-[#e8f2e5] text-[#38623b]',
+      finalizado: 'bg-[#f4f6f8] text-[#77818c]',
+    };
+    return classes[status];
   }
 
   protected saveOrder(): void {

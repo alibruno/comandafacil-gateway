@@ -1,11 +1,22 @@
-<div class="home-shell">
+<div class="flex min-h-svh flex-col bg-[#fafaf8]">
   <app-home-header (authRequested)="openAuth($event)" />
 
-  <main class="home-main">
+  <main
+    class="mx-auto flex min-h-[calc(100svh-80px)] w-full max-w-[1200px] flex-1 flex-col justify-center px-4 pb-12 pt-28 sm:px-6 sm:pb-20 sm:pt-32"
+  >
     <app-home-hero />
-    <div class="access-grid">
-      <app-home-access-card title="Gerenciamento do Restaurante" icon="table_restaurant" route="/restaurante" />
-      <app-home-access-card title="Gerenciamento de Pedidos" icon="receipt_long" route="/pedidos" accent="amber" />
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-8">
+      <app-home-access-card
+        title="Gerenciamento do Restaurante"
+        icon="table_restaurant"
+        route="/restaurante"
+      />
+      <app-home-access-card
+        title="Gerenciamento de Pedidos"
+        icon="receipt_long"
+        route="/pedidos"
+        accent="amber"
+      />
     </div>
   </main>
   <app-home-auth [(mode)]="authMode" />

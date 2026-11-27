@@ -6,7 +6,12 @@
       <p class="max-w-2xl text-sm leading-6 text-[#77818c]">
         Acompanhe o fluxo da cozinha, atualize comandas e mantenha o atendimento sincronizado.
       </p>
-      <p-button label="Novo pedido" type="button" styleClass="new-order-button" (onClick)="openCreateDialog()">
+      <p-button
+        label="Novo pedido"
+        type="button"
+        styleClass="new-order-button min-h-[44px] whitespace-nowrap rounded-[10px] border-[#f99a26] bg-[#f99a26] px-4 font-bold text-[#152e30] transition hover:-translate-y-px hover:border-[#a13711] hover:bg-[#a13711] hover:text-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#f99a26]/48"
+        (onClick)="openCreateDialog()"
+      >
         <ng-template #icon>
           <span class="material-symbols-outlined" aria-hidden="true">add</span>
         </ng-template>
@@ -14,38 +19,68 @@
     </div>
 
     <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4" aria-label="Resumo dos pedidos">
-      <article class="summary-item">
+      <article
+        class="flex min-h-[116px] items-center justify-between gap-4 rounded-xl border border-[#dccdc1]/60 bg-white px-5 py-4.5 shadow-[0_4px_16px_-2px_rgb(21_46_48/6%)]"
+      >
         <div>
-          <p>Pedidos em andamento</p>
-          <strong>{{ activeCount() }}</strong>
+          <p class="m-0 text-[0.74rem] font-semibold text-[#77818c]">Pedidos em andamento</p>
+          <strong class="mt-1.5 block text-[1.8rem] leading-none">{{ activeCount() }}</strong>
         </div>
-        <span class="summary-icon material-symbols-outlined" aria-hidden="true">receipt_long</span>
+        <span
+          class="material-symbols-outlined grid size-[42px] flex-none place-items-center rounded-[10px] bg-[#152e30] text-[22px] text-white"
+          aria-hidden="true"
+        >
+          receipt_long
+        </span>
       </article>
-      <article class="summary-item">
+      <article
+        class="flex min-h-[116px] items-center justify-between gap-4 rounded-xl border border-[#dccdc1]/60 bg-white px-5 py-4.5 shadow-[0_4px_16px_-2px_rgb(21_46_48/6%)]"
+      >
         <div>
-          <p>Na cozinha</p>
-          <strong>{{ statusCounts().cozinha }}</strong>
+          <p class="m-0 text-[0.74rem] font-semibold text-[#77818c]">Na cozinha</p>
+          <strong class="mt-1.5 block text-[1.8rem] leading-none">{{ statusCounts().cozinha }}</strong>
         </div>
-        <span class="summary-icon summary-icon--muted material-symbols-outlined" aria-hidden="true">soup_kitchen</span>
+        <span
+          class="material-symbols-outlined grid size-[42px] flex-none place-items-center rounded-[10px] bg-[#e5ebeb] text-[22px] text-[#152e30]"
+          aria-hidden="true"
+        >
+          soup_kitchen
+        </span>
       </article>
-      <article class="summary-item">
+      <article
+        class="flex min-h-[116px] items-center justify-between gap-4 rounded-xl border border-[#dccdc1]/60 bg-white px-5 py-4.5 shadow-[0_4px_16px_-2px_rgb(21_46_48/6%)]"
+      >
         <div>
-          <p>Prontos para servir</p>
-          <strong>{{ statusCounts().pronto }}</strong>
+          <p class="m-0 text-[0.74rem] font-semibold text-[#77818c]">Prontos para servir</p>
+          <strong class="mt-1.5 block text-[1.8rem] leading-none">{{ statusCounts().pronto }}</strong>
         </div>
-        <span class="summary-icon summary-icon--amber material-symbols-outlined" aria-hidden="true">task_alt</span>
+        <span
+          class="material-symbols-outlined grid size-[42px] flex-none place-items-center rounded-[10px] bg-[#f99a26]/20 text-[22px] text-[#a13711]"
+          aria-hidden="true"
+        >
+          task_alt
+        </span>
       </article>
-      <article class="summary-item summary-item--dark">
+      <article
+        class="flex min-h-[116px] items-center justify-between gap-4 rounded-xl border border-[#152e30] bg-[#152e30] px-5 py-4.5 text-white shadow-[0_4px_16px_-2px_rgb(21_46_48/6%)]"
+      >
         <div>
-          <p>Finalizados hoje</p>
-          <strong>{{ statusCounts().finalizado }}</strong>
+          <p class="m-0 text-[0.74rem] font-semibold text-[#dccdc1]">Finalizados hoje</p>
+          <strong class="mt-1.5 block text-[1.8rem] leading-none">{{ statusCounts().finalizado }}</strong>
         </div>
-        <span class="summary-icon summary-icon--dark material-symbols-outlined" aria-hidden="true">check_circle</span>
+        <span
+          class="material-symbols-outlined grid size-[42px] flex-none place-items-center rounded-[10px] bg-white/10 text-[22px] text-[#f99a26]"
+          aria-hidden="true"
+        >
+          check_circle
+        </span>
       </article>
     </section>
 
     <section class="space-y-4" aria-labelledby="orders-list-title">
-      <div class="flex flex-col justify-between gap-4 rounded-xl border border-[#dccdc1]/55 bg-white p-4 shadow-sm md:flex-row md:items-center">
+      <div
+        class="flex flex-col justify-between gap-4 rounded-xl border border-[#dccdc1]/55 bg-white p-4 shadow-sm md:flex-row md:items-center"
+      >
         <div class="flex items-center gap-2">
           <h2 id="orders-list-title" class="font-serif text-xl font-bold">Pedidos do turno</h2>
           <span class="rounded-full bg-[#152e30]/10 px-2.5 py-1 text-xs font-bold text-[#152e30]">
@@ -54,66 +89,145 @@
         </div>
         <div class="flex flex-wrap gap-1" role="group" aria-label="Filtrar pedidos por etapa">
           @for (filter of filters; track filter.value) {
-          <p-button [label]="filter.label + ' (' + filterCounts()[filter.value] + ')'" type="button" [text]="activeFilter() !== filter.value" [styleClass]="activeFilter() === filter.value ? 'order-filter order-filter--active' : 'order-filter'" (onClick)="setFilter(filter.value)" />
+            <p-button
+              [label]="filter.label + ' (' + filterCounts()[filter.value] + ')'"
+              type="button"
+              [text]="activeFilter() !== filter.value"
+              [styleClass]="
+                activeFilter() === filter.value
+                  ? 'min-h-[36px] rounded-lg border-[#152e30] bg-[#152e30] px-2.5 py-2 text-[0.74rem] font-semibold text-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#f99a26]/48'
+                  : 'min-h-[36px] rounded-lg px-2.5 py-2 text-[0.74rem] font-semibold text-[#77818c] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#f99a26]/48'
+              "
+              (onClick)="setFilter(filter.value)"
+            />
           }
         </div>
       </div>
 
       <div class="grid gap-3">
         @for (order of filteredOrders(); track order.id) {
-        <article class="order-card">
-          <div class="order-main">
-            <div class="order-heading">
-              <div class="flex flex-wrap items-center gap-2.5">
-                <h3>{{ order.id }}</h3>
-                <span class="table-label">{{ order.table }}</span>
+          <article
+            class="order-card flex items-start justify-between gap-2 rounded-xl border border-[#dccdc1]/65 bg-white p-4 transition hover:border-[#f99a26]/65 hover:shadow-[0_8px_20px_-8px_rgb(21_46_48/14%)] sm:items-center sm:gap-5 sm:px-5 sm:py-4.5"
+          >
+            <div class="min-w-0 flex-1">
+              <div class="flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center sm:gap-4">
+                <div class="flex flex-wrap items-center gap-2.5">
+                  <h3 class="m-0 text-[0.92rem] font-extrabold">{{ order.id }}</h3>
+                  <span class="rounded-md bg-[#f4f6f8] px-2 py-1 text-[0.7rem] font-semibold text-[#152e30]">
+                    {{ order.table }}
+                  </span>
+                </div>
+                <span
+                  class="inline-flex min-h-[26px] flex-none items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.64rem] font-bold"
+                  [class]="statusClass(order.status)"
+                >
+                  <span class="size-[7px] rounded-full bg-current" aria-hidden="true"></span>
+                  {{ statusLabel(order.status) }}
+                </span>
               </div>
-              <span class="status-pill" [class]="statusClass(order.status)">
-                <span class="status-dot" aria-hidden="true"></span>
-                {{ statusLabel(order.status) }}
-              </span>
+              <p class="mt-2.5 overflow-hidden text-ellipsis text-[0.76rem] leading-normal text-[#77818c]">
+                {{ itemsSummary(order.items) }}
+              </p>
+              @if (order.notes) {
+                <p class="mt-2 flex items-center gap-1.5 text-[0.7rem] text-[#77818c]">
+                  <span class="material-symbols-outlined text-[16px] text-[#a13711]" aria-hidden="true">chat</span>
+                  {{ order.notes }}
+                </p>
+              }
+              <div
+                class="mt-3 flex items-center justify-between gap-3 border-t border-[#dccdc1]/38 pt-2.5 text-[0.68rem] text-[#77818c]"
+              >
+                <span>{{ order.waiter }} · {{ order.openedAt }}</span>
+                <strong class="text-[0.82rem] text-[#152e30]">{{ formatCurrency(order.total) }}</strong>
+              </div>
             </div>
-            <p class="order-items">{{ itemsSummary(order.items) }}</p>
-            @if (order.notes) {
-            <p class="order-note">
-              <span class="material-symbols-outlined" aria-hidden="true">chat</span>
-              {{ order.notes }}
-            </p>
-            }
-            <div class="order-meta">
-              <span>{{ order.waiter }} · {{ order.openedAt }}</span>
-              <strong>{{ formatCurrency(order.total) }}</strong>
+            <div class="flex flex-none flex-wrap items-center justify-end gap-0.5 pt-7 sm:flex-nowrap sm:pt-0">
+              <p-button
+                label="Visualizar"
+                type="button"
+                [text]="true"
+                styleClass="view-order-button rounded-[7px] px-2 text-[0.7rem] font-bold text-[#152e30] hover:bg-[#152e30]/8 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#f99a26]/48"
+                (onClick)="openViewDialog(order)"
+              />
+              <p-button
+                label="Editar"
+                type="button"
+                [text]="true"
+                styleClass="edit-order-button rounded-[7px] px-2 text-[0.7rem] font-bold text-[#152e30] hover:bg-[#152e30]/8 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#f99a26]/48"
+                (onClick)="openEditDialog(order)"
+              />
+              <p-button
+                label="Excluir"
+                type="button"
+                [text]="true"
+                styleClass="delete-order-button rounded-[7px] px-2 text-[0.7rem] font-bold text-[#a13711] hover:bg-[#a13711]/8 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#f99a26]/48"
+                (onClick)="openDeleteConfirmation(order)"
+              />
             </div>
-          </div>
-          <div class="order-actions">
-            <p-button label="Visualizar" type="button" [text]="true" styleClass="view-order-button" (onClick)="openViewDialog(order)" />
-            <p-button label="Editar" type="button" [text]="true" styleClass="edit-order-button" (onClick)="openEditDialog(order)" />
-            <p-button label="Excluir" type="button" [text]="true" styleClass="delete-order-button" (onClick)="openDeleteConfirmation(order)" />
-          </div>
-        </article>
+          </article>
         } @empty {
-        <div class="empty-state">
-          <span class="material-symbols-outlined" aria-hidden="true">receipt_long</span>
-          <p>Nenhum pedido nesta etapa.</p>
-        </div>
+          <div
+            class="grid min-h-[190px] place-content-center justify-items-center gap-2 rounded-xl border border-dashed border-[#77818c]/35 text-[#77818c]"
+          >
+            <span class="material-symbols-outlined text-[30px]" aria-hidden="true">receipt_long</span>
+            <p class="m-0 text-[0.84rem]">Nenhum pedido nesta etapa.</p>
+          </div>
         }
       </div>
     </section>
   </section>
 </main>
 
-<app-order-dialog [visible]="dialogVisible()" [mode]="dialogMode()" [order]="selectedOrder()" (close)="closeDialog()" (save)="saveOrder($event)" (editRequested)="editFromView($event)" />
+<app-order-dialog
+  [visible]="dialogVisible()"
+  [mode]="dialogMode()"
+  [order]="selectedOrder()"
+  (close)="closeDialog()"
+  (save)="saveOrder($event)"
+  (editRequested)="editFromView($event)"
+/>
 
-<p-dialog [visible]="deleteTarget() !== null" [modal]="true" [blockScroll]="true" [dismissableMask]="true" [closeOnEscape]="true" [style]="{ width: 'min(calc(100vw - 2rem), 420px)' }" styleClass="delete-order-dialog" ariaLabelledBy="delete-order-title" (visibleChange)="closeDeleteConfirmation($event)">
+<p-dialog
+  [visible]="deleteTarget() !== null"
+  [modal]="true"
+  [blockScroll]="true"
+  [dismissableMask]="true"
+  [closeOnEscape]="true"
+  [style]="{ width: 'min(calc(100vw - 2rem), 420px)' }"
+  styleClass="rounded-xl border border-[#dccdc1]/70 shadow-[0_20px_48px_rgb(21_46_48/18%)]"
+  ariaLabelledBy="delete-order-title"
+  (visibleChange)="closeDeleteConfirmation($event)"
+>
   @if (deleteTarget(); as order) {
-  <div class="delete-confirmation">
-    <span class="delete-confirmation-icon material-symbols-outlined" aria-hidden="true">delete</span>
-    <h2 id="delete-order-title">Excluir pedido {{ order.id }}?</h2>
-    <p>Esta ação remove o pedido de {{ order.table }} do turno e não pode ser desfeita.</p>
-    <div class="delete-confirmation-actions">
-      <p-button label="Manter pedido" type="button" severity="secondary" [outlined]="true" (onClick)="deleteTarget.set(null)" />
-      <p-button label="Excluir pedido" type="button" severity="danger" styleClass="confirm-delete-order" (onClick)="confirmDeleteOrder()" />
+    <div class="grid justify-items-center p-6 text-center">
+      <span
+        class="material-symbols-outlined grid size-12 place-items-center rounded-xl bg-[#a13711]/10 text-[24px] text-[#a13711]"
+        aria-hidden="true"
+      >
+        delete
+      </span>
+      <h2 id="delete-order-title" class="mt-4 font-serif text-[1.3rem] text-[#152e30]">
+        Excluir pedido {{ order.id }}?
+      </h2>
+      <p class="mt-2 text-[0.78rem] leading-relaxed text-[#77818c]">
+        Esta ação remove o pedido de {{ order.table }} do turno e não pode ser desfeita.
+      </p>
+      <div class="mt-5 flex justify-center gap-2.5">
+        <p-button
+          label="Manter pedido"
+          type="button"
+          severity="secondary"
+          [outlined]="true"
+          (onClick)="deleteTarget.set(null)"
+        />
+        <p-button
+          label="Excluir pedido"
+          type="button"
+          severity="danger"
+          styleClass="confirm-delete-order border-[#a13711] bg-[#a13711] hover:border-[#842500] hover:bg-[#842500]"
+          (onClick)="confirmDeleteOrder()"
+        />
+      </div>
     </div>
-  </div>
   }
 </p-dialog>

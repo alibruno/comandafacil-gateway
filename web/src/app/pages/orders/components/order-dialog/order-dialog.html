@@ -1,185 +1,392 @@
-<p-dialog [visible]="visible()" [modal]="true" [blockScroll]="true" [dismissableMask]="true" [closeOnEscape]="true" [focusTrap]="true" [showHeader]="false" [closable]="false" [style]="{ width: 'min(calc(100vw - 2rem), 560px)' }" [contentStyle]="{ padding: '0' }" styleClass="order-dialog-panel" maskStyleClass="order-dialog-mask" ariaLabelledBy="order-dialog-title" (visibleChange)="onVisibleChange($event)">
-  <section class="order-dialog-content">
-    <div class="dialog-accent"></div>
-    <div class="dialog-body">
-      <header class="dialog-heading">
-        <div class="dialog-title-group">
-          <span class="dialog-brand-icon material-symbols-outlined" aria-hidden="true">receipt_long</span>
+<p-dialog
+  [visible]="visible()"
+  [modal]="true"
+  [blockScroll]="true"
+  [dismissableMask]="true"
+  [closeOnEscape]="true"
+  [focusTrap]="true"
+  [showHeader]="false"
+  [closable]="false"
+  [style]="{ width: 'min(calc(100vw - 2rem), 560px)' }"
+  [contentStyle]="{ padding: '0' }"
+  styleClass="overflow-hidden rounded-2xl border border-[#dccdc1]/70 bg-white shadow-[0_24px_64px_rgb(21_46_48/20%)]"
+  maskStyleClass="bg-[#152e30]/48 backdrop-blur-[5px]"
+  ariaLabelledBy="order-dialog-title"
+  (visibleChange)="onVisibleChange($event)"
+>
+  <section class="max-h-[min(90vh,800px)] overflow-y-auto text-[#152e30]">
+    <div class="h-[5px] bg-gradient-to-r from-[#152e30] via-[#f99a26] to-[#a13711]"></div>
+    <div class="p-5 sm:p-6">
+      <header class="mb-6 flex items-start justify-between gap-4">
+        <div class="flex min-w-0 items-center gap-3">
+          <span
+            class="material-symbols-outlined grid size-[42px] flex-none place-items-center rounded-[10px] bg-[#152e30] text-[22px] text-[#f99a26]"
+            aria-hidden="true"
+          >
+            receipt_long
+          </span>
           <div>
             @if (order(); as currentOrder) {
-            <p class="dialog-eyebrow">{{ currentOrder.table }} · {{ currentOrder.waiter }} · {{ currentOrder.openedAt }}</p>
+              <p class="mb-1.5 text-[0.68rem] font-bold uppercase tracking-[0.12em] text-[#a13711]">
+                {{ currentOrder.table }} · {{ currentOrder.waiter }} · {{ currentOrder.openedAt }}
+              </p>
             } @else {
-            <p class="dialog-eyebrow">Cozinha &amp; atendimento</p>
+              <p class="mb-1.5 text-[0.68rem] font-bold uppercase tracking-[0.12em] text-[#a13711]">
+                Cozinha &amp; atendimento
+              </p>
             }
-            <h2 id="order-dialog-title">
+            <h2
+              id="order-dialog-title"
+              class="m-0 font-serif text-[1.45rem] leading-tight sm:text-[1.65rem]"
+            >
               @if (mode() === 'create') {
-              Novo pedido
+                Novo pedido
               } @else if (mode() === 'edit') {
-              Editar pedido #{{ order()?.id }}
+                Editar pedido #{{ order()?.id }}
               } @else {
-              Pedido #{{ order()?.id }}
+                Pedido #{{ order()?.id }}
               }
             </h2>
           </div>
         </div>
-        <button class="dialog-close" type="button" aria-label="Fechar diálogo" (click)="close.emit()">
+        <button
+          class="dialog-close grid size-[38px] flex-none cursor-pointer place-items-center rounded-full border-0 bg-[#f4f6f8] text-[#77818c] hover:bg-[#e5ebeb] hover:text-[#152e30]"
+          type="button"
+          aria-label="Fechar diálogo"
+          (click)="close.emit()"
+        >
           <span class="material-symbols-outlined" aria-hidden="true">close</span>
         </button>
       </header>
 
       @if (mode() === 'view') {
-      @if (order(); as currentOrder) {
-      <div class="view-summary">
-        <span class="view-status" [class]="'view-status--' + currentOrder.status">
-          {{ statusLabel(currentOrder.status) }}
-        </span>
-        <span>Atendente: {{ currentOrder.waiter }}</span>
-        <span>{{ currentOrder.openedAt }}</span>
-      </div>
-      <h3 class="items-title">Itens do pedido</h3>
-      <div class="item-list view-item-list">
-        @for (item of currentOrder.items; track item.id) {
-        <article class="line-item">
-          <div class="line-copy">
-            <strong>{{ item.name }}</strong>
-            <span>{{ item.detail }} · {{ formatCurrency(item.unitPrice) }} un.</span>
-          </div>
-          <span class="view-quantity">{{ item.quantity }} × {{ formatCurrency(item.unitPrice) }}</span>
-          <strong class="line-total">{{ formatCurrency(itemTotal(item)) }}</strong>
-        </article>
-        }
-      </div>
-      @if (currentOrder.notes) {
-      <div class="order-notes"><strong>Observações da cozinha:</strong> {{ currentOrder.notes }}</div>
-      }
-      <div class="subtotal-row"><span>Total do pedido</span><strong>{{ formatCurrency(currentOrder.total) }}</strong></div>
-      }
-      <footer class="dialog-actions">
-        <p-button label="Fechar" type="button" severity="secondary" [outlined]="true" (onClick)="close.emit()" />
         @if (order(); as currentOrder) {
-        <p-button label="Editar pedido" type="button" styleClass="save-order-button" (onClick)="editRequested.emit(currentOrder)" />
-        }
-      </footer>
-      } @else {
-      <form [formGroup]="orderForm" (ngSubmit)="saveOrder()" novalidate>
-        <fieldset class="status-fieldset">
-          <legend>Etapa do pedido</legend>
-          <div class="status-switch" role="group" aria-label="Etapa do pedido">
-            @for (status of statusChoices; track status.value) {
-            <p-button [label]="status.label" type="button" [text]="orderForm.controls.status.value !== status.value" [styleClass]="orderForm.controls.status.value === status.value ? 'status-choice status-choice--active' : 'status-choice'" (onClick)="setStatus(status.value)" />
-            }
+          <div class="mb-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-[0.75rem] text-[#77818c]">
+            <span
+              class="rounded-full px-2.5 py-1.5 text-[0.68rem] font-bold"
+              [class]="statusBadgeClass(currentOrder.status)"
+            >
+              {{ statusLabel(currentOrder.status) }}
+            </span>
+            <span>Atendente: {{ currentOrder.waiter }}</span>
+            <span>{{ currentOrder.openedAt }}</span>
           </div>
-        </fieldset>
-
-        <div class="form-grid">
-          <div class="field-group">
-            <label for="order-table">Mesa / local</label>
-            <select id="order-table" formControlName="table">
-              <option value="Mesa 01 · Salão">Mesa 01 · Salão</option>
-              <option value="Mesa 02 · Salão">Mesa 02 · Salão</option>
-              <option value="Mesa 05 · Varanda">Mesa 05 · Varanda</option>
-              <option value="Mesa 08 · Gazebo">Mesa 08 · Gazebo</option>
-              <option value="Balcão · Bar">Balcão · Bar</option>
-            </select>
-          </div>
-          <div class="field-group">
-            <label for="order-waiter">Atendente</label>
-            <select id="order-waiter" formControlName="waiter">
-              <option value="Jean-Pierre">Jean-Pierre</option>
-              <option value="Marcella V.">Marcella V.</option>
-              <option value="Thomas B.">Thomas B.</option>
-            </select>
-          </div>
-        </div>
-
-        <section class="items-section" aria-labelledby="order-items-title">
-          <div class="items-heading">
-            <h3 id="order-items-title">Itens do pedido</h3>
-            <span>{{ orderForm.controls.items.length }} {{ orderForm.controls.items.length === 1 ? 'item' : 'itens' }}</span>
-          </div>
-
-          <div class="item-list" formArrayName="items">
-            @for (item of orderForm.controls.items.controls; track item.controls.id.value; let index = $index) {
-            <article class="line-item" [formGroupName]="index">
-              <div class="line-copy">
-                <strong>{{ item.controls.name.value }}</strong>
-                <span>{{ item.controls.detail.value || formatCurrency(item.controls.unitPrice.value) + ' un.' }}</span>
-                @if (item.controls.note.value) {
-                <small><span class="material-symbols-outlined" aria-hidden="true">restaurant</span>{{ item.controls.note.value }}</small>
-                }
-              </div>
-              <div class="item-controls">
-                <div class="quantity-stepper" [attr.aria-label]="'Quantidade de ' + item.controls.name.value">
-                  <p-button label="−" type="button" styleClass="quantity-change" [attr.aria-label]="'Diminuir ' + item.controls.name.value" (onClick)="adjustQuantity(index, -1)" />
-                  <span>{{ item.controls.quantity.value }}</span>
-                  <p-button label="+" type="button" styleClass="quantity-change" [attr.aria-label]="'Aumentar ' + item.controls.name.value" (onClick)="adjustQuantity(index, 1)" />
+          <h3 class="mb-2 text-[0.65rem] font-extrabold uppercase tracking-[0.07em] text-[#77818c]">
+            Itens do pedido
+          </h3>
+          <div class="view-item-list grid gap-2">
+            @for (item of currentOrder.items; track item.id) {
+              <article
+                class="flex min-w-0 items-center justify-between gap-1.5 rounded-[9px] border border-[#dccdc1]/50 bg-[#f8fafc] px-3 py-2.5 sm:gap-3"
+              >
+                <div class="grid min-w-0 gap-0.5">
+                  <strong class="overflow-hidden text-ellipsis whitespace-nowrap text-[0.72rem] text-[#152e30]">
+                    {{ item.name }}
+                  </strong>
+                  <span class="text-[0.62rem] text-[#77818c]">
+                    {{ item.detail }} · {{ formatCurrency(item.unitPrice) }} un.
+                  </span>
                 </div>
-                <strong class="line-total">{{ formatCurrency(item.controls.unitPrice.value * item.controls.quantity.value) }}</strong>
-                <p-button type="button" [text]="true" styleClass="remove-item-button" [attr.aria-label]="'Remover ' + item.controls.name.value" (onClick)="removeItem(index)">
-                  <ng-template #icon><span class="material-symbols-outlined" aria-hidden="true">delete</span></ng-template>
-                </p-button>
-              </div>
-            </article>
-            } @empty {
-            <p class="empty-items">Adicione pelo menos um item ao pedido.</p>
+                <span class="text-[0.7rem] text-[#77818c]">
+                  {{ item.quantity }} × {{ formatCurrency(item.unitPrice) }}
+                </span>
+                <strong class="min-w-[3.6rem] text-right text-[0.62rem] text-[#152e30] sm:min-w-[4.5rem] sm:text-[0.68rem]">
+                  {{ formatCurrency(itemTotal(item)) }}
+                </strong>
+              </article>
             }
           </div>
-
-          @if (orderForm.controls.items.touched && orderForm.controls.items.length === 0) {
-          <span class="field-error">O pedido precisa ter ao menos um item.</span>
-          }
-
-          @if (addingItem) {
-          <div class="new-item-form" [formGroup]="newItemForm">
-            <div class="new-item-fields">
-              <div class="field-group">
-                <label for="new-item-name">Nome do item</label>
-                <input id="new-item-name" pInputText formControlName="name" placeholder="Ex.: Croque Monsieur" />
-                @if (newItemForm.controls.name.touched && newItemForm.controls.name.invalid) {
-                <span class="field-error">Informe o nome do item.</span>
-                }
-              </div>
-              <div class="field-group">
-                <label for="new-item-detail">Descrição</label>
-                <input id="new-item-detail" pInputText formControlName="detail" placeholder="Opcional" />
-              </div>
-              <div class="field-group">
-                <label for="new-item-price">Preço unitário</label>
-                <input id="new-item-price" pInputText type="number" min="0.01" step="0.01" formControlName="unitPrice" />
-                @if (newItemForm.controls.unitPrice.touched && newItemForm.controls.unitPrice.invalid) {
-                <span class="field-error">Informe um preço maior que zero.</span>
-                }
-              </div>
-              <div class="field-group">
-                <label for="new-item-quantity">Quantidade</label>
-                <input id="new-item-quantity" pInputText type="number" min="1" step="1" formControlName="quantity" />
-                @if (newItemForm.controls.quantity.touched && newItemForm.controls.quantity.invalid) {
-                <span class="field-error">A quantidade mínima é 1.</span>
-                }
-              </div>
+          @if (currentOrder.notes) {
+            <div class="mt-3 rounded-lg bg-[#f4f6f8] p-3 text-[0.74rem] leading-normal text-[#77818c]">
+              <strong class="text-[#152e30]">Observações da cozinha:</strong> {{ currentOrder.notes }}
             </div>
-            <div class="new-item-actions">
-              <p-button label="Cancelar" type="button" [text]="true" styleClass="cancel-add-item" (onClick)="addingItem = false" />
-              <p-button label="Adicionar item" type="button" styleClass="add-item-confirm" (onClick)="addItem()" />
+          }
+          <div
+            class="mt-3 flex items-center justify-between rounded-lg border border-[#dccdc1]/45 bg-[#f4f6f8] p-3 text-[0.72rem] text-[#77818c]"
+          >
+            <span>Total do pedido</span>
+            <strong class="text-[0.9rem] text-[#152e30]">{{ formatCurrency(currentOrder.total) }}</strong>
+          </div>
+        }
+        <footer class="mt-4 flex justify-end gap-2.5 border-t border-[#dccdc1]/45 pt-4">
+          <p-button
+            label="Fechar"
+            type="button"
+            severity="secondary"
+            [outlined]="true"
+            (onClick)="close.emit()"
+          />
+          @if (order(); as currentOrder) {
+            <p-button
+              label="Editar pedido"
+              type="button"
+              styleClass="save-order-button border-[#f99a26] bg-[#f99a26] font-bold text-[#152e30] hover:border-[#a13711] hover:bg-[#a13711] hover:text-white"
+              (onClick)="editRequested.emit(currentOrder)"
+            />
+          }
+        </footer>
+      } @else {
+        <form class="grid gap-4" [formGroup]="orderForm" (ngSubmit)="saveOrder()" novalidate>
+          <fieldset class="m-0 min-w-0 border-0 p-0">
+            <legend class="mb-2 text-[0.65rem] font-extrabold uppercase tracking-[0.07em] text-[#77818c]">
+              Etapa do pedido
+            </legend>
+            <div class="grid grid-cols-2 gap-1.5 sm:grid-cols-4" role="group" aria-label="Etapa do pedido">
+              @for (status of statusChoices; track status.value) {
+                <p-button
+                  [label]="status.label"
+                  type="button"
+                  [text]="orderForm.controls.status.value !== status.value"
+                  [styleClass]="
+                    orderForm.controls.status.value === status.value
+                      ? 'min-h-[38px] min-w-0 rounded-[9px] border border-[#f99a26] bg-[#f99a26]/11 p-1.5 text-[0.68rem] font-bold text-[#a13711]'
+                      : 'min-h-[38px] min-w-0 rounded-[9px] border border-[#dccdc1]/70 p-1.5 text-[0.68rem] text-[#77818c]'
+                  "
+                  (onClick)="setStatus(status.value)"
+                />
+              }
+            </div>
+          </fieldset>
+
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div class="grid content-start gap-1.5">
+              <label class="text-[0.76rem] font-bold text-[#152e30]" for="order-table">Mesa / local</label>
+              <select
+                id="order-table"
+                class="min-h-[44px] w-full rounded-lg border border-[#77818c]/35 bg-[#f8fafc] px-3 py-2.5 text-[0.82rem] text-[#152e30] focus-visible:border-[#f99a26] focus-visible:outline-3 focus-visible:outline-offset-1 focus-visible:outline-[#f99a26]/24"
+                formControlName="table"
+              >
+                <option value="Mesa 01 · Salão">Mesa 01 · Salão</option>
+                <option value="Mesa 02 · Salão">Mesa 02 · Salão</option>
+                <option value="Mesa 05 · Varanda">Mesa 05 · Varanda</option>
+                <option value="Mesa 08 · Gazebo">Mesa 08 · Gazebo</option>
+                <option value="Balcão · Bar">Balcão · Bar</option>
+              </select>
+            </div>
+            <div class="grid content-start gap-1.5">
+              <label class="text-[0.76rem] font-bold text-[#152e30]" for="order-waiter">Atendente</label>
+              <select
+                id="order-waiter"
+                class="min-h-[44px] w-full rounded-lg border border-[#77818c]/35 bg-[#f8fafc] px-3 py-2.5 text-[0.82rem] text-[#152e30] focus-visible:border-[#f99a26] focus-visible:outline-3 focus-visible:outline-offset-1 focus-visible:outline-[#f99a26]/24"
+                formControlName="waiter"
+              >
+                <option value="Jean-Pierre">Jean-Pierre</option>
+                <option value="Marcella V.">Marcella V.</option>
+                <option value="Thomas B.">Thomas B.</option>
+              </select>
             </div>
           </div>
-          } @else {
-          <p-button label="Adicionar item ao pedido" type="button" [outlined]="true" styleClass="add-item-button" (onClick)="addingItem = true" />
-          }
-        </section>
 
-        <div class="field-group">
-          <label for="order-notes">Observações gerais da cozinha</label>
-          <textarea id="order-notes" rows="2" formControlName="notes" placeholder="Ponto da carne, restrições ou instruções especiais"></textarea>
-        </div>
+          <section class="grid gap-2" aria-labelledby="order-items-title">
+            <div class="flex items-center justify-between">
+              <h3
+                id="order-items-title"
+                class="m-0 text-[0.65rem] font-extrabold uppercase tracking-[0.07em] text-[#77818c]"
+              >
+                Itens do pedido
+              </h3>
+              <span class="text-[0.68rem] text-[#77818c]">
+                {{ orderForm.controls.items.length }}
+                {{ orderForm.controls.items.length === 1 ? 'item' : 'itens' }}
+              </span>
+            </div>
 
-        <div class="subtotal-row"><span>Subtotal dos itens</span><strong>{{ formatCurrency(itemsSubtotal()) }}</strong></div>
+            <div class="grid gap-2" formArrayName="items">
+              @for (item of orderForm.controls.items.controls; track item.controls.id.value; let index = $index) {
+                <article
+                  class="flex min-w-0 items-center justify-between gap-1.5 rounded-[9px] border border-[#dccdc1]/50 bg-[#f8fafc] px-3 py-2.5 sm:gap-3"
+                  [formGroupName]="index"
+                >
+                  <div class="grid min-w-0 gap-0.5">
+                    <strong class="overflow-hidden text-ellipsis whitespace-nowrap text-[0.72rem] text-[#152e30]">
+                      {{ item.controls.name.value }}
+                    </strong>
+                    <span class="text-[0.62rem] text-[#77818c]">
+                      {{ item.controls.detail.value || formatCurrency(item.controls.unitPrice.value) + ' un.' }}
+                    </span>
+                    @if (item.controls.note.value) {
+                      <small class="flex items-center gap-1 rounded-[5px] bg-white px-1.5 py-1 text-[0.6rem] text-[#77818c]">
+                        <span class="material-symbols-outlined text-[13px] text-[#f99a26]" aria-hidden="true">
+                          restaurant
+                        </span>
+                        {{ item.controls.note.value }}
+                      </small>
+                    }
+                  </div>
+                  <div class="flex flex-none items-center justify-end gap-1 sm:gap-2">
+                    <div
+                      class="flex h-8 items-center gap-1 rounded-[7px] border border-[#dccdc1]/65 bg-white px-0.5"
+                      [attr.aria-label]="'Quantidade de ' + item.controls.name.value"
+                    >
+                      <p-button
+                        label="−"
+                        type="button"
+                        styleClass="quantity-change size-6 min-w-6 border-0 bg-transparent p-0 text-[#77818c] hover:bg-[#f4f6f8] hover:text-[#152e30]"
+                        [attr.aria-label]="'Diminuir ' + item.controls.name.value"
+                        (onClick)="adjustQuantity(index, -1)"
+                      />
+                      <span class="min-w-[1.2rem] text-center text-[0.7rem] font-bold text-[#152e30]">
+                        {{ item.controls.quantity.value }}
+                      </span>
+                      <p-button
+                        label="+"
+                        type="button"
+                        styleClass="quantity-change size-6 min-w-6 border-0 bg-transparent p-0 text-[#77818c] hover:bg-[#f4f6f8] hover:text-[#152e30]"
+                        [attr.aria-label]="'Aumentar ' + item.controls.name.value"
+                        (onClick)="adjustQuantity(index, 1)"
+                      />
+                    </div>
+                    <strong class="min-w-[3.6rem] text-right text-[0.62rem] text-[#152e30] sm:min-w-[4.5rem] sm:text-[0.68rem]">
+                      {{ formatCurrency(item.controls.unitPrice.value * item.controls.quantity.value) }}
+                    </strong>
+                    <p-button
+                      type="button"
+                      [text]="true"
+                      styleClass="h-[30px] w-7 min-w-7 p-0 text-[#77818c] hover:text-[#a13711]"
+                      [attr.aria-label]="'Remover ' + item.controls.name.value"
+                      (onClick)="removeItem(index)"
+                    >
+                      <ng-template #icon>
+                        <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+                      </ng-template>
+                    </p-button>
+                  </div>
+                </article>
+              } @empty {
+                <p
+                  class="m-0 rounded-lg border border-dashed border-[#77818c]/35 p-4 text-center text-[0.72rem] text-[#77818c]"
+                >
+                  Adicione pelo menos um item ao pedido.
+                </p>
+              }
+            </div>
 
-        <footer class="dialog-actions">
-          <p-button label="Cancelar" type="button" severity="secondary" [outlined]="true" (onClick)="close.emit()" />
-          <p-button [label]="mode() === 'create' ? 'Criar pedido' : 'Salvar alterações'" type="submit" styleClass="save-order-button" />
-        </footer>
-      </form>
+            @if (orderForm.controls.items.touched && orderForm.controls.items.length === 0) {
+              <span class="text-[0.7rem] text-[#a13711]">O pedido precisa ter ao menos um item.</span>
+            }
+
+            @if (addingItem) {
+              <div
+                class="grid gap-2.5 rounded-[9px] border border-dashed border-[#dccdc1]/80 bg-white p-3"
+                [formGroup]="newItemForm"
+              >
+                <div class="grid grid-cols-2 gap-2 sm:grid-cols-[2fr_1.2fr_1fr_1fr]">
+                  <div class="grid content-start gap-1.5">
+                    <label class="text-[0.65rem] font-bold text-[#152e30]" for="new-item-name">Nome do item</label>
+                    <input
+                      id="new-item-name"
+                      class="min-h-[36px] w-full rounded-lg border border-[#77818c]/35 bg-[#f8fafc] p-2 text-[0.7rem] text-[#152e30] focus-visible:border-[#f99a26] focus-visible:outline-3 focus-visible:outline-offset-1 focus-visible:outline-[#f99a26]/24"
+                      pInputText
+                      formControlName="name"
+                      placeholder="Ex.: Croque Monsieur"
+                    />
+                    @if (newItemForm.controls.name.touched && newItemForm.controls.name.invalid) {
+                      <span class="text-[0.7rem] text-[#a13711]">Informe o nome do item.</span>
+                    }
+                  </div>
+                  <div class="grid content-start gap-1.5">
+                    <label class="text-[0.65rem] font-bold text-[#152e30]" for="new-item-detail">Descrição</label>
+                    <input
+                      id="new-item-detail"
+                      class="min-h-[36px] w-full rounded-lg border border-[#77818c]/35 bg-[#f8fafc] p-2 text-[0.7rem] text-[#152e30] focus-visible:border-[#f99a26] focus-visible:outline-3 focus-visible:outline-offset-1 focus-visible:outline-[#f99a26]/24"
+                      pInputText
+                      formControlName="detail"
+                      placeholder="Opcional"
+                    />
+                  </div>
+                  <div class="grid content-start gap-1.5">
+                    <label class="text-[0.65rem] font-bold text-[#152e30]" for="new-item-price">Preço unitário</label>
+                    <input
+                      id="new-item-price"
+                      class="min-h-[36px] w-full rounded-lg border border-[#77818c]/35 bg-[#f8fafc] p-2 text-[0.7rem] text-[#152e30] focus-visible:border-[#f99a26] focus-visible:outline-3 focus-visible:outline-offset-1 focus-visible:outline-[#f99a26]/24"
+                      pInputText
+                      type="number"
+                      min="0.01"
+                      step="0.01"
+                      formControlName="unitPrice"
+                    />
+                    @if (newItemForm.controls.unitPrice.touched && newItemForm.controls.unitPrice.invalid) {
+                      <span class="text-[0.7rem] text-[#a13711]">Informe um preço maior que zero.</span>
+                    }
+                  </div>
+                  <div class="grid content-start gap-1.5">
+                    <label class="text-[0.65rem] font-bold text-[#152e30]" for="new-item-quantity">Quantidade</label>
+                    <input
+                      id="new-item-quantity"
+                      class="min-h-[36px] w-full rounded-lg border border-[#77818c]/35 bg-[#f8fafc] p-2 text-[0.7rem] text-[#152e30] focus-visible:border-[#f99a26] focus-visible:outline-3 focus-visible:outline-offset-1 focus-visible:outline-[#f99a26]/24"
+                      pInputText
+                      type="number"
+                      min="1"
+                      step="1"
+                      formControlName="quantity"
+                    />
+                    @if (newItemForm.controls.quantity.touched && newItemForm.controls.quantity.invalid) {
+                      <span class="text-[0.7rem] text-[#a13711]">A quantidade mínima é 1.</span>
+                    }
+                  </div>
+                </div>
+                <div class="flex justify-end gap-1.5">
+                  <p-button
+                    label="Cancelar"
+                    type="button"
+                    [text]="true"
+                    styleClass="text-[0.68rem] text-[#77818c]"
+                    (onClick)="addingItem = false"
+                  />
+                  <p-button
+                    label="Adicionar item"
+                    type="button"
+                    styleClass="add-item-confirm border-[#152e30] bg-[#152e30] text-[0.68rem] text-white"
+                    (onClick)="addItem()"
+                  />
+                </div>
+              </div>
+            } @else {
+              <p-button
+                label="Adicionar item ao pedido"
+                type="button"
+                [outlined]="true"
+                styleClass="add-item-button min-h-[38px] w-full border-dashed border-[#dccdc1]/80 text-[0.7rem] text-[#a13711]"
+                (onClick)="addingItem = true"
+              />
+            }
+          </section>
+
+          <div class="grid content-start gap-1.5">
+            <label class="text-[0.76rem] font-bold text-[#152e30]" for="order-notes">
+              Observações gerais da cozinha
+            </label>
+            <textarea
+              id="order-notes"
+              class="min-h-[76px] w-full resize-y rounded-lg border border-[#77818c]/35 bg-[#f8fafc] px-3 py-2.5 text-[0.82rem] text-[#152e30] focus-visible:border-[#f99a26] focus-visible:outline-3 focus-visible:outline-offset-1 focus-visible:outline-[#f99a26]/24"
+              rows="2"
+              formControlName="notes"
+              placeholder="Ponto da carne, restrições ou instruções especiais"
+            ></textarea>
+          </div>
+
+          <div
+            class="flex items-center justify-between rounded-lg border border-[#dccdc1]/45 bg-[#f4f6f8] p-3 text-[0.72rem] text-[#77818c]"
+          >
+            <span>Subtotal dos itens</span>
+            <strong class="text-[0.9rem] text-[#152e30]">{{ formatCurrency(itemsSubtotal()) }}</strong>
+          </div>
+
+          <footer class="mt-1 flex justify-end gap-2.5 border-t border-[#dccdc1]/45 pt-4">
+            <p-button
+              label="Cancelar"
+              type="button"
+              severity="secondary"
+              [outlined]="true"
+              (onClick)="close.emit()"
+            />
+            <p-button
+              [label]="mode() === 'create' ? 'Criar pedido' : 'Salvar alterações'"
+              type="submit"
+              styleClass="save-order-button border-[#f99a26] bg-[#f99a26] font-bold text-[#152e30] hover:border-[#a13711] hover:bg-[#a13711] hover:text-white"
+            />
+          </footer>
+        </form>
       }
     </div>
   </section>

@@ -8,8 +8,10 @@ import { AuthMode } from './home-page.types';
 @Component({
   imports: [HomeAccessCard, HomeAuth, HomeHeader, HomeHero],
   selector: 'app-home-page',
-  styleUrl: './home-page.css',
   templateUrl: './home-page.html',
+  host: {
+    class: 'block min-h-svh font-sans text-[#152e30]',
+  },
 })
 export class HomePage {
   protected readonly authMode = signal<AuthMode | null>(null);

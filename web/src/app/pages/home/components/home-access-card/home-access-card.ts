@@ -7,6 +7,9 @@ import { CardModule } from '@openng/optimus-ui/card';
   selector: 'app-home-access-card',
   styleUrl: './home-access-card.css',
   templateUrl: './home-access-card.html',
+  host: {
+    class: 'block min-w-0 animate-card-arrive motion-reduce:animate-none',
+  },
 })
 export class HomeAccessCard {
   readonly title = input.required<string>();

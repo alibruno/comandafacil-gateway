@@ -8,7 +8,6 @@ type ActiveSection = 'restaurant' | 'orders';
 @Component({
   imports: [Button, NgOptimizedImage, RouterLink],
   selector: 'app-restaurant-header',
-  styleUrl: './restaurant-header.css',
   templateUrl: './restaurant-header.html',
 })
 export class RestaurantHeader {

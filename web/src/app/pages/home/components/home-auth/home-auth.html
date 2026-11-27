@@ -1,149 +1,320 @@
 @if (mode() === 'login') {
-<p-dialog [visible]="true" [modal]="true" [blockScroll]="true" [dismissableMask]="true" [closeOnEscape]="true" [focusTrap]="true" [showHeader]="false" [closable]="false" [style]="{ width: 'min(calc(100vw - 2rem), 480px)' }" [contentStyle]="{ padding: '0' }" styleClass="auth-dialog-panel" maskStyleClass="auth-dialog-mask" ariaLabelledBy="login-title" (visibleChange)="handleDialogVisibility('login', $event)">
-  <section class="auth-dialog">
-    <div class="modal-accent modal-accent--petrol"></div>
-    <div class="dialog-body">
-      <button class="dialog-close" type="button" aria-label="Fechar modal de login" (click)="close('login')">
-        <span class="material-symbols-outlined" aria-hidden="true">close</span>
-      </button>
+  <p-dialog
+    [visible]="true"
+    [modal]="true"
+    [blockScroll]="true"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [focusTrap]="true"
+    [showHeader]="false"
+    [closable]="false"
+    [style]="{ width: 'min(calc(100vw - 2rem), 480px)' }"
+    [contentStyle]="{ padding: '0', overflow: 'visible', borderRadius: 'inherit' }"
+    styleClass="overflow-hidden rounded-3xl border border-[#dccdc1]/45 bg-white shadow-[0_20px_36px_-6px_rgb(21_46_48/18%),0_8px_16px_-4px_rgb(21_46_48/8%)]"
+    maskStyleClass="bg-[#152e30]/42 backdrop-blur-sm"
+    ariaLabelledBy="login-title"
+    (visibleChange)="handleDialogVisibility('login', $event)"
+  >
+    <section class="relative max-h-[min(90vh,760px)] overflow-y-auto text-[#152e30]">
+      <div class="h-1.5 bg-gradient-to-r from-[#152e30] via-[#f99a26] to-[#a13711]"></div>
+      <div class="px-5 pb-5 pt-6 sm:px-8 sm:pb-6 sm:pt-7">
+        <button
+          class="dialog-close absolute right-4 top-4 grid size-[38px] cursor-pointer place-items-center rounded-full border-0 bg-transparent text-[#77818c] transition hover:bg-[#dccdc1]/35 hover:text-[#152e30] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-[#f99a26]/55 sm:right-6 sm:top-6"
+          type="button"
+          aria-label="Fechar modal de login"
+          (click)="close('login')"
+        >
+          <span class="material-symbols-outlined text-[22px]" aria-hidden="true">close</span>
+        </button>
 
-      <div class="dialog-heading">
-        <span class="heading-icon heading-icon--petrol material-symbols-outlined" aria-hidden="true">
-          lock_open
-        </span>
-        <div class="heading-copy">
-          <p class="eyebrow">Portal de gerenciamento</p>
-          <h2 id="login-title">Acesse o sistema</h2>
+        <div class="mb-6 flex items-start gap-4 pr-6">
+          <span
+            class="material-symbols-outlined grid size-12 flex-none place-items-center rounded-xl bg-[#152e30]/10 text-[24px] text-[#152e30]"
+            aria-hidden="true"
+          >
+            lock_open
+          </span>
+          <div class="min-w-0">
+            <p class="mb-1.5 text-[0.7rem] font-bold uppercase leading-normal tracking-[0.1em] text-[#a13711]">
+              Portal de gerenciamento
+            </p>
+            <h2 id="login-title" class="m-0 font-serif text-[1.55rem] font-semibold leading-tight sm:text-[1.8rem]">
+              Acesse o sistema
+            </h2>
+          </div>
         </div>
+
+        <form class="grid gap-4" [formGroup]="loginForm" (ngSubmit)="submitLogin()" novalidate>
+          <div class="grid gap-1.5">
+            <label class="text-[0.76rem] font-semibold text-[#77818c]" for="login-email">Email</label>
+            <div class="relative flex items-center">
+              <span
+                class="material-symbols-outlined pointer-events-none absolute left-3.5 z-10 text-[20px] text-[#77818c]"
+                aria-hidden="true"
+              >
+                mail
+              </span>
+              <input
+                id="login-email"
+                class="min-h-[46px] w-full rounded-[10px] border border-[#77818c]/28 bg-[#fafaf8] py-2.5 pl-11 pr-3.5 text-[0.86rem] text-[#152e30] transition placeholder:text-[#77818c]/58 focus:border-[#f99a26] focus:bg-white focus:shadow-[0_0_0_3px_rgb(249_154_38/22%)] focus:outline-none [&.p-invalid]:border-[#ba1a1a]"
+                pInputText
+                type="email"
+                formControlName="email"
+                autocomplete="email"
+                placeholder="gerente@bistroapp.com.br"
+                [invalid]="loginForm.controls.email.touched && loginForm.controls.email.invalid"
+              />
+            </div>
+            @if (loginForm.controls.email.touched && loginForm.controls.email.invalid) {
+              <span class="text-[0.72rem] leading-snug text-[#a12620]">Informe um e-mail válido.</span>
+            }
+          </div>
+
+          <div class="grid gap-1.5">
+            <label class="text-[0.76rem] font-semibold text-[#77818c]" for="login-password">Senha</label>
+            <div class="relative flex items-center">
+              <span
+                class="material-symbols-outlined pointer-events-none absolute left-3.5 z-10 text-[20px] text-[#77818c]"
+                aria-hidden="true"
+              >
+                key
+              </span>
+              <input
+                id="login-password"
+                class="min-h-[46px] w-full rounded-[10px] border border-[#77818c]/28 bg-[#fafaf8] py-2.5 pl-11 pr-3.5 text-[0.86rem] text-[#152e30] transition placeholder:text-[#77818c]/58 focus:border-[#f99a26] focus:bg-white focus:shadow-[0_0_0_3px_rgb(249_154_38/22%)] focus:outline-none [&.p-invalid]:border-[#ba1a1a]"
+                pInputText
+                type="password"
+                formControlName="password"
+                autocomplete="current-password"
+                placeholder="Sua senha"
+                [invalid]="loginForm.controls.password.touched && loginForm.controls.password.invalid"
+              />
+            </div>
+            @if (loginForm.controls.password.touched && loginForm.controls.password.invalid) {
+              <span class="text-[0.72rem] leading-snug text-[#a12620]">Informe sua senha.</span>
+            }
+          </div>
+
+          <p-button
+            label="Fazer login"
+            type="submit"
+            styleClass="mt-1 min-h-[46px] w-full rounded-[10px] border-0 bg-[#152e30] text-[0.86rem] font-semibold text-white transition hover:-translate-y-px hover:bg-[#1f4043] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-[#f99a26]/55"
+          >
+            <ng-template #icon>
+              <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+            </ng-template>
+          </p-button>
+        </form>
+
+        <p
+          class="mt-6 flex items-center justify-center gap-1 border-t border-[#dccdc1]/40 pt-4.5 text-center text-[0.76rem] text-[#77818c]"
+        >
+          Ainda não tem acesso administrativo?
+          <p-button
+            label="Criar conta"
+            type="button"
+            [text]="true"
+            styleClass="border-0 bg-transparent p-1 text-[0.76rem] font-bold text-[#f99a26] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-[#f99a26]/55"
+            (onClick)="switchMode('register')"
+          />
+        </p>
       </div>
-
-      <form [formGroup]="loginForm" (ngSubmit)="submitLogin()" novalidate>
-        <div class="field-group">
-          <label for="login-email">Email</label>
-          <div class="input-wrap">
-            <span class="field-icon material-symbols-outlined" aria-hidden="true">mail</span>
-            <input id="login-email" class="auth-input" pInputText type="email" formControlName="email" autocomplete="email" placeholder="gerente@bistroapp.com.br" [invalid]="loginForm.controls.email.touched && loginForm.controls.email.invalid" />
-          </div>
-          @if (loginForm.controls.email.touched && loginForm.controls.email.invalid) {
-          <span class="field-error">Informe um e-mail válido.</span>
-          }
-        </div>
-
-        <div class="field-group">
-          <label for="login-password">Senha</label>
-          <div class="input-wrap">
-            <span class="field-icon material-symbols-outlined" aria-hidden="true">key</span>
-            <input id="login-password" class="auth-input" pInputText type="password" formControlName="password" autocomplete="current-password" placeholder="Sua senha" [invalid]="loginForm.controls.password.touched && loginForm.controls.password.invalid" />
-          </div>
-          @if (loginForm.controls.password.touched && loginForm.controls.password.invalid) {
-          <span class="field-error">Informe sua senha.</span>
-          }
-        </div>
-
-        <p-button label="Fazer login" type="submit" styleClass="auth-submit-button">
-          <ng-template #icon>
-            <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
-          </ng-template>
-        </p-button>
-      </form>
-
-      <p class="auth-switch">
-        Ainda não tem acesso administrativo?
-        <p-button label="Criar conta" type="button" [text]="true" styleClass="auth-switch-button" (onClick)="switchMode('register')" />
-      </p>
-    </div>
-    <div class="security-strip">
-      <span class="security-indicator"></span>
-      <span>Acesso administrativo</span>
-    </div>
-  </section>
-</p-dialog>
+      <div
+        class="flex min-h-[42px] items-center gap-2 bg-[#dccdc1]/27 px-5 py-2.5 text-[0.68rem] text-[#77818c] sm:px-8"
+      >
+        <span class="size-[7px] flex-none rounded-full bg-[#152e30]"></span>
+        <span>Acesso administrativo</span>
+      </div>
+    </section>
+  </p-dialog>
 }
 
 @if (mode() === 'register') {
-<p-dialog [visible]="true" [modal]="true" [blockScroll]="true" [dismissableMask]="true" [closeOnEscape]="true" [focusTrap]="true" [showHeader]="false" [closable]="false" [style]="{ width: 'min(calc(100vw - 2rem), 520px)' }" [contentStyle]="{ padding: '0' }" styleClass="auth-dialog-panel" maskStyleClass="auth-dialog-mask" ariaLabelledBy="register-title" (visibleChange)="handleDialogVisibility('register', $event)">
-  <section class="auth-dialog">
-    <div class="modal-accent modal-accent--amber"></div>
-    <div class="dialog-body">
-      <button class="dialog-close" type="button" aria-label="Fechar modal de cadastro" (click)="close('register')">
-        <span class="material-symbols-outlined" aria-hidden="true">close</span>
-      </button>
+  <p-dialog
+    [visible]="true"
+    [modal]="true"
+    [blockScroll]="true"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [focusTrap]="true"
+    [showHeader]="false"
+    [closable]="false"
+    [style]="{ width: 'min(calc(100vw - 2rem), 520px)' }"
+    [contentStyle]="{ padding: '0', overflow: 'visible', borderRadius: 'inherit' }"
+    styleClass="overflow-hidden rounded-3xl border border-[#dccdc1]/45 bg-white shadow-[0_20px_36px_-6px_rgb(21_46_48/18%),0_8px_16px_-4px_rgb(21_46_48/8%)]"
+    maskStyleClass="bg-[#152e30]/42 backdrop-blur-sm"
+    ariaLabelledBy="register-title"
+    (visibleChange)="handleDialogVisibility('register', $event)"
+  >
+    <section class="relative max-h-[min(90vh,760px)] overflow-y-auto text-[#152e30]">
+      <div class="h-1.5 bg-gradient-to-r from-[#152e30] via-[#f99a26] to-[#8b5000]"></div>
+      <div class="px-5 pb-5 pt-6 sm:px-8 sm:pb-6 sm:pt-7">
+        <button
+          class="dialog-close absolute right-4 top-4 grid size-[38px] cursor-pointer place-items-center rounded-full border-0 bg-transparent text-[#77818c] transition hover:bg-[#dccdc1]/35 hover:text-[#152e30] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-[#f99a26]/55 sm:right-6 sm:top-6"
+          type="button"
+          aria-label="Fechar modal de cadastro"
+          (click)="close('register')"
+        >
+          <span class="material-symbols-outlined text-[22px]" aria-hidden="true">close</span>
+        </button>
 
-      <div class="dialog-heading">
-        <span class="heading-icon heading-icon--amber material-symbols-outlined" aria-hidden="true">
-          person_add
-        </span>
-        <div class="heading-copy">
-          <p class="eyebrow eyebrow--amber">Boas-vindas</p>
-          <h2 id="register-title">Criar conta</h2>
+        <div class="mb-6 flex items-start gap-4 pr-6">
+          <span
+            class="material-symbols-outlined grid size-12 flex-none place-items-center rounded-xl bg-[#f99a26]/17 text-[24px] text-[#8b5000]"
+            aria-hidden="true"
+          >
+            person_add
+          </span>
+          <div class="min-w-0">
+            <p class="mb-1.5 text-[0.7rem] font-bold uppercase leading-normal tracking-[0.1em] text-[#8b5000]">
+              Boas-vindas
+            </p>
+            <h2 id="register-title" class="m-0 font-serif text-[1.55rem] font-semibold leading-tight sm:text-[1.8rem]">
+              Criar conta
+            </h2>
+          </div>
         </div>
+
+        <form class="grid gap-4" [formGroup]="registerForm" (ngSubmit)="submitRegister()" novalidate>
+          <div class="grid gap-1.5">
+            <label class="text-[0.76rem] font-semibold text-[#77818c]" for="register-name">Nome completo</label>
+            <div class="relative flex items-center">
+              <span
+                class="material-symbols-outlined pointer-events-none absolute left-3.5 z-10 text-[20px] text-[#77818c]"
+                aria-hidden="true"
+              >
+                badge
+              </span>
+              <input
+                id="register-name"
+                class="min-h-[46px] w-full rounded-[10px] border border-[#77818c]/28 bg-[#fafaf8] py-2.5 pl-11 pr-3.5 text-[0.86rem] text-[#152e30] transition placeholder:text-[#77818c]/58 focus:border-[#f99a26] focus:bg-white focus:shadow-[0_0_0_3px_rgb(249_154_38/22%)] focus:outline-none [&.p-invalid]:border-[#ba1a1a]"
+                pInputText
+                type="text"
+                formControlName="name"
+                autocomplete="name"
+                placeholder="Seu nome completo"
+                [invalid]="registerForm.controls.name.touched && registerForm.controls.name.invalid"
+              />
+            </div>
+            @if (registerForm.controls.name.touched && registerForm.controls.name.invalid) {
+              <span class="text-[0.72rem] leading-snug text-[#a12620]">Informe seu nome completo.</span>
+            }
+          </div>
+
+          <div class="grid gap-1.5">
+            <label class="text-[0.76rem] font-semibold text-[#77818c]" for="register-email">Email</label>
+            <div class="relative flex items-center">
+              <span
+                class="material-symbols-outlined pointer-events-none absolute left-3.5 z-10 text-[20px] text-[#77818c]"
+                aria-hidden="true"
+              >
+                mail
+              </span>
+              <input
+                id="register-email"
+                class="min-h-[46px] w-full rounded-[10px] border border-[#77818c]/28 bg-[#fafaf8] py-2.5 pl-11 pr-3.5 text-[0.86rem] text-[#152e30] transition placeholder:text-[#77818c]/58 focus:border-[#f99a26] focus:bg-white focus:shadow-[0_0_0_3px_rgb(249_154_38/22%)] focus:outline-none [&.p-invalid]:border-[#ba1a1a]"
+                pInputText
+                type="email"
+                formControlName="email"
+                autocomplete="email"
+                placeholder="seu.email@exemplo.com"
+                [invalid]="registerForm.controls.email.touched && registerForm.controls.email.invalid"
+              />
+            </div>
+            @if (registerForm.controls.email.touched && registerForm.controls.email.invalid) {
+              <span class="text-[0.72rem] leading-snug text-[#a12620]">Informe um e-mail válido.</span>
+            }
+          </div>
+
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div class="grid gap-1.5">
+              <label class="text-[0.76rem] font-semibold text-[#77818c]" for="register-password">Senha</label>
+              <div class="relative flex items-center">
+                <span
+                  class="material-symbols-outlined pointer-events-none absolute left-3.5 z-10 text-[20px] text-[#77818c]"
+                  aria-hidden="true"
+                >
+                  lock
+                </span>
+                <input
+                  id="register-password"
+                  class="min-h-[46px] w-full rounded-[10px] border border-[#77818c]/28 bg-[#fafaf8] py-2.5 pl-11 pr-3.5 text-[0.86rem] text-[#152e30] transition placeholder:text-[#77818c]/58 focus:border-[#f99a26] focus:bg-white focus:shadow-[0_0_0_3px_rgb(249_154_38/22%)] focus:outline-none [&.p-invalid]:border-[#ba1a1a]"
+                  pInputText
+                  type="password"
+                  formControlName="password"
+                  autocomplete="new-password"
+                  placeholder="Mínimo 8 caracteres"
+                  [invalid]="registerForm.controls.password.touched && registerForm.controls.password.invalid"
+                />
+              </div>
+              @if (registerForm.controls.password.touched && registerForm.controls.password.invalid) {
+                <span class="text-[0.72rem] leading-snug text-[#a12620]">Use ao menos 8 caracteres.</span>
+              }
+            </div>
+
+            <div class="grid gap-1.5">
+              <label class="text-[0.76rem] font-semibold text-[#77818c]" for="register-confirm-password">
+                Confirmar senha
+              </label>
+              <div class="relative flex items-center">
+                <span
+                  class="material-symbols-outlined pointer-events-none absolute left-3.5 z-10 text-[20px] text-[#77818c]"
+                  aria-hidden="true"
+                >
+                  lock_reset
+                </span>
+                <input
+                  id="register-confirm-password"
+                  class="min-h-[46px] w-full rounded-[10px] border border-[#77818c]/28 bg-[#fafaf8] py-2.5 pl-11 pr-3.5 text-[0.86rem] text-[#152e30] transition placeholder:text-[#77818c]/58 focus:border-[#f99a26] focus:bg-white focus:shadow-[0_0_0_3px_rgb(249_154_38/22%)] focus:outline-none [&.p-invalid]:border-[#ba1a1a]"
+                  pInputText
+                  type="password"
+                  formControlName="confirmPassword"
+                  autocomplete="new-password"
+                  placeholder="Repita sua senha"
+                  [invalid]="
+                    registerForm.controls.confirmPassword.touched &&
+                    (registerForm.controls.confirmPassword.invalid || registerForm.hasError('passwordMismatch'))
+                  "
+                />
+              </div>
+              @if (registerForm.controls.confirmPassword.touched && registerForm.controls.confirmPassword.invalid) {
+                <span class="text-[0.72rem] leading-snug text-[#a12620]">Confirme sua senha.</span>
+              } @else if (registerForm.controls.confirmPassword.touched && registerForm.hasError('passwordMismatch')) {
+                <span class="text-[0.72rem] leading-snug text-[#a12620]">As senhas não coincidem.</span>
+              }
+            </div>
+          </div>
+
+          <p-button
+            label="Concluir cadastro"
+            type="submit"
+            styleClass="mt-1 min-h-[46px] w-full rounded-[10px] border-0 bg-[#f99a26] text-[0.86rem] font-semibold text-white transition hover:-translate-y-px hover:bg-[#f28c18] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-[#f99a26]/55"
+          >
+            <ng-template #icon>
+              <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+            </ng-template>
+          </p-button>
+        </form>
+
+        <p
+          class="mt-6 flex items-center justify-center gap-1 border-t border-[#dccdc1]/40 pt-4.5 text-center text-[0.76rem] text-[#77818c]"
+        >
+          Já possui uma conta?
+          <p-button
+            label="Fazer login"
+            type="button"
+            [text]="true"
+            styleClass="border-0 bg-transparent p-1 text-[0.76rem] font-bold text-[#152e30] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-[#f99a26]/55"
+            (onClick)="switchMode('login')"
+          />
+        </p>
       </div>
-
-      <form [formGroup]="registerForm" (ngSubmit)="submitRegister()" novalidate>
-        <div class="field-group">
-          <label for="register-name">Nome completo</label>
-          <div class="input-wrap">
-            <span class="field-icon material-symbols-outlined" aria-hidden="true">badge</span>
-            <input id="register-name" class="auth-input" pInputText type="text" formControlName="name" autocomplete="name" placeholder="Seu nome completo" [invalid]="registerForm.controls.name.touched && registerForm.controls.name.invalid" />
-          </div>
-          @if (registerForm.controls.name.touched && registerForm.controls.name.invalid) {
-          <span class="field-error">Informe seu nome completo.</span>
-          }
-        </div>
-
-        <div class="field-group">
-          <label for="register-email">Email</label>
-          <div class="input-wrap">
-            <span class="field-icon material-symbols-outlined" aria-hidden="true">mail</span>
-            <input id="register-email" class="auth-input" pInputText type="email" formControlName="email" autocomplete="email" placeholder="seu.email@exemplo.com" [invalid]="registerForm.controls.email.touched && registerForm.controls.email.invalid" />
-          </div>
-          @if (registerForm.controls.email.touched && registerForm.controls.email.invalid) {
-          <span class="field-error">Informe um e-mail válido.</span>
-          }
-        </div>
-
-        <div class="field-grid">
-          <div class="field-group">
-            <label for="register-password">Senha</label>
-            <div class="input-wrap">
-              <span class="field-icon material-symbols-outlined" aria-hidden="true">lock</span>
-              <input id="register-password" class="auth-input" pInputText type="password" formControlName="password" autocomplete="new-password" placeholder="Mínimo 8 caracteres" [invalid]="registerForm.controls.password.touched && registerForm.controls.password.invalid" />
-            </div>
-            @if (registerForm.controls.password.touched && registerForm.controls.password.invalid) {
-            <span class="field-error">Use ao menos 8 caracteres.</span>
-            }
-          </div>
-
-          <div class="field-group">
-            <label for="register-confirm-password">Confirmar senha</label>
-            <div class="input-wrap">
-              <span class="field-icon material-symbols-outlined" aria-hidden="true">lock_reset</span>
-              <input id="register-confirm-password" class="auth-input" pInputText type="password" formControlName="confirmPassword" autocomplete="new-password" placeholder="Repita sua senha" [invalid]="registerForm.controls.confirmPassword.touched && (registerForm.controls.confirmPassword.invalid || registerForm.hasError('passwordMismatch'))" />
-            </div>
-            @if (registerForm.controls.confirmPassword.touched && registerForm.controls.confirmPassword.invalid) {
-            <span class="field-error">Confirme sua senha.</span>
-            } @else if (registerForm.controls.confirmPassword.touched && registerForm.hasError('passwordMismatch')) {
-            <span class="field-error">As senhas não coincidem.</span>
-            }
-          </div>
-        </div>
-
-        <p-button label="Concluir cadastro" type="submit" styleClass="auth-submit-button auth-submit-button--amber">
-          <ng-template #icon>
-            <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
-          </ng-template>
-        </p-button>
-      </form>
-
-      <p class="auth-switch">
-        Já possui uma conta?
-        <p-button label="Fazer login" type="button" [text]="true" styleClass="auth-switch-button auth-switch-button--petrol" (onClick)="switchMode('login')" />
-      </p>
-    </div>
-    <div class="security-strip">
-      <span class="security-indicator security-indicator--amber"></span>
-      <span>Cadastro para equipe do restaurante</span>
-    </div>
-  </section>
-</p-dialog>
+      <div
+        class="flex min-h-[42px] items-center gap-2 bg-[#dccdc1]/27 px-5 py-2.5 text-[0.68rem] text-[#77818c] sm:px-8"
+      >
+        <span class="size-[7px] flex-none rounded-full bg-[#f99a26]"></span>
+        <span>Cadastro para equipe do restaurante</span>
+      </div>
+    </section>
+  </p-dialog>
 }

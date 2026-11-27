@@ -31,7 +31,13 @@
       <p class="text-sm font-bold text-[#5b5b58]">Julien Roy</p>
       <p class="text-xs text-[#5b5b58]">Maître D'</p>
     </div>
-    <p-button label="Sair" type="button" [text]="true" styleClass="header-logout-button" (onClick)="logout()">
+    <p-button
+      label="Sair"
+      type="button"
+      [text]="true"
+      styleClass="header-logout-button min-h-[38px] rounded-lg px-2.5 py-2 text-[0.78rem] font-bold text-[#77818c] hover:bg-[#a13711]/8 hover:text-[#a13711] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#f99a26]/50"
+      (onClick)="logout()"
+    >
       <ng-template #icon>
         <span class="material-symbols-outlined" aria-hidden="true">logout</span>
       </ng-template>
@@ -42,7 +48,13 @@
 <nav class="flex gap-2 border-b border-[#77818c]/15 bg-white px-5 py-2 lg:hidden" aria-label="Navegação principal">
   <a routerLink="/restaurante" class="rounded-lg px-3 py-2 text-sm font-semibold" [class.bg-[#f99a26]]="activeSection() === 'restaurant'" [class.text-[#152e30]]="activeSection() === 'restaurant'" [class.text-[#77818c]]="activeSection() !== 'restaurant'" [attr.aria-current]="activeSection() === 'restaurant' ? 'page' : null">Restaurante</a>
   <a routerLink="/pedidos" class="rounded-lg px-3 py-2 text-sm font-semibold" [class.bg-[#f99a26]]="activeSection() === 'orders'" [class.text-[#152e30]]="activeSection() === 'orders'" [class.text-[#77818c]]="activeSection() !== 'orders'" [attr.aria-current]="activeSection() === 'orders' ? 'page' : null">Pedidos</a>
-  <p-button label="Sair" type="button" [text]="true" styleClass="header-logout-button header-logout-button--mobile" (onClick)="logout()">
+  <p-button
+    label="Sair"
+    type="button"
+    [text]="true"
+    styleClass="header-logout-button ml-auto min-h-[38px] rounded-lg px-2.5 py-2 text-[0.78rem] font-bold text-[#77818c] hover:bg-[#a13711]/8 hover:text-[#a13711] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[#f99a26]/50"
+    (onClick)="logout()"
+  >
     <ng-template #icon>
       <span class="material-symbols-outlined" aria-hidden="true">logout</span>
     </ng-template>

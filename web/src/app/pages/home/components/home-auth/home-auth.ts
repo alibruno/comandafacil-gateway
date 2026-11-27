@@ -16,7 +16,6 @@ function passwordsMatch(control: AbstractControl): ValidationErrors | null {
 @Component({
   imports: [ButtonModule, DialogModule, InputTextModule, ReactiveFormsModule],
   selector: 'app-home-auth',
-  styleUrl: './home-auth.css',
   templateUrl: './home-auth.html',
 })
 export class HomeAuth {

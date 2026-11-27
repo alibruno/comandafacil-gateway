@@ -7,8 +7,10 @@ import { AuthMode } from '../../home-page.types';
 @Component({
   imports: [ButtonModule, NgOptimizedImage, RouterLink],
   selector: 'app-home-header',
-  styleUrl: './home-header.css',
   templateUrl: './home-header.html',
+  host: {
+    class: 'relative z-10 block h-20 flex-none',
+  },
 })
 export class HomeHeader {
   protected readonly authRequested = output<AuthMode>();
