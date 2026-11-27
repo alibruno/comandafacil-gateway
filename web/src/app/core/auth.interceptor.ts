@@ -9,11 +9,13 @@ export const authInterceptor: HttpInterceptorFn = (request, next) => {
   const auth = inject(AuthService);
   const token = auth.token();
 
+  // Não envia token para login/cadastro nem para endereços que não sejam da API.
   if (!token || !request.url.startsWith(API_URL) || request.url.includes('/auth/')) {
     return next(request);
   }
 
   const router = inject(Router);
+  // Clona a requisição para acrescentar o JWT sem alterar a requisição original.
   return next(request.clone({ setHeaders: { Authorization: `Bearer ${token}` } })).pipe(
     catchError((error: unknown) => {
       if (error instanceof HttpErrorResponse && error.status === 401) {

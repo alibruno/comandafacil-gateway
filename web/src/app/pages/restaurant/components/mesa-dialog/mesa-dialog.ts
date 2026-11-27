@@ -11,6 +11,7 @@ import { Mesa, MesaDraft, ModalMode } from '../../mesa.model';
   templateUrl: './mesa-dialog.html',
 })
 export class MesaDialog {
+  // input() recebe valores do componente pai; output() avisa o pai sobre ações.
   readonly visible = input.required<boolean>();
   readonly mode = input.required<ModalMode>();
   readonly selectedMesa = input<Mesa | null>(null);
@@ -18,6 +19,7 @@ export class MesaDialog {
   readonly save = output<MesaDraft>();
   readonly remove = output<void>();
 
+  // O formulário acompanha a mesa selecionada ou cria valores iniciais para uma nova.
   protected readonly mesaDraft = linkedSignal(() => {
     const mesa = this.selectedMesa();
     return mesa
@@ -31,6 +33,7 @@ export class MesaDialog {
   });
   protected readonly mesaForm = form(
     this.mesaDraft,
+    // Regras de validação aplicadas aos campos do formulário.
     schema((path) => {
       required(path.nome);
       min(path.capacidade, 1);

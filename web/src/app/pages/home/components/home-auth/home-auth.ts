@@ -24,6 +24,7 @@ export class HomeAuth {
 
   readonly mode = model<AuthMode | null>(null);
   readonly authenticated = output<void>();
+  // Estes formulários usam Reactive Forms; o formulário de mesa é o exemplo de Signal Forms.
   protected readonly loginForm = this.formBuilder.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required],
@@ -62,6 +63,7 @@ export class HomeAuth {
     }
 
     this.auth.login(this.loginForm.getRawValue()).subscribe({
+      // Quando o login termina, avisa o componente pai para continuar a navegação.
       next: () => this.authenticated.emit(),
       error: (error: unknown) => console.error('Falha ao entrar:', error),
     });

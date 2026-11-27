@@ -10,6 +10,7 @@ import { Order, OrderDraft } from '../pages/orders/order.model';
 export class RestaurantDataService {
   private readonly http = inject(HttpClient);
 
+  // Signals mantêm os dados e os estados de carregamento/erro compartilhados entre telas.
   readonly mesas = signal<Mesa[]>([]);
   readonly orders = signal<Order[]>([]);
   readonly loadingMesas = signal(false);
@@ -17,6 +18,7 @@ export class RestaurantDataService {
   readonly mesaError = signal<string | null>(null);
   readonly orderError = signal<string | null>(null);
 
+  // Cada método chama a API e atualiza o signal local quando a resposta chega.
   loadMesas(): Observable<Mesa[]> {
     return this.track(
       this.http.get<Mesa[]>(`${API_URL}/mesas`),

@@ -26,6 +26,7 @@ const NAME_KEY = 'comandafacil-name';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
+  // O estado do usuário é compartilhado pela aplicação e começa com a sessão salva.
   private readonly currentUserState = signal<AuthSession | null>(this.restoreSession());
 
   readonly currentUser = this.currentUserState.asReadonly();
@@ -78,6 +79,7 @@ export class AuthService {
   }
 
   private saveSession(session: AuthSession): void {
+    // Guarda a sessão para que ela continue disponível após atualizar a página.
     localStorage.setItem(TOKEN_KEY, session.token);
     localStorage.setItem(EMAIL_KEY, session.email);
     localStorage.setItem(NAME_KEY, session.name);
