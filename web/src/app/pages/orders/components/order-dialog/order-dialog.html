@@ -20,10 +20,10 @@
       <header class="mb-6 flex items-start justify-between gap-4">
         <div class="flex min-w-0 items-center gap-3">
           <span
-            class="material-symbols-outlined grid size-[42px] flex-none place-items-center rounded-[10px] bg-[#152e30] text-[22px] text-[#f99a26]"
+            class="grid size-[42px] flex-none place-items-center rounded-[10px] bg-[#152e30] text-[#f99a26]"
             aria-hidden="true"
           >
-            receipt_long
+            <span class="material-symbols-outlined text-[22px]!">receipt_long</span>
           </span>
           <div>
             @if (order(); as currentOrder) {
@@ -206,7 +206,7 @@
                     </span>
                     @if (item.controls.note.value) {
                       <small class="flex items-center gap-1 rounded-[5px] bg-white px-1.5 py-1 text-[0.6rem] text-[#77818c]">
-                        <span class="material-symbols-outlined text-[13px] text-[#f99a26]" aria-hidden="true">
+                        <span class="material-symbols-outlined text-[13px]! text-[#f99a26]" aria-hidden="true">
                           restaurant
                         </span>
                         {{ item.controls.note.value }}

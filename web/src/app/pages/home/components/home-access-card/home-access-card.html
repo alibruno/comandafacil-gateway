@@ -15,7 +15,7 @@
         "
         aria-hidden="true"
       >
-        <span class="access-icon-symbol material-symbols-outlined text-[30px]">{{ icon() }}</span>
+        <span class="access-icon-symbol material-symbols-outlined text-[30px]!">{{ icon() }}</span>
       </span>
       <h2
         class="m-0 max-w-[18ch] font-serif text-[1.55rem] font-semibold leading-tight text-[#152e30] transition-colors duration-200 motion-reduce:transition-none group-hover:text-[#a13711] md:text-[clamp(1.6rem,2.4vw,2rem)]"
@@ -23,7 +23,7 @@
         {{ title() }}
       </h2>
       <span
-        class="material-symbols-outlined absolute right-0 top-0 -translate-x-1 translate-y-1 text-[1.3rem] opacity-0 transition duration-200 motion-reduce:transition-none group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
+        class="material-symbols-outlined absolute right-0 top-0 -translate-x-1 translate-y-1 text-[1.3rem]! opacity-0 transition duration-200 motion-reduce:transition-none group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
         [class]="accent() === 'amber' ? 'text-[#f99a26]' : 'text-[#77818c]'"
         aria-hidden="true"
       >

@@ -27,10 +27,10 @@
           <strong class="mt-1.5 block text-[1.8rem] leading-none">{{ activeCount() }}</strong>
         </div>
         <span
-          class="material-symbols-outlined grid size-[42px] flex-none place-items-center rounded-[10px] bg-[#152e30] text-[22px] text-white"
+          class="grid size-[42px] flex-none place-items-center rounded-[10px] bg-[#152e30] text-white"
           aria-hidden="true"
         >
-          receipt_long
+          <span class="material-symbols-outlined text-[22px]!">receipt_long</span>
         </span>
       </article>
       <article
@@ -41,10 +41,10 @@
           <strong class="mt-1.5 block text-[1.8rem] leading-none">{{ statusCounts().cozinha }}</strong>
         </div>
         <span
-          class="material-symbols-outlined grid size-[42px] flex-none place-items-center rounded-[10px] bg-[#e5ebeb] text-[22px] text-[#152e30]"
+          class="grid size-[42px] flex-none place-items-center rounded-[10px] bg-[#e5ebeb] text-[#152e30]"
           aria-hidden="true"
         >
-          soup_kitchen
+          <span class="material-symbols-outlined text-[22px]!">soup_kitchen</span>
         </span>
       </article>
       <article
@@ -55,10 +55,10 @@
           <strong class="mt-1.5 block text-[1.8rem] leading-none">{{ statusCounts().pronto }}</strong>
         </div>
         <span
-          class="material-symbols-outlined grid size-[42px] flex-none place-items-center rounded-[10px] bg-[#f99a26]/20 text-[22px] text-[#a13711]"
+          class="grid size-[42px] flex-none place-items-center rounded-[10px] bg-[#f99a26]/20 text-[#a13711]"
           aria-hidden="true"
         >
-          task_alt
+          <span class="material-symbols-outlined text-[22px]!">task_alt</span>
         </span>
       </article>
       <article
@@ -69,10 +69,10 @@
           <strong class="mt-1.5 block text-[1.8rem] leading-none">{{ statusCounts().finalizado }}</strong>
         </div>
         <span
-          class="material-symbols-outlined grid size-[42px] flex-none place-items-center rounded-[10px] bg-white/10 text-[22px] text-[#f99a26]"
+          class="grid size-[42px] flex-none place-items-center rounded-[10px] bg-white/10 text-[#f99a26]"
           aria-hidden="true"
         >
-          check_circle
+          <span class="material-symbols-outlined text-[22px]!">check_circle</span>
         </span>
       </article>
     </section>
@@ -130,7 +130,7 @@
               </p>
               @if (order.notes) {
                 <p class="mt-2 flex items-center gap-1.5 text-[0.7rem] text-[#77818c]">
-                  <span class="material-symbols-outlined text-[16px] text-[#a13711]" aria-hidden="true">chat</span>
+                  <span class="material-symbols-outlined text-[16px]! text-[#a13711]" aria-hidden="true">chat</span>
                   {{ order.notes }}
                 </p>
               }
@@ -169,7 +169,7 @@
           <div
             class="grid min-h-[190px] place-content-center justify-items-center gap-2 rounded-xl border border-dashed border-[#77818c]/35 text-[#77818c]"
           >
-            <span class="material-symbols-outlined text-[30px]" aria-hidden="true">receipt_long</span>
+            <span class="material-symbols-outlined text-[30px]!" aria-hidden="true">receipt_long</span>
             <p class="m-0 text-[0.84rem]">Nenhum pedido nesta etapa.</p>
           </div>
         }
@@ -201,10 +201,10 @@
   @if (deleteTarget(); as order) {
     <div class="grid justify-items-center p-6 text-center">
       <span
-        class="material-symbols-outlined grid size-12 place-items-center rounded-xl bg-[#a13711]/10 text-[24px] text-[#a13711]"
+        class="grid size-12 place-items-center rounded-xl bg-[#a13711]/10 text-[#a13711]"
         aria-hidden="true"
       >
-        delete
+        <span class="material-symbols-outlined text-[24px]!">delete</span>
       </span>
       <h2 id="delete-order-title" class="mt-4 font-serif text-[1.3rem] text-[#152e30]">
         Excluir pedido {{ order.id }}?
