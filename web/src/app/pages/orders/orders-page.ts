@@ -1,9 +1,9 @@
 import { Component, computed, signal } from '@angular/core';
 import { Button } from '@openng/optimus-ui/button';
 import { Dialog } from '@openng/optimus-ui/dialog';
-import { OrderDialog } from './orders/order-dialog/order-dialog';
-import { Order, OrderDialogMode, OrderDraft, OrderFilter, OrderItem, OrderStatus } from './orders/order.model';
-import { RestaurantHeader } from './restaurant-header/restaurant-header';
+import { OrderDialog } from './components/order-dialog/order-dialog';
+import { Order, OrderDialogMode, OrderDraft, OrderFilter, OrderItem, OrderStatus } from './order.model';
+import { RestaurantHeader } from '../../shared/components/restaurant-header/restaurant-header';
 
 @Component({
   imports: [Button, Dialog, OrderDialog, RestaurantHeader],

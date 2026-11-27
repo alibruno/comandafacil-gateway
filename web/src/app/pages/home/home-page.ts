@@ -1,8 +1,8 @@
 import { Component, signal } from '@angular/core';
-import { HomeAccessCard } from './home-access-card/home-access-card';
-import { HomeAuth } from './home-auth/home-auth';
-import { HomeHeader } from './home-header/home-header';
-import { HomeHero } from './home-hero/home-hero';
+import { HomeAccessCard } from './components/home-access-card/home-access-card';
+import { HomeAuth } from './components/home-auth/home-auth';
+import { HomeHeader } from './components/home-header/home-header';
+import { HomeHero } from './components/home-hero/home-hero';
 import { AuthMode } from './home-page.types';
 
 @Component({

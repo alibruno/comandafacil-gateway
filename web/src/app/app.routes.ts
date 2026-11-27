@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { HomePage } from './home-page';
+import { HomePage } from './pages/home/home-page';
 
 export const routes: Routes = [
 	{
@@ -11,12 +11,15 @@ export const routes: Routes = [
 	{
 		path: 'restaurante',
 		loadComponent: () =>
-			import('./restaurant-management').then((module) => module.RestaurantManagement),
+			import('./pages/restaurant/restaurant-management').then(
+				(module) => module.RestaurantManagement,
+			),
 		title: 'Restaurante | ComandaFácil',
 	},
 	{
 		path: 'pedidos',
-		loadComponent: () => import('./orders-page').then((module) => module.OrdersPage),
+		loadComponent: () =>
+			import('./pages/orders/orders-page').then((module) => module.OrdersPage),
 		title: 'Pedidos | ComandaFácil',
 	},
 	{ path: '**', redirectTo: '' },

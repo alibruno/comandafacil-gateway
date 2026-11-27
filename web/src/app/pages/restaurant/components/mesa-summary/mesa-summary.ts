@@ -1,5 +1,5 @@
 import { computed, Component, input } from '@angular/core';
-import { Mesa } from '../mesa.model';
+import { Mesa } from '../../mesa.model';
 
 @Component({
   selector: 'app-mesa-summary',

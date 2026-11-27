@@ -2,7 +2,7 @@ import { NgOptimizedImage } from '@angular/common';
 import { Component, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from '@openng/optimus-ui/button';
-import { AuthMode } from '../home-page.types';
+import { AuthMode } from '../../home-page.types';
 
 @Component({
   imports: [ButtonModule, NgOptimizedImage, RouterLink],

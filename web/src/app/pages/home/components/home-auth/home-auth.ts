@@ -4,7 +4,7 @@ import { ButtonModule } from '@openng/optimus-ui/button';
 import { DialogModule } from '@openng/optimus-ui/dialog';
 import { InputTextModule } from '@openng/optimus-ui/inputtext';
 import { Router } from '@angular/router';
-import { AuthMode } from '../home-page.types';
+import { AuthMode } from '../../home-page.types';
 
 function passwordsMatch(control: AbstractControl): ValidationErrors | null {
   const password = control.get('password')?.value;

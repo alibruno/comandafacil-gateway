@@ -1,16 +1,15 @@
 import { Component, signal } from '@angular/core';
 import { Button } from '@openng/optimus-ui/button';
-import { Mesa, MesaDraft, ModalMode } from './mesas/mesa.model';
-import { MesaDialog } from './mesas/mesa-dialog/mesa-dialog';
-import { MesaSummary } from './mesas/mesa-summary/mesa-summary';
-import { MesaTable } from './mesas/mesa-table/mesa-table';
-import { RestaurantHeader } from './restaurant-header/restaurant-header';
+import { RestaurantHeader } from '../../shared/components/restaurant-header/restaurant-header';
+import { MesaDialog } from './components/mesa-dialog/mesa-dialog';
+import { MesaSummary } from './components/mesa-summary/mesa-summary';
+import { MesaTable } from './components/mesa-table/mesa-table';
+import { Mesa, MesaDraft, ModalMode } from './mesa.model';
 
 @Component({
   imports: [Button, MesaDialog, MesaSummary, MesaTable, RestaurantHeader],
   selector: 'app-restaurant-management',
-  styleUrl: './app.css',
-  templateUrl: './app.html',
+  templateUrl: './restaurant-management.html',
 })
 export class RestaurantManagement {
   protected readonly mesas = signal<Mesa[]>([

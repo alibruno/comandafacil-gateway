@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { computed, Component, input, output, signal } from '@angular/core';
-import { Mesa } from '../mesa.model';
+import { Mesa } from '../../mesa.model';
 
 @Component({
   imports: [DatePipe],

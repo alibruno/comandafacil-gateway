@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
 import { App } from './app';
 import { appConfig } from './app.config';
-import { HomePage } from './home-page';
-import { HomeHero } from './home-hero/home-hero';
-import { HomeAuth } from './home-auth/home-auth';
-import { Router } from '@angular/router';
-import { OrdersPage } from './orders-page';
-import { RestaurantHeader } from './restaurant-header/restaurant-header';
+import { HomeAuth } from './pages/home/components/home-auth/home-auth';
+import { HomeHero } from './pages/home/components/home-hero/home-hero';
+import { HomePage } from './pages/home/home-page';
+import { OrdersPage } from './pages/orders/orders-page';
+import { RestaurantHeader } from './shared/components/restaurant-header/restaurant-header';
 
 describe('App', () => {
   beforeEach(async () => {

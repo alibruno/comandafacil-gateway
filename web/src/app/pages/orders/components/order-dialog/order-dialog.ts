@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { Button } from '@openng/optimus-ui/button';
 import { Dialog } from '@openng/optimus-ui/dialog';
 import { InputText } from '@openng/optimus-ui/inputtext';
-import { Order, OrderDialogMode, OrderDraft, OrderItem, OrderStatus } from '../order.model';
+import { Order, OrderDialogMode, OrderDraft, OrderItem, OrderStatus } from '../../order.model';
 
 type OrderItemForm = FormGroup<{
   id: FormControl<string>;

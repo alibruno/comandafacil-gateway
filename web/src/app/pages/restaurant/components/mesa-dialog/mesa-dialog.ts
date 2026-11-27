@@ -3,7 +3,7 @@ import { Component, computed, input, linkedSignal, output } from '@angular/core'
 import { form, FormField, min, required, schema } from '@angular/forms/signals';
 import { Button } from '@openng/optimus-ui/button';
 import { Dialog } from '@openng/optimus-ui/dialog';
-import { Mesa, MesaDraft, ModalMode } from '../mesa.model';
+import { Mesa, MesaDraft, ModalMode } from '../../mesa.model';
 
 @Component({
   imports: [Button, DatePipe, Dialog, FormField],
