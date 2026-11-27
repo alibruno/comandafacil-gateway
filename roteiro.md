@@ -1,53 +1,39 @@
-## Roteiro breve para apresentação
+## Roteiro breve para apresentação (aproximadamente 5 minutos)
 
-Uma apresentação de aproximadamente 5 minutos pode seguir esta ordem:
+1. **Aplicação e componentes:** apresente o ComandaFácil, usado para gerenciar
+   mesas e pedidos. Em `web/src/app/pages/restaurant/restaurant-management.ts`,
+   mostre o componente da tela e seus componentes filhos, como `MesaTable` e
+   `MesaDialog`.
 
-1. **Apresentar a aplicação:** “Este é o ComandaFácil, feito em Angular 22 para
-   gerenciar mesas e pedidos de um restaurante. Usei OptimusUI e Tailwind para
-   montar a interface. Vou mostrar como as telas se organizam e conversam com a API.”
-2. **Mostrar as telas e os componentes:** faça login e navegue entre Restaurante
-   e Pedidos. Explique que cada tela é um componente e que componentes menores,
-   como a tabela e o resumo de mesas, cuidam de partes específicas. Mostre a
-   mesa e seus quatro dados: nome, capacidade, data de cadastro e disponibilidade.
-3. **Demonstrar a comunicação entre componentes:** em Restaurante, abra
-   `restaurant-management.html`. Explique que o componente de Restaurante é o
-   **pai** e a tabela é um componente **filho**. O pai envia a lista de mesas
-   para o filho com `[mesas]="mesas()"`; no filho, `input.required<Mesa[]>()`
-   declara que essa lista será recebida. Como `input()` é um signal, o filho lê
-   o valor chamando `mesas()`.
+2. **Comunicação e signals:** em
+   `web/src/app/pages/restaurant/restaurant-management.html`, mostre
+   `[mesas]="mesas()"`: o pai lê o signal e passa a lista à tabela. Em
+   `components/mesa-table/mesa-table.ts`, mostre `input.required<Mesa[]>()`.
+   Para o caminho de volta, em `components/mesa-dialog/mesa-dialog.ts`, mostre
+   `save.emit(this.mesaForm().value())`; no template do pai,
+   `(save)="saveMesa($event)"` recebe os dados. **Input leva dados ao filho;
+   output envia eventos ao pai.**
 
-   Depois, mostre o caminho de volta: ao clicar em Editar, o filho executa
-   `edit.emit(mesa)`. No template do pai, `(edit)="openEditModal($event)`
-   recebe o evento; `$event` é a mesa que o filho enviou. O pai então abre o
-   formulário para aquela mesa. Resuma assim: **input é a informação que entra
-   no filho; output é o aviso que sai do filho para o pai**. Aqui, `input()`
-   é um recurso Angular, não o campo de texto `input` do HTML.
-4. **Mostrar o formulário Signal Forms:** abra o formulário de cadastro/edição
-   de mesa. Explique que `form()` liga os dados do formulário a signals, `schema()`
-   define validações e `[formField]` conecta cada campo da tela ao formulário.
-5. **Explicar o service e a API:** em `restaurant-data.service.ts`, mostre como
-   `HttpClient` lista, cria, atualiza e remove dados. O service guarda os dados
-   em signals para que as telas possam compartilhá-los.
-6. **Mostrar rotas e autenticação:** em `app.routes.ts`, aponte os caminhos das
-   telas e o `authGuard` nas rotas protegidas. Explique que o interceptor envia
-   o token JWT nas chamadas à API; o backend também verifica esse token. O login
-   e o cadastro são feitos em `home-auth.ts`.
-7. **Encerrar com as operações:** mostre que é possível listar, ver detalhes,
-   cadastrar, editar e remover mesas ou pedidos. Se o tempo for curto, cadastre
-   ou edite uma mesa e mostre a lista atualizada. “Assim, tela, componentes,
-   service e API trabalham juntos.”
+3. **Cadastro com Signal Forms:** em `components/mesa-dialog/mesa-dialog.ts`,
+   mostre que `mesaDraft` é um signal, `form()` cria o formulário e `schema()`
+   define validações, como nome obrigatório e capacidade mínima. O formulário
+   de login usa Reactive Forms, não Signal Forms.
 
-### Códigos para consultar durante a apresentação
+4. **Service e API:** em `web/src/app/core/restaurant-data.service.ts`,
+   mostre `loadMesas()` e `createMesa()`: `HttpClient` faz requisições GET e
+   POST, e as respostas atualizam o signal `mesas`. O componente acessa esse
+   service por injeção de dependência.
 
-- Rotas e carregamento das telas: `web/src/app/app.routes.ts`.
-- Comunicação pai/filho e Signals Forms: `web/src/app/pages/restaurant/restaurant-management.html`,
-  `web/src/app/pages/restaurant/components/mesa-table/mesa-table.ts` e
-  `web/src/app/pages/restaurant/components/mesa-dialog/mesa-dialog.ts`.
-- Estado compartilhado e operações HTTP: `web/src/app/core/restaurant-data.service.ts`.
-- Login, proteção da navegação e envio do token: `web/src/app/core/auth.service.ts`,
-  `web/src/app/pages/home/components/home-auth/home-auth.ts`,
-  `web/src/app/core/auth.guard.ts` e `web/src/app/core/auth.interceptor.ts`.
+5. **Rotas e segurança:** em `web/src/app/app.routes.ts`, mostre a rota inicial
+   pública e as rotas `restaurante` e `pedidos` protegidas por `authGuard`.
+   Em `web/src/app/pages/home/components/home-auth/home-auth.ts` e
+   `web/src/app/core/auth.service.ts`, mostre o login e a chamada à API.
+   Em `auth.guard.ts`, explique o redirecionamento de quem não tem sessão; em
+   `auth.interceptor.ts`, mostre o envio do JWT no cabeçalho das chamadas à API.
+   No backend, mostre `backend/backend/src/main/java/br/com/comandafacil/backend/config/SecurityConfig.java`
+   e `backend/backend/src/main/java/br/com/comandafacil/backend/auth/JwtAuthenticationFilter.java`:
+   a API exige autenticação nas rotas protegidas e verifica o token.
 
-**Observação:** o formulário de mesa usa Signal Forms. O formulário de pedidos
-e os formulários de login/cadastro usam Reactive Forms; portanto, para mostrar
-o requisito de Signal Forms, use o cadastro ou a edição de mesa.
+**Antes da apresentação:** a cópia atual está com arquivos ausentes, incluindo
+os templates da tabela e do formulário de mesas e arquivos de configuração do
+projeto web. Restaure-os antes de executar a aplicação e demonstrar as telas.
